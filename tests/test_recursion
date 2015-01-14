@@ -1,0 +1,55 @@
+program
+begin
+
+% A function that takes in an integer and returns the factorial of
+% that integer. If the input is a negative number, then 1 will be returned.
+integer function factorial ( integer n )
+begin 
+	if n <= 1
+	then
+		return (1)
+	else
+		return ( factorial(n - 1) * n )
+	end
+end
+
+%Check if factorial works correctly by comparing directly in an expression.
+if factorial(5) != 120 
+then
+	put "Failed Factorial Test 1"
+end
+
+%Check if factorial works correctly by assigning the value of factorial(3)
+%to a variable, and then comparing that variable with a constant.
+fact3 <= factorial(3)
+if fact3 != 6 
+then
+	put "Failed Factorial Test 2"
+end
+
+%Use recursion to print the sum of all integers from 1 to n.
+procedure print_sum (integer n)
+begin
+	integer function get_sum(integer n)
+	begin
+		sum <= 0
+		if n >= 1
+		then
+			sum = n + get_sum(n - 1)
+		else
+			sum = n
+		end
+
+		return (sum)
+	end
+
+	put "The sum of 1 to ", n, " is ", get_sum(n)
+end
+
+%Make sure the procedure works for a few different inputs.
+print_sum(1)
+print_sum(100)
+print_sum(-10)
+
+end
+
