@@ -1,0 +1,36 @@
+begin
+    integer number
+    number <= -1           % = -1
+    number <= -1 * number  % = 1
+    number <= number + 1   % = 2
+    number <= number * 4   % = 8
+    number <= number - 2   % = 6
+    number <= number / 3   % = 2
+
+    % Are we allowed to 'put' a number or boolean without casting?
+    put number
+
+    boolean bool
+    bool <= !false                % = true
+    bool <= bool & true & false   % = false
+    bool <= bool | true           % = true
+
+    % Are the comparison operators applicable to bools and numbers?
+    bool <= bool = false          % = false
+    bool <= bool != true          % = true
+    put bool
+
+    integer n1
+    integer n2
+
+    n1 <= 10
+    n2 <= 20
+
+    bool <= n1 = n2     % = false
+    bool <= n1 != n2    % = true
+    bool <= n1 < n2     % = true
+    bool <= n1 > n2     % = false
+    bool <= n1 >= 10     % = true
+    bool <= n1 <= 10     % = true
+    put bool 
+end

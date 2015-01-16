@@ -1,0 +1,29 @@
+begin
+	boolean array1[1]
+    integer array2[10]
+
+    integer array3[1..1]
+    integer array4[1..5]
+
+    integer array5[0..0]
+    integer array6[-10..10]
+
+    boolean array7[-10..-10]
+    integer array8[-10..-5]
+
+    integer square1[1, 1]
+    boolean square2[10, 10]
+
+    integer square3[1..10, 3..6]
+    integer square4[-10..10, -10..10]
+    integer square5[-10..-6, -10..-4]
+    integer square6[-10..-2, 2..4]
+
+    array1[1] <= 1
+
+    array2[1] <= 1
+    array2[10] <= 10
+
+    % array3[1] = 10 - 1 = 9
+    array3[array1[1]] <= array2[10] - array2[1] 
+end
