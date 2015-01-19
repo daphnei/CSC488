@@ -1,0 +1,67 @@
+%All arithmetical, logical and comparision operators
+begin
+
+	integer number1 
+	integer number2 
+	integer sum
+	integer subtraction
+	integer product
+	integer division
+
+
+	put "Give me one number: "
+	get number1
+
+	put "Give me a second number: "
+	get number2
+
+
+	sum <= number1 + number2
+	subtraction <= number1 - number2
+	product <= number1 * number2
+	division <= number1/number2
+
+	if number1 = number2 then
+	put "Number 1 equal number 2"
+	end
+
+	if number1 != number2 then
+	put "Number 1  not equal number 2"
+	end
+
+	if number1 < number2 then
+	put "Number 1 greater than number 2"
+	end
+
+	if number1 <= number2 then
+	put "Number 1 greater or equal number 2"
+	end
+
+	if number1 > number2 then
+	put "Number 2 greater than number 1"
+	end
+
+	if number1 >= number2 then
+	put "Number 2 greater or equal number 1"
+	end
+
+	
+	
+	if number1=0 & number2=0 then
+	put "both equal 0"
+	end
+
+	if number1=0 | number2=0 then
+	put "some equal 0"
+	end
+
+	if true then
+	put "True!"
+	end
+
+	if !false then
+	put "Not false = true!"
+	end
+
+
+end

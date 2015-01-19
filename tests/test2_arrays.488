@@ -1,0 +1,43 @@
+%All kinds of declaration of arrays
+begin 
+
+integer array1[5] %Integer bound
+integer array2[100] %Integer bound
+
+integer array3[0 .. 5] %-General bound .. General bound
+integer array4[-10 .. 0] %-General bound .. General bound
+integer array5[-10 .. 10] %-General bound .. General bound
+
+integer array6[5,5] %Integer bound, integer bound
+integer array7[100,100] %Integer bound, integer bound
+
+integer array8[0 .. 9,0 .. 9] %Integer bound, integer bound
+integer array9[-5 .. 0,0 .. 5] %Integer bound, integer bound
+integer array10[-10 .. -2,-30 .. -25]%-General bound .. general bound, -general bound .. general bound
+
+
+array1[4] <= 99
+
+array2[50] <= -99
+
+array3[3] <= 88
+
+array4[-2] <= 77
+
+array5[-5] <= 100
+array5[5] <= -100
+
+array6[2,2] <= 90
+
+array7[ array6[2,2], 10] <= 20
+
+array8[0,0] <= 0
+
+integer test
+test <= 2
+
+array9[test, -test] <= -20
+
+array10[-8,-28] <= -3
+
+end
