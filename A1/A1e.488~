@@ -85,7 +85,7 @@ begin
 	procedure print_helloworld(boolean print_full)
 	begin
 		if print_full 
-		then
+		begin
 			print_helloworld(false)
 			put "World"
 		else

@@ -39,14 +39,14 @@ begin
     procedure check_bool(boolean expected, boolean actual)
     begin
         if (expected)
-        then
+        begin
             put "Expected true, "
         else
             put "Expected false, "
         end
         
         if (actual)
-        then
+        begin
             put "Got true, ", skip
         else
             put "Gor false, ", skip
