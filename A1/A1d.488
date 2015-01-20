@@ -1,0 +1,112 @@
+% global/main scope
+begin
+
+% Void (empty) procedure, no parameters
+procedure proc_1a 
+begin
+	return
+end
+
+% Void procedure, one parameter
+procedure proc_1b (integer param)
+begin
+	return
+end
+
+% Void procedure, multi parameters
+procedure proc_1c (integer param1, boolean param2, integer param3)
+begin
+	return
+end
+
+% Non-void procedure, no arguments
+procedure proc_2a
+begin
+	put "Nothing useful happened in this procedure.", skip
+	return
+end
+
+% Procedure that changes value of int parameter and (out)puts
+procedure proc_2b (integer param1)
+begin
+	param1 < = param1 + 1
+	put "Value of parameter became: ", param1, skip
+	return
+end
+
+% Procedure that outputs pos/neg value of param1 depending on param2
+procedure proc_2c (integer param1, boolean param2)
+begin
+	if (param2) then 
+		put param1, skip
+	else
+		put (- param1), skip
+	end
+end
+
+% Function with no parameters
+integer function func_1a
+begin
+	return (42)
+end
+
+% Function with no parameters
+boolean function func_1b
+begin
+	return (true)
+end
+
+% Function that returns 1 if param1 true, 0 otherwise
+integer function func_2a (boolean param1)
+begin
+	if (param1) then
+		return (1)
+	else
+		return (0)
+	end
+end
+
+% Function that returns whether or not param1 is a non-negative integer
+boolean function func_2b (integer param1)
+begin
+	if (param1 < = 0) then
+		return (false)
+	else
+		return (true)
+	end
+end
+
+% Function that adds/multiplies param1 & param2, depending on param3
+integer function func_3 (boolean param1, integer param2, integer param3)
+begin
+	if (param1) then
+		return (param2 + param3)
+	else
+		return (param2 * param3)
+	end
+end
+
+% Call all the procedures/functions (done in new scope for testing purposes)
+begin 
+	proc_1a
+	proc_1b (7)
+	proc_1c (11, true, 17)
+	proc_2a
+	proc_2b (0)
+	proc_2c (func_1a, func_1b)
+	proc_2c (-(func_1a), !(func_1b))
+
+	r_2a = func_2a (false)
+	r_2b = func_2b (1)
+	r_3 = func_3 (false, 3, 7)
+
+	% These should throw errors, but not b/c of syntax..
+	% Not sure if want to hand these in
+
+	proc_2a = func_2a (false) 	% Re-declaring identifier
+	proc_1b (true) 				% Type error
+
+
+end
+
+end
