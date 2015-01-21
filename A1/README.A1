@@ -1,7 +1,21 @@
-For the assignment 1,
+CSC488 A1 README
 
-Adam Robinson-Yu answered letter A. The first program does not compute anything useful, it just uses all arithmetic, logical and comparison operators. 
-Jordan Boaz Rodrigues answered letter B. The program in letter B does not compute anything useful, it has only the various ways to declare and use an array using the language provided. 
-Diego Santos answered letter C. The program in letter C contains the different ways to use a loop and nested loops.
-Lisa answered letter D. The program in here shows all the ways available to use procedures and functions.
-Daphne Ippolito answered letter E. The last program shows how to use recursive functions, procedures, nested functions and procedures. It uses a factorial function to show a recursive function.
+
+Here is a brief description of each program, accompanied by the name of the author .
+
+A1a (Adam Robinson-Yu):
+A program that makes use of arithmetic, logical and comparison operators, in various permutations and combinations, in the style of test cases so that results are output and visible to the user.
+
+A1b (Jordan Boaz Rodrigues):
+Various declarations and usages of arrays are presented in this program, with both one and two dimensional arrays declared with a variety of bound "styles".
+
+A1c (Diego Santos):
+This program tests different kinds of loops, including an infinite loop, as permitted by the language.
+
+A1d (Lisa Zhou): 
+Many different (non-recursive) procedures and functions are implemented in this program, including those that are have or don't have parameters. 
+
+A1e (Daphne Ippolito):
+Many uses of recursion are featured in this program, using both non-nested and nested functions and procedures. 
+
+All team members contributed to peer-reviewing everyone else's work. 
