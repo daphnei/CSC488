@@ -105,8 +105,6 @@ begin
 
 	proc_2a = func_2a (false) 	% Re-declaring identifier
 	proc_1b (true) 				% Type error
-
-
 end
 
 end
