@@ -1,9 +1,10 @@
-%Author Diego 
+%Author Diego Santos
 
-begin                                 %scope
-	integer i                     % i will be used for all the loops and j will be used in the last 2
+begin %scope
+	% I will be used for all the loops and j will be used in the last 2
+	integer i                     
 	integer j
-	j <= 1                        % initializations
+	j <= 1                        
 	i <= 1
 	
 	% LOOP STRUCTURES
@@ -30,7 +31,6 @@ begin                                 %scope
 		i <= i + 1
 	end
 
-
 	% NESTED LOOPS
 
 	%Count from 1 to 6, 10 times. 
@@ -54,6 +54,17 @@ begin                                 %scope
 			j <= j + 1
 			exit when j > 6
 		end
+	end
+
+	% BAD LOOPS
+	% These loops don't exit.
+
+	while true
+		put "This is the loop that never ends.", skip
+	end
+
+	loop
+		put "This is the other loop that never ends.", skip
 	end
 
 end
