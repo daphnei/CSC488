@@ -1,0 +1,6 @@
+begin
+	boolean b, p, x
+	b <= true
+	p <= false
+	x <= false
+end
