@@ -188,6 +188,8 @@ statementMultiple ::=       statementMultiple statementSingle
 variableNamesSingle ::=     variablename
                           | variablename L_SQUARE bound R_SQUARE
                           | variablename L_SQUARE bound COMMA bound R_SQUARE;
+
+                          
 variableNamesMultiple ::=   variableNamesSingle COMMA variableNamesMultiple
                           | variableNamesSingle;
 
@@ -226,8 +228,12 @@ variable ::=                variablename
                           | arrayname L_SQUARE expression COMMA expression R_SQUARE;
 
 //Daphne's attempt at cleaning up the expression code. Right not this doesn't work.
-/*
-anyExpression ::=            anyExpression OR andExpression
+/*Jordan working on it
+expression ::=              unaryExpression
+                            | anyExpression
+                            | expression OR andExpression;
+
+anyExpression ::=            expression OR andExpression
                           | andExpression;
 
 andExpression ::=          andExpression AND negationExpression
@@ -255,11 +261,12 @@ unaryExpression ::=         variablename
                           | INTCONST
                           | TRUE
                           | FALSE
-                          | MINUS anyExpression
+                          | MINUS expression
                           | functionname
                           | functionname L_PAREN argumentsMultiple R_PAREN
-                          | L_PAREN anyExpression R_PAREN 
+                          | L_PAREN expression R_PAREN 
                           | L_CURLEY statementMultiple YIELDS anyExpression R_CURLEY ;
+
 */
 
 expression ::= expression OR expression1 | expression1 | L_CURLEY statementMultiple YIELDS expression R_CURLEY | parametername;
@@ -277,12 +284,16 @@ expression4 ::= expression4 PLUS expression5 | expression4 MINUS expression5 | e
 * variable | functionname | functionname L_PAREN arguments R_PAREN;
 */
 
+
+
+
 expression5 ::= expression5 TIMES expression6 | expression5 DIVIDE expression6 | expression6;
 
 expression6 ::= MINUS expression7 | expression7;
 
 expression7 ::= L_PAREN expression R_PAREN | expression8 ; 
 expression8 ::= INTCONST;
+
 /*
 * here should be also accepted functions and variable however it is not working
 * variable | functionname | functionname L_PAREN arguments R_PAREN;
