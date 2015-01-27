@@ -108,11 +108,26 @@ terminal String  TEXTCONST	;
 // Non-terminals that have no value.
 // nonterminal xxx
 
-nonterminal program,scope,statement,variablenames,bound,generalBound;
-nonterminal output,input,type,arguments,parameters,variable,expression;
-nonterminal variablename,arrayname,functionname,parametername,procedurename;
-nonterminal expression1,expression2,expression3,expression4,expression5,expression6,expression7,expression8;
-nonterminal input1,output1,arguments1,parameters1,variablenames1,statement1;
+nonterminal statementSingle, statementMultiple;
+nonterminal variableNamesSingle, variableNamesMultiple;
+nonterminal outputSingle, outputMultiple;
+nonterminal inputSingle, inputMultiple;
+nonterminal argumentsSingle, argumentsMultiple;
+nonterminal parametersSingle, parametersMultiple;
+
+//For Daphne's failed attempt at improving the expression code.
+//nonterminal anyExpression, orExpression, andExpression, negationExpression;
+//nonterminal compareExpression, transitionExpression, multDivideExpression, unaryExpression;
+
+
+
+nonterminal simpleExpression, timesExpression, minusExpression, basicExpression, intExpression, andExpression, negationExpression;
+//The original nonterminals used in the expression code.
+//nonterminal expression, expression1, expression2, expression3, expression4, expression5, expression6, expression7, expression8;
+nonterminal expression;
+nonterminal program, scope, bound, generalBound;
+nonterminal type, variable;
+nonterminal variablename, arrayname, functionname, parametername, procedurename;
 
 /**********************************************************
 
@@ -145,89 +160,169 @@ start with program;
 //basically this is a simple transcript of the source language definition
 // all working except functions and variables inside expressions
 
+//The entire program must be in a scope.
 program ::= scope;
 
-statement1 ::= variable GREATER EQUAL expression;
-statement1 ::= IF expression THEN statement END;
-statement1 ::= IF expression THEN statement ELSE statement END;
-statement1 ::= WHILE expression DO statement END;
-statement1 ::= LOOP statement END;
-statement1 ::= EXIT;
-statement1 ::= EXIT WHEN expression;
-statement1 ::= RETURN L_PAREN expression R_PAREN;
-statement1 ::= RETURN;
-statement1 ::= PUT output;
-statement1 ::= GET input;
-statement1 ::= procedurename;
-statement1 ::= procedurename L_PAREN arguments R_PAREN;
-statement1 ::= scope;
-statement1 ::= type variablenames;
-statement1 ::= type FUNCTION functionname scope;
-statement1 ::= type FUNCTION functionname L_PAREN parameters R_PAREN scope;
-statement1 ::= PROCEDURE procedurename scope;
-statement1 ::= PROCEDURE procedurename L_PAREN parameters R_PAREN scope;
-statement ::= statement statement1 | statement1;    
+//A single statement.
+statementSingle ::=         variable LESS EQUAL expression
+                          | IF expression THEN statementMultiple END
+                          | IF expression THEN statementMultiple ELSE statementMultiple END
+                          | WHILE expression DO statementMultiple END
+                          | LOOP statementMultiple END
+                          | EXIT
+                          | EXIT WHEN expression
+                          | RETURN L_PAREN expression R_PAREN
+                          | RETURN
+                          | PUT outputMultiple
+                          | GET inputMultiple
+                          | procedurename
+                          | procedurename L_PAREN argumentsMultiple R_PAREN
+                          | scope
+                          | type variableNamesMultiple
+                          | type FUNCTION functionname scope
+                          | type FUNCTION functionname L_PAREN parametersMultiple R_PAREN scope
+                          | PROCEDURE procedurename scope
+                          | PROCEDURE procedurename L_PAREN parametersMultiple R_PAREN scope;
 
-variablenames1 ::= variablename;
-variablenames1 ::= variablename L_SQUARE bound R_SQUARE;
-variablenames1 ::= variablename L_SQUARE bound COMMA bound R_SQUARE;
-variablenames ::= variablename COMMA variablenames1 | variablenames1;
+//A combination of 1 or more statements.
+statementMultiple ::=       statementMultiple statementSingle
+                          | statementSingle;    
 
-bound ::= INTCONST | generalBound DOT DOT generalBound;
+variableNamesSingle ::=     variablename
+                          | variablename L_SQUARE bound R_SQUARE
+                          | variablename L_SQUARE bound COMMA bound R_SQUARE;
 
-generalBound ::= INTCONST | MINUS INTCONST;
+                          
+variableNamesMultiple ::=   variableNamesSingle COMMA variableNamesMultiple
+                          | variableNamesSingle;
 
-scope ::= BEGIN statement END | BEGIN END;
+bound ::=                   INTCONST
+                          | generalBound DOT DOT generalBound;
 
-output ::= output COMMA output1 | output1;
-output1 ::= expression | TEXTCONST | SKIP;
+generalBound ::=            INTCONST
+                          | MINUS INTCONST;
+
+scope ::=                   BEGIN statementMultiple END
+                          | BEGIN END;
+
+outputSingle ::=            expression
+                          | TEXTCONST
+                          | SKIP;
+outputMultiple ::=          outputSingle COMMA outputMultiple
+                          | outputSingle;
+
+inputSingle ::=             variable;
+inputMultiple ::=           inputSingle COMMA inputMultiple
+                          | inputSingle;
+
+type ::=                    INTEGER
+                          | BOOLEAN;
+
+argumentsSingle ::=         expression;
+argumentsMultiple ::=       argumentsSingle COMMA argumentsMultiple
+                          | argumentsSingle;
+
+parametersSingle ::=        type parametername;
+parametersMultiple ::=      parametersSingle COMMA parametersMultiple
+                          | parametersSingle;
+
+variable ::=                variablename
+                          | arrayname L_SQUARE expression R_SQUARE
+                          | arrayname L_SQUARE expression COMMA expression R_SQUARE;
+
+//Daphne's attempt at cleaning up the expression code. Right not this doesn't work.
+/*Jordan working on it, do not delete
+/*
+expression ::=              unaryExpression
+                            | anyExpression
+                            | expression OR andExpression;*/
+/*
+expression ::=            expression OR andExpression
+                          | parametername
+                          | L_CURLEY statementMultiple YIELDS anyExpression R_CURLEY 
+                          | andExpression;
+
+andExpression ::=          andExpression AND negationExpression
+                          | negationExpression;
+
+negationExpression ::=      NOT transitionExpression
+                          | transitionExpression;
+
+transitionExpression ::=       compareExpression LESS compareExpression
+                          | compareExpression LESS EQUAL compareExpression
+                          | compareExpression GREATER compareExpression
+                          | compareExpression GREATER EQUAL compareExpression
+                          | compareExpression EQUAL compareExpression
+                          | compareExpression NOT EQUAL compareExpression
+                          | compareExpression;
+
+compareExpression ::=   compareExpression PLUS multDivideExpression
+                          | compareExpression MINUS multDivideExpression
+                          | TRUE
+                          | FALSE
+                          | multDivideExpression;
+
+multDivideExpression ::=    multDivideExpression TIMES unaryExpression 
+                          | multDivideExpression DIVIDE unaryExpression
+                          | unaryExpression;
+
+unaryExpression ::=        MINUS expression
+                          | L_PAREN expression R_PAREN ;
+
+finalExpression ::= INTCONST;*/
+
+expression ::= expression OR andExpression 
+                     | L_CURLEY statementMultiple YIELDS expression R_CURLEY 
+                     | parametername
+                     | andExpression;
+
+andExpression ::= andExpression AND negationExpression 
+                      | negationExpression;
+
+negationExpression ::= NOT compareExpression 
+                      | compareExpression;
 
 
-input ::= input COMMA input1 | input1;
-input1 ::= variable;
 
-type ::= INTEGER | BOOLEAN;
-
-arguments ::= arguments COMMA arguments1 | arguments1;
-arguments1 ::= expression;
-
-parameters ::= parameters COMMA parameters1 | parameters1;
-parameters1 ::= type parametername;
-
-variable ::= variablename;
-variable ::= arrayname L_SQUARE expression R_SQUARE;
-variable ::= arrayname L_SQUARE expression COMMA expression R_SQUARE;
+compareExpression ::= simpleExpression EQUAL simpleExpression 
+              | simpleExpression NOT EQUAL simpleExpression 
+              | simpleExpression LESS simpleExpression 
+              | simpleExpression LESS EQUAL simpleExpression
+              | simpleExpression GREATER simpleExpression 
+              | simpleExpression GREATER EQUAL simpleExpression 
+              | simpleExpression;
 
 
-
-// the struture following makes the precedence works despite it not explicity say
-//  parentesis has higher precedence, since it can change over all others
-
-expression ::= expression OR expression1 | expression1 | L_CURLEY statement YIELDS expression R_CURLEY | parametername;
-
-expression1 ::= expression1 AND expression2 | expression2;
-
-expression2 ::= NOT expression3 | expression3;
-
-expression3 ::= expression4 EQUAL expression4 | expression4 NOT EQUAL expression4 | expression4 LESS expression4 | expression4 LESS EQUAL expression4
-	| expression4 GREATER expression4 | expression4 GREATER EQUAL expression4 | expression4;
-
-expression4 ::= expression4 PLUS expression5 | expression4 MINUS expression5 | expression5 | TRUE | FALSE ; 
+simpleExpression ::= simpleExpression PLUS timesExpression 
+              | simpleExpression MINUS timesExpression 
+              | timesExpression 
+              | TRUE 
+              | FALSE ; 
 /*
 * here should be also accepted functions and variable however it is not working
 * variable | functionname | functionname L_PAREN arguments R_PAREN;
 */
 
-expression5 ::= expression5 TIMES expression6 | expression5 DIVIDE expression6 | expression6;
 
-expression6 ::= MINUS expression7 | expression7;
 
-expression7 ::= L_PAREN expression R_PAREN | expression8 ; 
-expression8 ::= INTCONST;
+
+timesExpression ::= timesExpression TIMES minusExpression 
+              | timesExpression DIVIDE minusExpression 
+              | minusExpression;
+
+minusExpression ::= MINUS basicExpression 
+              | basicExpression;
+
+basicExpression ::= L_PAREN expression R_PAREN 
+              | intExpression ; 
+
+intExpression ::= INTCONST;
+
 /*
 * here should be also accepted functions and variable however it is not working
 * variable | functionname | functionname L_PAREN arguments R_PAREN;
 */
+
 
 variablename ::= IDENT;
 arrayname ::= IDENT;
@@ -243,4 +338,5 @@ procedurename ::= IDENT;
     GOES HERE
 
 ****************************************************************************/
+
 

@@ -1,0 +1,9 @@
+begin
+
+integer function my_func (integer param1, boolean param2) begin
+	put "Hello Canada"
+end
+
+
+
+end

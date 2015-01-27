@@ -1,0 +1,8 @@
+begin
+
+integer variable1
+
+variable1 <= 5
+
+
+end

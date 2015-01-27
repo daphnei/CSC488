@@ -116,12 +116,15 @@ nonterminal argumentsSingle, argumentsMultiple;
 nonterminal parametersSingle, parametersMultiple;
 
 //For Daphne's failed attempt at improving the expression code.
-nonterminal anyExpression, orExpression, andExpression, negationExpression;
-nonterminal compareExpression, addSubtractExpression, multDivideExpression, unaryExpression;
+//nonterminal anyExpression, orExpression, andExpression, negationExpression;
+nonterminal compareExpression, transitionExpression, multDivideExpression, unaryExpression;
 
+
+
+nonterminal simpleExpression, timesExpression, minusExpression, basicExpression, intExpression, andExpression, negationExpression;
 //The original nonterminals used in the expression code.
-nonterminal expression, expression1, expression2, expression3, expression4, expression5, expression6, expression7, expression8;
-
+//nonterminal expression, expression1, expression2, expression3, expression4, expression5, expression6, expression7, expression8;
+nonterminal expression;
 nonterminal program, scope, bound, generalBound;
 nonterminal type, variable;
 nonterminal variablename, arrayname, functionname, parametername, procedurename;
@@ -161,7 +164,7 @@ start with program;
 program ::= scope;
 
 //A single statement.
-statementSingle ::=         variable GREATER EQUAL expression
+statementSingle ::=         variable LESS EQUAL expression
                           | IF expression THEN statementMultiple END
                           | IF expression THEN statementMultiple ELSE statementMultiple END
                           | WHILE expression DO statementMultiple END
@@ -228,71 +231,89 @@ variable ::=                variablename
                           | arrayname L_SQUARE expression COMMA expression R_SQUARE;
 
 //Daphne's attempt at cleaning up the expression code. Right not this doesn't work.
-/*Jordan working on it
+/*Jordan working on it, do not delete
+/*
 expression ::=              unaryExpression
                             | anyExpression
-                            | expression OR andExpression;
-
-anyExpression ::=            expression OR andExpression
+                            | expression OR andExpression;*/
+/*
+expression ::=            expression OR andExpression
+                          | parametername
+                          | L_CURLEY statementMultiple YIELDS anyExpression R_CURLEY 
                           | andExpression;
 
 andExpression ::=          andExpression AND negationExpression
                           | negationExpression;
 
-negationExpression ::=      NOT compareExpression
+negationExpression ::=      NOT transitionExpression
+                          | transitionExpression;
+
+transitionExpression ::=       compareExpression LESS compareExpression
+                          | compareExpression LESS EQUAL compareExpression
+                          | compareExpression GREATER compareExpression
+                          | compareExpression GREATER EQUAL compareExpression
+                          | compareExpression EQUAL compareExpression
+                          | compareExpression NOT EQUAL compareExpression
                           | compareExpression;
 
-compareExpression ::=       compareExpression LESS addSubtractExpression
-                          | compareExpression LESS EQUAL addSubtractExpression
-                          | compareExpression GREATER addSubtractExpression
-                          | compareExpression GREATER EQUAL addSubtractExpression
-                          | compareExpression EQUAL addSubtractExpression
-                          | addSubtractExpression;
-
-addSubtractExpression ::=   addSubtractExpression PLUS multDivideExpression
-                          | addSubtractExpression MINUS multDivideExpression
+compareExpression ::=   compareExpression PLUS multDivideExpression
+                          | compareExpression MINUS multDivideExpression
+                          | TRUE
+                          | FALSE
                           | multDivideExpression;
 
 multDivideExpression ::=    multDivideExpression TIMES unaryExpression 
                           | multDivideExpression DIVIDE unaryExpression
                           | unaryExpression;
 
-unaryExpression ::=         variablename
-                          | INTCONST
-                          | TRUE
-                          | FALSE
-                          | MINUS expression
-                          | functionname
-                          | functionname L_PAREN argumentsMultiple R_PAREN
-                          | L_PAREN expression R_PAREN 
-                          | L_CURLEY statementMultiple YIELDS anyExpression R_CURLEY ;
+unaryExpression ::=        MINUS expression
+                          | L_PAREN expression R_PAREN ;
 
-*/
+finalExpression ::= INTCONST;*/
 
-expression ::= expression OR expression1 | expression1 | L_CURLEY statementMultiple YIELDS expression R_CURLEY | parametername;
+expression ::= expression OR andExpression 
+                     | L_CURLEY statementMultiple YIELDS expression R_CURLEY 
+                     | parametername
+                     | andExpression;
 
-expression1 ::= expression1 AND expression2 | expression2;
+andExpression ::= andExpression AND negationExpression 
+                      | negationExpression;
 
-expression2 ::= NOT expression3 | expression3;
+negationExpression ::= NOT compareExpression 
+                      | compareExpression;
 
-expression3 ::= expression4 EQUAL expression4 | expression4 NOT EQUAL expression4 | expression4 LESS expression4 | expression4 LESS EQUAL expression4
-    | expression4 GREATER expression4 | expression4 GREATER EQUAL expression4 | expression4;
 
-expression4 ::= expression4 PLUS expression5 | expression4 MINUS expression5 | expression5 | TRUE | FALSE ; 
+
+compareExpression ::= simpleExpression EQUAL simpleExpression 
+              | simpleExpression NOT EQUAL simpleExpression 
+              | simpleExpression LESS simpleExpression 
+              | simpleExpression LESS EQUAL simpleExpression
+              | simpleExpression GREATER simpleExpression 
+              | simpleExpression GREATER EQUAL simpleExpression 
+              | simpleExpression;
+
+
+simpleExpression ::= simpleExpression PLUS timesExpression 
+              | simpleExpression MINUS timesExpression 
+              | timesExpression 
+              | TRUE 
+              | FALSE ; 
 /*
 * here should be also accepted functions and variable however it is not working
 * variable | functionname | functionname L_PAREN arguments R_PAREN;
 */
 
+timesExpression ::= timesExpression TIMES minusExpression 
+              | timesExpression DIVIDE minusExpression 
+              | minusExpression;
 
+minusExpression ::= MINUS basicExpression 
+              | basicExpression;
 
+basicExpression ::= L_PAREN expression R_PAREN 
+              | intExpression ; 
 
-expression5 ::= expression5 TIMES expression6 | expression5 DIVIDE expression6 | expression6;
-
-expression6 ::= MINUS expression7 | expression7;
-
-expression7 ::= L_PAREN expression R_PAREN | expression8 ; 
-expression8 ::= INTCONST;
+intExpression ::= INTCONST;
 
 /*
 * here should be also accepted functions and variable however it is not working
@@ -314,4 +335,5 @@ procedurename ::= IDENT;
     GOES HERE
 
 ****************************************************************************/
+
 

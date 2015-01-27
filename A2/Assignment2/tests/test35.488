@@ -1,0 +1,9 @@
+begin
+
+integer function my_func begin
+	put "Hello Canada"
+end
+
+
+
+end

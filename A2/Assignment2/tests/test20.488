@@ -1,0 +1,24 @@
+begin
+integer a1
+boolean a2
+integer a3[5]
+boolean a4[1..5]
+integer a5, a6
+
+exit
+return
+
+if -(-15) | 20 then 
+      return 
+   end
+
+if -(false) | true then 
+      return 
+   end
+
+if (variablenamehere) | (a1) then
+	return
+   end
+
+
+end
