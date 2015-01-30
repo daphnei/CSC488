@@ -126,7 +126,7 @@ nonterminal simpleExpression, timesExpression, minusExpression, basicExpression,
 //nonterminal expression, expression1, expression2, expression3, expression4, expression5, expression6, expression7, expression8;
 nonterminal expression;
 nonterminal program, scope, bound, generalBound;
-nonterminal type, variable;
+nonterminal type, variable, name;
 nonterminal variablename, arrayname, functionname, parametername, procedurename;
 
 /**********************************************************
@@ -175,22 +175,22 @@ statementSingle ::=         variable LESS EQUAL expression
                           | RETURN
                           | PUT outputMultiple
                           | GET inputMultiple
-                          | procedurename
-                          | procedurename L_PAREN argumentsMultiple R_PAREN
+                          | name
+                          | name L_PAREN argumentsMultiple R_PAREN
                           | scope
                           | type variableNamesMultiple
-                          | type FUNCTION functionname scope
-                          | type FUNCTION functionname L_PAREN parametersMultiple R_PAREN scope
-                          | PROCEDURE procedurename scope
-                          | PROCEDURE procedurename L_PAREN parametersMultiple R_PAREN scope;
+                          | type FUNCTION name scope
+                          | type FUNCTION name L_PAREN parametersMultiple R_PAREN scope
+                          | PROCEDURE name scope
+                          | PROCEDURE name L_PAREN parametersMultiple R_PAREN scope;
 
 //A combination of 1 or more statements.
 statementMultiple ::=       statementMultiple statementSingle
                           | statementSingle;    
 
-variableNamesSingle ::=     variablename
-                          | variablename L_SQUARE bound R_SQUARE
-                          | variablename L_SQUARE bound COMMA bound R_SQUARE;
+variableNamesSingle ::=     name
+                          | name L_SQUARE bound R_SQUARE
+                          | name L_SQUARE bound COMMA bound R_SQUARE;
 
                           
 variableNamesMultiple ::=   variableNamesSingle COMMA variableNamesMultiple
@@ -222,17 +222,18 @@ argumentsSingle ::=         expression;
 argumentsMultiple ::=       argumentsSingle COMMA argumentsMultiple
                           | argumentsSingle;
 
-parametersSingle ::=        type parametername;
+parametersSingle ::=        type name;
 parametersMultiple ::=      parametersSingle COMMA parametersMultiple
                           | parametersSingle;
 
-variable ::=                variablename
-                          | arrayname L_SQUARE expression R_SQUARE
-                          | arrayname L_SQUARE expression COMMA expression R_SQUARE;
+variable ::=                name
+                          | name L_SQUARE expression R_SQUARE
+                          | name L_SQUARE expression COMMA expression R_SQUARE;
 
 //Daphne's attempt at cleaning up the expression code. Right not this doesn't work.
 /*Jordan working on it, do not delete
 /*
+Comment::= 
 expression ::=              unaryExpression
                             | anyExpression
                             | expression OR andExpression;*/
@@ -274,7 +275,7 @@ finalExpression ::= INTCONST;*/
 expression ::= expression OR andExpression 
                      | L_CURLEY statementMultiple YIELDS expression R_CURLEY 
                      | parametername
-                     | andExpression;
+                     | andExpression ;
 
 andExpression ::= andExpression AND negationExpression 
                       | negationExpression;
@@ -299,7 +300,7 @@ simpleExpression ::= simpleExpression PLUS timesExpression
               | TRUE 
               | FALSE ; 
 /*
-* here should be also accepted functions and variable however it is not working
+*  NOT NOT NOT NOThere should be also accepted functions and variable however it is not working
 * variable | functionname | functionname L_PAREN arguments R_PAREN;
 */
 
@@ -308,24 +309,25 @@ timesExpression ::= timesExpression TIMES minusExpression
               | minusExpression;
 
 minusExpression ::= MINUS basicExpression 
-              | basicExpression;
+              | basicExpression ;
 
 basicExpression ::= L_PAREN expression R_PAREN 
               | intExpression ; 
 
-intExpression ::= INTCONST;
-
+intExpression ::= INTCONST | name | name L_PAREN argumentsMultiple R_PAREN;
 /*
 * here should be also accepted functions and variable however it is not working
 * variable | functionname | functionname L_PAREN arguments R_PAREN;
 */
 
 
-variablename ::= IDENT;
-arrayname ::= IDENT;
-functionname ::= IDENT;
-parametername ::= IDENT;
-procedurename ::= IDENT;
+name ::= IDENT;
+
+//variablename ::= IDENT;
+//arrayname ::= IDENT;
+//functionname ::= IDENT;
+//parametername ::= IDENT;
+//procedurename ::= IDENT;
 
 
 /*****************************************************************************
