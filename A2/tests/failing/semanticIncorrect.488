@@ -1,0 +1,12 @@
+begin
+
+procedure my_procedure begin
+   return
+end
+
+
+while my_procedure do
+	x <= x + 1
+end
+
+end

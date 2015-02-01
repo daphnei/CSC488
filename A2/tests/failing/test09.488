@@ -1,0 +1,8 @@
+begin
+   integer variable
+   
+   %Missing "<" in assingment
+   variable = 5
+
+end
+

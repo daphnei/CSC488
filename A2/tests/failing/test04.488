@@ -1,0 +1,6 @@
+begin
+
+%Type should be followed by a identifier
+integer 
+
+end
