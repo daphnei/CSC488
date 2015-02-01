@@ -1,0 +1,9 @@
+begin
+
+%Identifiers cant begin with digit
+procedure 1var begin
+   put "hello"
+end
+
+
+end

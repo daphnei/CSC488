@@ -1,0 +1,11 @@
+begin
+
+integer my_func begin
+   put "Hello world"
+   %Missing "()" in return.
+   return 10
+   
+   end
+
+
+end

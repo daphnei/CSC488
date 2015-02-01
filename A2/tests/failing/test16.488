@@ -1,0 +1,12 @@
+begin
+
+%Missing type of parameter
+integer my_func(var1) begin
+
+   put "hello"
+
+   end
+
+
+
+end

@@ -1,0 +1,6 @@
+begin
+
+%Waiting statement inside scope, instead of expression
+!false
+
+end

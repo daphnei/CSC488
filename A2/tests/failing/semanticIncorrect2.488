@@ -1,0 +1,10 @@
+begin
+
+integer my_func begin
+   put "Hello world"
+   return 
+   end 
+
+
+
+end

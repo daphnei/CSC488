@@ -1,0 +1,6 @@
+begin
+
+%Exit is a statement and should be followed by another statement, but instead we got "true", which is a expression
+exit true
+
+end

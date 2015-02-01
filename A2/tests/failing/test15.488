@@ -1,0 +1,11 @@
+begin
+
+%Missing type of function
+function my_func begin
+   put "Hello"
+
+   end
+
+
+
+end
