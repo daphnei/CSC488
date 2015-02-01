@@ -1,6 +1,6 @@
 begin
 
-if -(false) & true then 
+if !(false) & true then 
       return 
    end
 
