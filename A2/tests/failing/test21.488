@@ -1,0 +1,9 @@
+begin
+
+%Statemet where a expression is expected is invalid
+while integer var <= 1 do
+   put "Not working."
+end
+
+
+end

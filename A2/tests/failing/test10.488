@@ -1,5 +1,5 @@
 begin
-
+%Missing type before variable
  array[0..10]
 
 end
