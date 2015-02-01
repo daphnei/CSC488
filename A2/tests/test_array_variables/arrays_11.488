@@ -1,0 +1,6 @@
+begin
+	boolean dogs[10..102]
+
+	dogs[11] = true
+	dogs[700] = false;
+end

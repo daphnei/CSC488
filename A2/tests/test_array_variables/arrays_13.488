@@ -1,0 +1,6 @@
+begin
+	boolean dogs[-20 .. 20]
+
+	dogs[-10] = true
+	dogs[20 - 30] = false;
+end

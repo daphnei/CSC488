@@ -1,0 +1,3 @@
+begin
+	integer cats[-1 .. 30, 20..100]
+end

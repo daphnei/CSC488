@@ -1,0 +1,6 @@
+begin
+	boolean dogs[20, 20]
+
+	dogs[5, 5] = true
+	dogs[15, 19] = false;
+end

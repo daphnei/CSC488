@@ -1,0 +1,4 @@
+begin
+	boolean simple_b[2]
+	integer simple_i[10]
+end
