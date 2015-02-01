@@ -1,15 +1,22 @@
 #! /bin/sh
 
-#  Location of directory containing  dist/compiler488.jar
-WHERE=`dirname $0`
+if [ "$#" != 3]; then
+	echo "RUNALLTESTS.sh compiler.jar passing_dir failing_dir"
+	exit 1
+fi
+
+COMPILER=$1
+PASSING_DIR=$2
+FAILING_DIR=$3
+
+for file in $(find $PASSING_DIR -name '*.488')
+do
+	echo $file
+	java -jar $COMPILER  file
+done
 
 
-#  TODO: loop through subdirectories (enforcing structure)
-#  and run each tests. Differentiate b/w 
-#  Output to standard output 
-java -jar $WHERE/dist/compiler488.jar  $1
-
-
+#java -jar $COMPILER  file
 
 exit 0
 

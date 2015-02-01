@@ -3,10 +3,15 @@ begin
 	integer j
 	j <= 1
 	i <= 1
+	
 	loop
 		i <= i + 1
 		if i > 10 then
 			exit
 		end
+		while j < 7
+			j <= j + 1
+		end
 	end
+
 end
