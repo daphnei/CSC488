@@ -1,0 +1,9 @@
+begin
+
+% Function with no parameters
+integer function func_1a
+begin
+	return (42)
+end
+
+end

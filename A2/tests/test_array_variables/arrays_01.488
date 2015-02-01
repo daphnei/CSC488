@@ -1,0 +1,5 @@
+begin
+
+boolean dogs[10..102]
+
+end

@@ -1,0 +1,9 @@
+begin
+
+% Function with no parameters
+boolean function func_1b
+begin
+	return (true)
+end
+
+end

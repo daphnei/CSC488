@@ -1,0 +1,3 @@
+begin
+	integer stuff[20]
+end

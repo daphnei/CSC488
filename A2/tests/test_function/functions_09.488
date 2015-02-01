@@ -1,0 +1,12 @@
+begin
+% Function that adds/multiplies param1 & param2, depending on param3
+integer function func_3 (boolean param1, integer param2, integer param3)
+begin
+	if (param1) then
+		return (param2 + param3)
+	else
+		return (param2 * param3)
+	end
+end
+
+end

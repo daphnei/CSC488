@@ -1,0 +1,14 @@
+begin
+
+% Function that returns 1 if param1 true, 0 otherwise
+integer function func_2a (boolean param1)
+begin
+	if (param1) then
+		return (1)
+	else
+		return (0)
+	end
+end
+
+
+end

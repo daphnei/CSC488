@@ -1,0 +1,3 @@
+begin
+	integer cats[10, 19]
+end
