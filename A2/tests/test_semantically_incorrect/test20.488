@@ -1,0 +1,10 @@
+begin
+integer a1
+boolean a2
+
+if (a2) | (a1) then
+	return
+   end
+
+
+end

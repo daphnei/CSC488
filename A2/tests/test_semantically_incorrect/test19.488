@@ -8,7 +8,12 @@ integer a5, a6
 exit
 return
 
-if 15 then return end
+if -(-15) | 20 then 
+      return 
+   end
 
+if -(false) then 
+      return 
+   end
 
 end

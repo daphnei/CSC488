@@ -1,9 +1,0 @@
-begin
-
-put true
-put "Hello world"
-put skip
-
-get somevariable
-
-end
