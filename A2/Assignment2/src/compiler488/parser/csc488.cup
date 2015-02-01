@@ -141,26 +141,19 @@ terminal String  TEXTCONST;
 // Non-terminals that have no value.
 // nonterminal xxx
 
+nonterminal program;
 nonterminal statementSingle, statementMultiple;
 nonterminal variableNamesSingle, variableNamesMultiple;
+nonterminal bound, generalBound, scope, type;
 nonterminal outputSingle, outputMultiple;
 nonterminal inputSingle, inputMultiple;
 nonterminal argumentsSingle, argumentsMultiple;
 nonterminal parametersSingle, parametersMultiple;
-
-//For Daphne's failed attempt at improving the expression code.
-//nonterminal anyExpression, orExpression, andExpression, negationExpression;
-nonterminal compareExpression, transitionExpression, multDivideExpression, unaryExpression;
-
-
-
-nonterminal simpleExpression, timesExpression, minusExpression, basicExpression, intExpression, andExpression, negationExpression;
-//The original nonterminals used in the expression code.
-//nonterminal expression, expression1, expression2, expression3, expression4, expression5, expression6, expression7, expression8;
+nonterminal variable;
 nonterminal expression;
-nonterminal program, scope, bound, generalBound;
-nonterminal type, variable, name;
-nonterminal variablename, arrayname, functionname, parametername, procedurename;
+nonterminal andExpression, negationExpression, compareExpression, simpleExpression;
+nonterminal timesExpression, minusExpression, basicExpression, intExpression;
+nonterminal name;
 
 /*****************************************************************************
 
@@ -226,7 +219,7 @@ variableNamesSingle ::=     name
                           | name L_SQUARE bound COMMA bound R_SQUARE;
 
                           
-variableNamesMultiple ::=   variableNamesSingle COMMA variableNamesMultiple
+variableNamesMultiple ::=   variableNamesMultiple COMMA variableNamesSingle
                           | variableNamesSingle;
 
 bound ::=                   INTCONST
@@ -238,76 +231,39 @@ generalBound ::=            INTCONST
 scope ::=                   BEGIN statementMultiple END
                           | BEGIN END;
 
-outputSingle ::=            expression
-                          | TEXTCONST
-                          | SKIP;
-outputMultiple ::=          outputSingle COMMA outputMultiple
-                          | outputSingle;
-
-inputSingle ::=             variable;
-inputMultiple ::=           inputSingle COMMA inputMultiple
-                          | inputSingle;
-
 type ::=                    INTEGER
                           | BOOLEAN;
 
+outputSingle ::=            expression
+                          | TEXTCONST
+                          | SKIP;
+
+outputMultiple ::=          outputMultiple COMMA outputSingle
+                          | outputSingle;
+
+inputSingle ::=             variable;
+
+inputMultiple ::=           inputMultiple COMMA inputSingle
+                          | inputSingle;
+
 argumentsSingle ::=         expression;
-argumentsMultiple ::=       argumentsSingle COMMA argumentsMultiple
+
+argumentsMultiple ::=       argumentsMultiple COMMA argumentsSingle
                           | argumentsSingle;
 
 parametersSingle ::=        type name;
-parametersMultiple ::=      parametersSingle COMMA parametersMultiple
+
+parametersMultiple ::=      parametersMultiple COMMA parametersSingle
                           | parametersSingle;
 
 variable ::=                name
                           | name L_SQUARE expression R_SQUARE
                           | name L_SQUARE expression COMMA expression R_SQUARE;
 
-//Daphne's attempt at cleaning up the expression code. Right not this doesn't work.
-/*Jordan working on it, do not delete
-/*
-Comment::= 
-expression ::=              unaryExpression
-                            | anyExpression
-                            | expression OR andExpression;*/
-/*
-expression ::=            expression OR andExpression
-                          | parametername
-                          | L_CURLEY statementMultiple YIELDS anyExpression R_CURLEY 
-                          | andExpression;
+expression ::= L_CURLEY statementMultiple YIELDS expression R_CURLEY
+              | orExpression;
 
-andExpression ::=          andExpression AND negationExpression
-                          | negationExpression;
-
-negationExpression ::=      NOT transitionExpression
-                          | transitionExpression;
-
-transitionExpression ::=       compareExpression LESS compareExpression
-                          | compareExpression LESS EQUAL compareExpression
-                          | compareExpression GREATER compareExpression
-                          | compareExpression GREATER EQUAL compareExpression
-                          | compareExpression EQUAL compareExpression
-                          | compareExpression NOT EQUAL compareExpression
-                          | compareExpression;
-
-compareExpression ::=   compareExpression PLUS multDivideExpression
-                          | compareExpression MINUS multDivideExpression
-                          | TRUE
-                          | FALSE
-                          | multDivideExpression;
-
-multDivideExpression ::=    multDivideExpression TIMES unaryExpression 
-                          | multDivideExpression DIVIDE unaryExpression
-                          | unaryExpression;
-
-unaryExpression ::=        MINUS expression
-                          | L_PAREN expression R_PAREN ;
-
-finalExpression ::= INTCONST;*/
-
-expression ::= expression OR andExpression 
-                     | L_CURLEY statementMultiple YIELDS expression R_CURLEY 
-                     | parametername
+orExpression ::= orExpression OR andExpression 
                      | andExpression ;
 
 andExpression ::= andExpression AND negationExpression 
@@ -315,8 +271,6 @@ andExpression ::= andExpression AND negationExpression
 
 negationExpression ::= NOT compareExpression 
                       | compareExpression;
-
-
 
 compareExpression ::= simpleExpression EQUAL simpleExpression 
               | simpleExpression NOT EQUAL simpleExpression 
@@ -326,16 +280,11 @@ compareExpression ::= simpleExpression EQUAL simpleExpression
               | simpleExpression GREATER EQUAL simpleExpression 
               | simpleExpression;
 
-
 simpleExpression ::= simpleExpression PLUS timesExpression 
               | simpleExpression MINUS timesExpression 
               | timesExpression 
               | TRUE 
               | FALSE ; 
-/*
-*  NOT NOT NOT NOThere should be also accepted functions and variable however it is not working
-* variable | functionname | functionname L_PAREN arguments R_PAREN;
-*/
 
 timesExpression ::= timesExpression TIMES minusExpression 
               | timesExpression DIVIDE minusExpression 
@@ -348,19 +297,8 @@ basicExpression ::= L_PAREN expression R_PAREN
               | intExpression ; 
 
 intExpression ::= INTCONST | name | name L_PAREN argumentsMultiple R_PAREN;
-/*
-* here should be also accepted functions and variable however it is not working
-* variable | functionname | functionname L_PAREN arguments R_PAREN;
-*/
-
 
 name ::= IDENT;
-
-//variablename ::= IDENT;
-//arrayname ::= IDENT;
-//functionname ::= IDENT;
-//parametername ::= IDENT;
-//procedurename ::= IDENT;
 
 
 
