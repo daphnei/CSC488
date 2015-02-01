@@ -1,0 +1,5 @@
+DESIGN DOCUMENTATION
+
+- "name" nonterminal instead of IDENT for future usage, sending information to semantic analysis? <expand on later>
+
+- singleStatement vs. multiStatement - resolve shift/reduce conflicts
