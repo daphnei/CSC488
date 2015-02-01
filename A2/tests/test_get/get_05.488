@@ -1,0 +1,8 @@
+begin
+
+boolean in1, in2
+integer in3
+
+get in1, in2, in3
+
+end

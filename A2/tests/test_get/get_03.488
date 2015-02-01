@@ -1,0 +1,7 @@
+begin
+
+boolean in1
+
+get in1
+
+end

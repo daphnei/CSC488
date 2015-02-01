@@ -1,0 +1,7 @@
+begin
+
+boolean in1, in2
+
+get in1, in2
+
+end
