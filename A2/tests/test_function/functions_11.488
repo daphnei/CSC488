@@ -1,0 +1,16 @@
+begin
+
+% Function with no parameters
+boolean function func_1b(boolean a)
+begin
+	return (a)
+end
+
+boolean a
+a = false
+
+a <= func_1b(a)
+
+end
+
+
