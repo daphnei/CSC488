@@ -13,8 +13,13 @@ FAILING_DIR=$3
 
 for file in $(find $PASSING_DIR -name '*.488')
 do
-	echo $file
-	java -jar $COMPILER $file
+	java -jar $COMPILER $file | grep "Error"
+	echo $?	
+
+	#if $? 
+	#then
+	#	echo "The file with the error  was" $file
+	#fi
 done
 
 exit 0
