@@ -1,5 +1,7 @@
 #! /bin/sh
 
+echo POOP
+
 if [ "$#" != 3]; then
 	echo "RUNALLTESTS.sh compiler.jar passing_dir failing_dir"
 	exit 1
@@ -12,12 +14,8 @@ FAILING_DIR=$3
 for file in $(find $PASSING_DIR -name '*.488')
 do
 	echo $file
-	java -jar $COMPILER  file
+	java -jar $COMPILER $file
 done
 
-
-#java -jar $COMPILER  file
-
 exit 0
-
 
