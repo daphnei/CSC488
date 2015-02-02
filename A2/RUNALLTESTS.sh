@@ -1,7 +1,7 @@
 #! /bin/bash
 
 USAGE() {
-	echo "Usage: sh RUNALLTESTS.sh [-f] compiler.jar test_dir"
+	echo "Usage: bash RUNALLTESTS.sh [-f] compiler.jar test_dir"
 	echo "Use -f if the scripts in test_dir are designed to fail compilation."
 
 	exit 1
