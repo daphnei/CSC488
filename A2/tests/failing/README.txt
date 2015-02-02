@@ -39,3 +39,7 @@ Test 19 - %Missing right ")"
 Test 20 - %Cant have a "put" inside a "while"
 
 Test 21 - %Statemet where a expression is expected is invalid
+
+Test 22 - %Operator precedence is undefined
+
+Test 23 - %Missing statements in if and else blocks

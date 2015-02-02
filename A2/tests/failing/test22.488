@@ -1,0 +1,4 @@
+begin
+	%Operator precedence is undefined
+	a = b = c 
+end

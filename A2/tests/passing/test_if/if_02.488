@@ -1,6 +1,10 @@
 begin
 	if ( true )
+		begin
+		end
 	then
 	else
+		begin
+		end
 	end
 end
