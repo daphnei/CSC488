@@ -151,7 +151,7 @@ nonterminal argumentsSingle, argumentsMultiple;
 nonterminal parametersSingle, parametersMultiple;
 nonterminal variable;
 nonterminal expression;
-nonterminal andExpression, negationExpression, compareExpression, simpleExpression;
+nonterminal andExpression, orExpression, negationExpression, compareExpression, simpleExpression;
 nonterminal timesExpression, minusExpression, basicExpression, intExpression;
 nonterminal name;
 
