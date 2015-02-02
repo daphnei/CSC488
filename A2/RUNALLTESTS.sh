@@ -1,45 +1,63 @@
 #! /bin/bash
 
-#Check for the correct usage
-
-#while getopts ":pf" opt
-#do
-
-#done
-
-if [ "$#" != 3 ]
-then
-	echo "Usage: sh RUNALLTESTS.sh [-pf] compiler.jar test_dir"
-	echo "Use -p if tests in test_dir are intended to compile without error."
-	echo "Use -f if tests in test_dir should fail when compiled."
-	echo "-p is used as default"
+USAGE() {
+	echo "Usage: sh RUNALLTESTS.sh [-f] compiler.jar test_dir"
+	echo "Use -f if the scripts in test_dir are designed to fail compilation."
 
 	exit 1
+}
+
+#Check for the correct usage
+if [ "$#" == 2 ]
+then
+	COMPILER=$1
+	TEST_DIR=$2
+	CHECK_FOR_FAIL=0
+elif [ "$#" == 3 ]
+then
+	if [ "$1" != "-f" ]
+	then
+		USAGE
+	fi
+
+	COMPILER=$2
+    TEST_DIR=$3
+	CHECK_FOR_FAIL=1
+else
+	USAGE
 fi
 
-COMPILER=$1
-PASSING_DIR=$2
-FAILING_DIR=$3
+echo "RUNNING TESTS IN FOLDER: $TEST_DIR"
+echo "USING COMPILER: $COMPILER"
+echo
 
 #Iterate over all of the .488 files in the passing directory.
-for file in $(find $PASSING_DIR -name '*.488')
+for file in $(find $TEST_DIR -name '*.488')
 do
 	#Try to compile the file.
 	result="$(java -jar $COMPILER $file 2>&1 )"
-	# 2>&1
-	#echo "$result"
 
-	#If the compilation output contains the word error, print the error information.
+	#Check if the compilation output contains the word error.
 	grep -qv "Error" <<< $result
 	if [ ! $? -eq 0 ]
 	then
-		echo "Error in file: $file"
-		echo "$result"
-		echo
+		if [ $CHECK_FOR_FAIL == 0 ]
+		then
+			#This is the case where there was an error but there should not have been.
+			echo "Error in file: $file"
+			echo "$result"
+			echo
+		fi
+	else
+		if [ $CHECK_FOR_FAIL == 1 ]
+		then
+			#This is the case where there was not an error but there should have been.
+			echo "Error in file: $file"
+			echo "Compilation should have failed."
+			echo
+		fi
 	fi	
 done
-
-#Iterate over all of the .488 files in the failing directory,
 
 exit 0
 
