@@ -264,8 +264,8 @@ parenExpression ::=         L_PAREN expression R_PAREN
                           | intExpression ; 
 
 intExpression ::=           INTCONST
-                          | name
-                          | name L_PAREN argumentsMultiple R_PAREN;
+                          | name L_PAREN argumentsMultiple R_PAREN
+                          | variable;
 
 name ::= IDENT;
 
