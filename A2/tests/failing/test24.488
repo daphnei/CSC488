@@ -1,0 +1,7 @@
+begin
+    boolean a, b ,c
+    % Linking boolean operators
+	if a = b <= c then
+        a <= false
+    end
+end
