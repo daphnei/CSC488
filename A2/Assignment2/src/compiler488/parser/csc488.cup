@@ -209,16 +209,12 @@ statementSingle ::=         variable LESS EQUAL expression
                           | type FUNCTION name L_PAREN parametersMultiple R_PAREN scope
                           | PROCEDURE name scope
                           | PROCEDURE name L_PAREN parametersMultiple R_PAREN scope;
-
-//A combination of 1 or more statements.
 statementMultiple ::=       statementMultiple statementSingle
                           | statementSingle;    
 
 variableNamesSingle ::=     name
                           | name L_SQUARE bound R_SQUARE
                           | name L_SQUARE bound COMMA bound R_SQUARE;
-
-                          
 variableNamesMultiple ::=   variableNamesMultiple COMMA variableNamesSingle
                           | variableNamesSingle;
 
@@ -237,22 +233,18 @@ type ::=                    INTEGER
 outputSingle ::=            expression
                           | TEXTCONST
                           | SKIP;
-
 outputMultiple ::=          outputMultiple COMMA outputSingle
                           | outputSingle;
 
 inputSingle ::=             variable;
-
 inputMultiple ::=           inputMultiple COMMA inputSingle
                           | inputSingle;
 
 argumentsSingle ::=         expression;
-
 argumentsMultiple ::=       argumentsMultiple COMMA argumentsSingle
                           | argumentsSingle;
 
 parametersSingle ::=        type name;
-
 parametersMultiple ::=      parametersMultiple COMMA parametersSingle
                           | parametersSingle;
 
@@ -260,43 +252,45 @@ variable ::=                name
                           | name L_SQUARE expression R_SQUARE
                           | name L_SQUARE expression COMMA expression R_SQUARE;
 
-expression ::= L_CURLEY statementMultiple YIELDS expression R_CURLEY
-              | orExpression;
+expression ::=				L_CURLEY statementMultiple YIELDS expression R_CURLEY
+						  | orExpression;
 
-orExpression ::= orExpression OR andExpression 
-                     | andExpression ;
+orExpression ::= 			orExpression OR andExpression 
+						  | andExpression ;
 
-andExpression ::= andExpression AND negationExpression 
-                      | negationExpression;
+andExpression ::= 			andExpression AND negationExpression 
+						  | negationExpression;
 
-negationExpression ::= NOT compareExpression 
-                      | compareExpression;
+negationExpression ::= 		NOT compareExpression 
+						  | compareExpression;
 
-compareExpression ::= simpleExpression EQUAL simpleExpression 
-              | simpleExpression NOT EQUAL simpleExpression 
-              | simpleExpression LESS simpleExpression 
-              | simpleExpression LESS EQUAL simpleExpression
-              | simpleExpression GREATER simpleExpression 
-              | simpleExpression GREATER EQUAL simpleExpression 
-              | simpleExpression;
+compareExpression ::= 		simpleExpression EQUAL simpleExpression 
+						  | simpleExpression NOT EQUAL simpleExpression 
+						  | simpleExpression LESS simpleExpression 
+						  | simpleExpression LESS EQUAL simpleExpression
+						  | simpleExpression GREATER simpleExpression 
+						  | simpleExpression GREATER EQUAL simpleExpression 
+						  | simpleExpression;
 
-simpleExpression ::= simpleExpression PLUS timesExpression 
-              | simpleExpression MINUS timesExpression 
-              | timesExpression 
-              | TRUE 
-              | FALSE ; 
+simpleExpression ::= 		simpleExpression PLUS timesExpression 
+						  | simpleExpression MINUS timesExpression 
+						  | timesExpression 
+						  | TRUE 
+						  | FALSE ; 
 
-timesExpression ::= timesExpression TIMES minusExpression 
-              | timesExpression DIVIDE minusExpression 
-              | minusExpression;
+timesExpression ::= 		timesExpression TIMES minusExpression 
+						  | timesExpression DIVIDE minusExpression 
+						  | minusExpression;
 
-minusExpression ::= MINUS basicExpression 
-              | basicExpression ;
+minusExpression ::= 		MINUS basicExpression 
+						  | basicExpression ;
 
-basicExpression ::= L_PAREN expression R_PAREN 
-              | intExpression ; 
+basicExpression ::= 		L_PAREN expression R_PAREN 
+						  | intExpression ; 
 
-intExpression ::= INTCONST | name | name L_PAREN argumentsMultiple R_PAREN;
+intExpression ::= 			INTCONST
+						  | name
+						  | name L_PAREN argumentsMultiple R_PAREN;
 
 name ::= IDENT;
 

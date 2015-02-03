@@ -2,11 +2,22 @@ CSC488 A2 README
 
 Here is a break-down of each team members' contribution
 
-Adam: 
+Diego trancscribed the language specification to the .cup file, and got
+most of the main functionality working. He figured out how to remove 
+ambiguity from the grammer.
 
-Daphne:
-Diego: Worked through grammar 
-Jordan:
+Adam code reviewed the .cup file, adding comments and improving
+organization. He also contributed to the writing of a script to
+automatically run all of the tests. He also helped go through and fix
+the tests that failed.
 
-Lisa
+Jordan fixed bugs in the expression handling code in the .cup file. He 
+also wrote many of the test .488 files, taking charging of writing most
+of the tests intended to fail.
 
+Lisa handled the logistics of assigning tasks. She fixed bugs in the
+.cup file. She wrote most of the design document and the readme.
+
+Daphne formatted the .cup file and fixed bugs in it. She contributed to
+the writing of a script to automatically run all of the tests. She
+organized the test .488 files into folders, and wrote a bunch of them.
