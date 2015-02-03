@@ -130,66 +130,41 @@ terminal String  IDENT;
 terminal Integer INTCONST;
 terminal String  TEXTCONST;
 
-/*****************************************************************************
 
-  YOUR CAREFULLY CRAFTED GRAMMAR FOR THE CSC488S SOURCE LANGUAGE
 
-    GOES HERE
+// **********************************
+// *** NON-TERMINALS DEFINITIONS  ***
+// **********************************
 
-****************************************************************************/
-
-// Non-terminals that have no value.
-// nonterminal xxx
+// See the CSC488S Source Language Reference Grammar for a more detailed
+// description of each non-terminal.
+//
+// Note that many of the non-terminals have "Single" and "Multiple"
+// versions. These are needed to prevent ambiguity when the non-terminals
+// are repeated.
+//
+// Although expressions are a singular concept, they are divided into
+// multiple non-terminals to enforce precedence.
 
 nonterminal program;
 nonterminal statementSingle, statementMultiple;
 nonterminal variableNamesSingle, variableNamesMultiple;
-nonterminal bound, generalBound, scope, type;
+nonterminal bound, generalBound;
+nonterminal scope;
 nonterminal outputSingle, outputMultiple;
 nonterminal inputSingle, inputMultiple;
+nonterminal type;
 nonterminal argumentsSingle, argumentsMultiple;
 nonterminal parametersSingle, parametersMultiple;
 nonterminal variable;
 nonterminal expression;
-nonterminal andExpression, orExpression, negationExpression, compareExpression, simpleExpression;
-nonterminal timesExpression, minusExpression, basicExpression, intExpression;
+nonterminal andExpression, orExpression, notExpression, compareExpression, addSubExpression;
+nonterminal multDivExpression, negativeExpression, parenExpression, intExpression;
 nonterminal name;
 
-/*****************************************************************************
 
-The nonterminals from your grammar go here
-
-***********************************************************/
-
-// Non-terminals that have a value.
-// nonterminal type  nameList ;
-
-// PLEASE NOTE: your grammar can not use the 'precedence'
-// feature of java-cup. The lines below should remain
-// commented.
-//
-//precedence left PLUS, MINUS;
-//precedence left TIMES, DIVIDE;    // Higher precedence.
-
-// The grammar section.
-
-// This specifies the initial symbol of the grammar.
-start with program;
-
-/* Notice that sometimes the action must be inside the production rule,
- * not after it.  This is a subtle yet significant difference from YACC.
- * This is because the CUP parser is looking ahead one token.  It ALWAYS
- * reads one more token before it will act on the production.
- */
-
-// most of the STATE and STATEn were create to avoid ambiguity
-//basically this is a simple transcript of the source language definition
-// all working except functions and variables inside expressions
-
-//The entire program must be in a scope.
 program ::= scope;
 
-//A single statement.
 statementSingle ::=         variable LESS EQUAL expression
                           | IF expression THEN statementMultiple END
                           | IF expression THEN statementMultiple ELSE statementMultiple END
@@ -252,45 +227,45 @@ variable ::=                name
                           | name L_SQUARE expression R_SQUARE
                           | name L_SQUARE expression COMMA expression R_SQUARE;
 
-expression ::=				L_CURLEY statementMultiple YIELDS expression R_CURLEY
-						  | orExpression;
+expression ::=              L_CURLEY statementMultiple YIELDS expression R_CURLEY
+                          | orExpression;
 
-orExpression ::= 			orExpression OR andExpression 
-						  | andExpression ;
+orExpression ::=            orExpression OR andExpression 
+                          | andExpression ;
 
-andExpression ::= 			andExpression AND negationExpression 
-						  | negationExpression;
+andExpression ::=           andExpression AND notExpression 
+                          | notExpression;
 
-negationExpression ::= 		NOT compareExpression 
-						  | compareExpression;
+notExpression ::=           NOT notExpression 
+                          | compareExpression;
 
-compareExpression ::= 		simpleExpression EQUAL simpleExpression 
-						  | simpleExpression NOT EQUAL simpleExpression 
-						  | simpleExpression LESS simpleExpression 
-						  | simpleExpression LESS EQUAL simpleExpression
-						  | simpleExpression GREATER simpleExpression 
-						  | simpleExpression GREATER EQUAL simpleExpression 
-						  | simpleExpression;
+compareExpression ::=       addSubExpression EQUAL addSubExpression 
+                          | addSubExpression NOT EQUAL addSubExpression 
+                          | addSubExpression LESS addSubExpression 
+                          | addSubExpression LESS EQUAL addSubExpression
+                          | addSubExpression GREATER addSubExpression 
+                          | addSubExpression GREATER EQUAL addSubExpression 
+                          | addSubExpression;
 
-simpleExpression ::= 		simpleExpression PLUS timesExpression 
-						  | simpleExpression MINUS timesExpression 
-						  | timesExpression 
-						  | TRUE 
-						  | FALSE ; 
+addSubExpression ::=        addSubExpression PLUS multDivExpression 
+                          | addSubExpression MINUS multDivExpression 
+                          | multDivExpression 
+                          | TRUE 
+                          | FALSE ; 
 
-timesExpression ::= 		timesExpression TIMES minusExpression 
-						  | timesExpression DIVIDE minusExpression 
-						  | minusExpression;
+multDivExpression ::=       multDivExpression TIMES negativeExpression 
+                          | multDivExpression DIVIDE negativeExpression 
+                          | negativeExpression;
 
-minusExpression ::= 		MINUS basicExpression 
-						  | basicExpression ;
+negativeExpression ::=      MINUS negativeExpression 
+                          | parenExpression ;
 
-basicExpression ::= 		L_PAREN expression R_PAREN 
-						  | intExpression ; 
+parenExpression ::=         L_PAREN expression R_PAREN 
+                          | intExpression ; 
 
-intExpression ::= 			INTCONST
-						  | name
-						  | name L_PAREN argumentsMultiple R_PAREN;
+intExpression ::=           INTCONST
+                          | name
+                          | name L_PAREN argumentsMultiple R_PAREN;
 
 name ::= IDENT;
 
