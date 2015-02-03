@@ -1,4 +1,4 @@
 begin
-    % Defining a single negative bound.
+    %Defining a single negative bound
 	boolean a[-120] 
 end

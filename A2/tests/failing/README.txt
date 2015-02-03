@@ -43,3 +43,7 @@ Test 21 - %Statemet where a expression is expected is invalid
 Test 22 - %Operator precedence is undefined
 
 Test 23 - %Missing statements in if and else blocks
+
+Test 24 - %Linking boolean operators
+
+Test 25 - %Defining a single negative bound

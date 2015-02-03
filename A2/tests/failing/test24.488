@@ -1,6 +1,6 @@
 begin
     boolean a, b ,c
-    % Linking boolean operators
+    %Linking boolean operators
 	if a = b <= c then
         a <= false
     end
