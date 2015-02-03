@@ -1,0 +1,4 @@
+#!/bin/bash
+
+bash RUNALLTESTS ./Assignment2/dist/compiler488.jar ./tests/passing/
+bash RUNALLTESTS -f ./Assignment2/dist/compiler488.jar ./tests/failing

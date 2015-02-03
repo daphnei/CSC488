@@ -1,8 +1,8 @@
 begin
 	if ( true )
+        then
 		begin
 		end
-	then
 	else
 		begin
 		end

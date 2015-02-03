@@ -1,5 +1,5 @@
 begin
-	if ( true )
+	if ( true ) then
 		begin
 		end
 	end

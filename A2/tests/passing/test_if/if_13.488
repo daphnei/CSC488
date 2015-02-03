@@ -3,6 +3,7 @@ integer a1
 boolean a2
 
 if (a1 = 2 & a2)
+then
 	put "Got here"
 end
 
