@@ -1,0 +1,5 @@
+begin
+	%Check a mixture of all four binary operations.
+	integer p
+	p <= (0 + 9) * (3 + 2) / 4 / 10
+end

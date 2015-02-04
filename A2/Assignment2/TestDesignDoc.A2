@@ -2,66 +2,70 @@ Test Design Documentation
 
 In our testing approach for our .cup file, we tried to be as comprehensive as possible by using both a large number of very short, 1-2 line programs as well as longer, multi-scoped tests. The longer tests are largely borrowed from our first assignment, which are comprehensive in their usage of the project language. The shorter tests cover much of the same test scope, but were useful in obtaining instantaneous feedback as well as isolating issues that arose during our implementation process for the parser. 
 
-We have written a script "RUNALLTESTS.sh" which will execute any tests in nested subdirectories given two parameters:  compiler .jar file to run and a test directory containing tests. There is also a special flag "-f" which will verify that all the tests being run are supposed to fail (i.e. they will generate errors if they pass).
+We have written a script RUNALLTESTS which will run the compiler on all of thr .488 files found in a specified directory and its subdirectories.
+RUNALLTESTS takes two arguments:
+	The path to the .jar file for the compiler.
+	A directory to search for tests in.
+By default, RUNALLTESTS checks to make sure that all the tests pass. By adding the optinal -f flag, RUNALLTESTS will instead check to make sure that all the tests fail. 
 
-As specified by the assignment guidelines, we have created two subdirectories for tests which demonstrate correct parsing behaviour and illegal programs that should generate syntax errors. We provide a brief description of these tests below:
+As specified by the assignment guidelines, we have created two subdirectories: one for tests which demonstrate correct parsing behaviour and one for illegal programs that should generate syntax errors. We provide a brief description of these tests below:
 
 tests/failing
 
-Test 1 - %Missing begin 
+Test 1 - Missing begin
 
-Test 2 - %Waiting statement inside scope, instead of expression
+Test 2 - Waiting statement inside scope, instead of expression
 
-Test 3 - %Waiting statement inside scope, instead of expression
+Test 3 - Waiting statement inside scope, instead of expression
 
-Test 4 - %Type should be followed by a identifier
+Test 4 - Type should be followed by a identifier
 
-Test 5 - %Exit is a statement and should be followed by another statement, but instead we got "true", which is a expression
+Test 5 - Exit is a statement and should be followed by another statement, but instead we got "true", which is a expression
 
-Test 6 - %Waiting statement inside scope, instead of expression
+Test 6 - Waiting statement inside scope, instead of expression
 
-Test 7 - %Waiting expression inside "while", got statement
+Test 7 - Waiting expression inside "while", got statement
 
-Test 8 - %Statement inside expression is invalid
+Test 8 - Statement inside expression is invalid
 
-Test 9 - %Missing "<" in assingment
+Test 9 - Missing "<" in assingment
 
-Test 10 - %Missing type before variable
+Test 10 - Missing type before variable
 
-Test 11 - %The "when" keyword needs to follow "exit"
+Test 11 - The "when" keyword needs to follow "exit"
 
-Test 12 - %Missing ")" in return.
+Test 12 - Missing ")" in return.
 
-Test 13 - %Missing "()" in return.
+Test 13 - Missing "()" in return.
 
-Test 14 - %New scope with no end
+Test 14 - New scope with no end
 
-Test 15 - %Missing type of function
+Test 15 - Missing type of function
 
-Test 16 - %Missing type of parameter
+Test 16 - Missing type of parameter
 
-Test 17 - %Missing name of parameter
+Test 17 - Missing name of parameter
 
-Test 18 - %Identifiers cant begin with digit
+Test 18 - Identifiers cant begin with digit
 
-Test 19 - %Missing right ")"
+Test 19 - Missing right ")"
 
-Test 20 - %Cant have a "put" inside a "while"
+Test 20 - Can't have a "put" inside a "while"
 
-Test 21 - %Statement where a expression is expected is invalid
+Test 21 - Statement where a expression is expected is invalid
 
-Test 22 - %Operator precedence is undefined
+Test 22 - Operator precedence is undefined
 
-Test 23 - %Missing statements in if and else blocks
+Test 23 - Missing statements in if and else blocks
 
-Test 24 - %Linking boolean operators
+Test 24 - Linking boolean operators
 
-Test 25 - %Defining a single negative bound
+Test 25 - Defining a single negative bound
 
 
 tests/passing
 
-As described earlier, we tried to vary our testing approach by using both long and extremely short, 1-2 line programs, resulting in a very large number of tests (averaging 5-7 tests over 14 subdirectories). We have grouped these test cases in subdirectories according to the category or area under test, and will provide a brief overview of the tests in each subdirectory, rather than overwhelm the reader with descriptions. 
+As described earlier, we tried to vary our testing approach by using both long and extremely short, 1-2 line programs. This resulted in a very large number of tests (averaging 5-7 tests over 14 subdirectories). We have grouped these test cases in subdirectories according to the category or area under test, and will provide a brief overview of the tests in each subdirectory, rather than overwhelm the reader with descriptions. 
 
 test_array_variables - Variations on declaring, assigning and accessing arrays.
 
