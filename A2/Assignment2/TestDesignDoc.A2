@@ -1,0 +1,103 @@
+Test Design Documentation
+
+In our testing approach for our .cup file, we tried to be as comprehensive as possible by using both a large number of very short, 1-2 line programs as well as longer, multi-scoped tests. The longer tests are largely borrowed from our first assignment, which are comprehensive in their usage of the project language. The shorter tests cover much of the same test scope, but were useful in obtaining instantaneous feedback as well as isolating issues that arose during our implementation process for the parser. 
+
+We have written a script "RUNALLTESTS.sh" which will execute any tests in nested subdirectories given two parameters:  compiler .jar file to run and a test directory containing tests. There is also a special flag "-f" which will verify that all the tests being run are supposed to fail (i.e. they will generate errors if they pass).
+
+As specified by the assignment guidelines, we have created two subdirectories for tests which demonstrate correct parsing behaviour and illegal programs that should generate syntax errors. We provide a brief description of these tests below:
+
+tests/failing
+
+Test 1 - %Missing begin 
+
+Test 2 - %Waiting statement inside scope, instead of expression
+
+Test 3 - %Waiting statement inside scope, instead of expression
+
+Test 4 - %Type should be followed by a identifier
+
+Test 5 - %Exit is a statement and should be followed by another statement, but instead we got "true", which is a expression
+
+Test 6 - %Waiting statement inside scope, instead of expression
+
+Test 7 - %Waiting expression inside "while", got statement
+
+Test 8 - %Statement inside expression is invalid
+
+Test 9 - %Missing "<" in assingment
+
+Test 10 - %Missing type before variable
+
+Test 11 - %The "when" keyword needs to follow "exit"
+
+Test 12 - %Missing ")" in return.
+
+Test 13 - %Missing "()" in return.
+
+Test 14 - %New scope with no end
+
+Test 15 - %Missing type of function
+
+Test 16 - %Missing type of parameter
+
+Test 17 - %Missing name of parameter
+
+Test 18 - %Identifiers cant begin with digit
+
+Test 19 - %Missing right ")"
+
+Test 20 - %Cant have a "put" inside a "while"
+
+Test 21 - %Statement where a expression is expected is invalid
+
+Test 22 - %Operator precedence is undefined
+
+Test 23 - %Missing statements in if and else blocks
+
+Test 24 - %Linking boolean operators
+
+Test 25 - %Defining a single negative bound
+
+
+tests/passing
+
+As described earlier, we tried to vary our testing approach by using both long and extremely short, 1-2 line programs, resulting in a very large number of tests (averaging 5-7 tests over 14 subdirectories). We have grouped these test cases in subdirectories according to the category or area under test, and will provide a brief overview of the tests in each subdirectory, rather than overwhelm the reader with descriptions. 
+
+test_array_variables - Variations on declaring, assigning and accessing arrays.
+
+test_exit_return - Testing combined uses of exit, return, conditional exit.
+
+test_expressions - A single comprehensive test for arithmetic and boolean operators.
+
+test_function - Declaring and calling functions with/without parameters.
+
+test_get - Calling the "get" operation on various inputs (including boolean, which is syntactically correct but not semantically).
+
+test_if - Passing different expressions for if to evaluate (including multiple unary operators).
+
+test_loop - All possible manifestations of loops (including infinite).
+
+test_nonarray_variables - Declaring and assigning non-array variables (type integer or boolean being the only options).
+
+test_procedure - Testing parameterless and paramter'd procedures. Includes comprehensive function & procedures test from A1.
+
+test_put - Calling the "put" operation on various outputs (including boolean, which is syntactically correct but not semantically).
+
+test_recursion - Comprehensive test from A1 which implements and executes recursive functions and procedures.
+
+test_scope - A single test which tests a single scope.
+
+test_semantically_incorrect - As the name suggests, a set of test cases where the syntax is parsed correctly but the semantic analysis should fail.
+
+test_yield - One test case for the mysterious "yield" reserved word.
+
+
+
+
+
+
+
+
+
+
+

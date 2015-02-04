@@ -28,6 +28,7 @@ begin %scope
 	%Count from 1 to 10
 	i <= 1
 	while i < 12
+	do
 		i <= i + 1
 	end
 
@@ -41,6 +42,7 @@ begin %scope
 			exit
 		end
 		while j < 7
+		do
 			j <= j + 1
 		end
 	end
@@ -49,6 +51,7 @@ begin %scope
 	j <= 1
 	i <= 1
 	while i < 12
+	do
 		i <= i + 1
 		loop
 			j <= j + 1
@@ -60,6 +63,7 @@ begin %scope
 	% These loops don't exit.
 
 	while true
+	do
 		put "This is the loop that never ends.", skip
 	end
 
