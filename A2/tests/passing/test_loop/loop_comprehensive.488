@@ -1,0 +1,74 @@
+%Author Diego Santos
+
+begin %scope
+	% I will be used for all the loops and j will be used in the last 2
+	integer i                     
+	integer j
+	j <= 1                        
+	i <= 1
+	
+	% LOOP STRUCTURES
+
+	%Count from 1 to 10
+	loop
+		i <= i + 1
+		if i > 10 then
+			% quit loop when i = 11
+			exit
+		end
+	end
+
+	%Count from 1 to 10
+	i <= 1                       
+	loop
+		i <= i + 1
+		exit when i > 10
+	end
+
+	%Count from 1 to 10
+	i <= 1
+	while i < 12
+	do
+		i <= i + 1
+	end
+
+	% NESTED LOOPS
+
+	%Count from 1 to 6, 10 times. 
+	i <= 1
+	loop
+		i <= i + 1
+		if i > 10 then
+			exit
+		end
+		while j < 7
+		do
+			j <= j + 1
+		end
+	end
+
+	%Count from 1 to 6, 11 times. 
+	j <= 1
+	i <= 1
+	while i < 12
+	do
+		i <= i + 1
+		loop
+			j <= j + 1
+			exit when j > 6
+		end
+	end
+
+	% BAD LOOPS
+	% These loops don't exit.
+
+	while true
+	do
+		put "This is the loop that never ends.", skip
+	end
+
+	loop
+		put "This is the other loop that never ends.", skip
+	end
+
+end

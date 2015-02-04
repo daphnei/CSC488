@@ -1,5 +1,8 @@
 DESIGN DOCUMENTATION
 
-- "name" nonterminal instead of IDENT for future usage, sending information to semantic analysis? <expand on later>
+Our approach for designing the .cup file was fairly simple, in that wherever possible, we directly "translated" the reference grammar into its CUP equivalent. In cases where ambiguity was an issue, such as potential shift/reduce conflicts, we employed a strategy of differentiating a nonterminal definition into separate definitions for "single" and "multiple" usage. For example, a statement containing nested statement would be parsed as a "statementMultiple" non-terminal consisting of multiple "statementSingle" non-terminals.
 
-- singleStatement vs. multiStatement - resolve shift/reduce conflicts
+Another area of issue was enforcing operator precedence for expressions. This we resolved by defining a hierarchy of expression "types" to preserve the precedence order. 
+
+Notice that we defined a non-terminal "name" to mask the terminal "IDENT". This was done intentionally in case in future usage, we wanted to bundle some code to execute with parsing, such as sending information to semantic analysis.
+

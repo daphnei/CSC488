@@ -1,6 +1,8 @@
 begin
 	if ( false )
 	then
+		put "here"
 	else
+		put "not here"
 	end
 end

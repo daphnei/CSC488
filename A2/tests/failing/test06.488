@@ -1,6 +1,7 @@
 begin
 
 loop
+%Waiting statement inside scope, instead of expression
    true
 end
 

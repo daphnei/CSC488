@@ -130,73 +130,41 @@ terminal String  IDENT;
 terminal Integer INTCONST;
 terminal String  TEXTCONST;
 
-/*****************************************************************************
 
-  YOUR CAREFULLY CRAFTED GRAMMAR FOR THE CSC488S SOURCE LANGUAGE
 
-    GOES HERE
+// **********************************
+// *** NON-TERMINALS DEFINITIONS  ***
+// **********************************
 
-****************************************************************************/
+// See the CSC488S Source Language Reference Grammar for a more detailed
+// description of each non-terminal.
+//
+// Note that many of the non-terminals have "Single" and "Multiple"
+// versions. These are needed to prevent ambiguity when the non-terminals
+// are repeated.
+//
+// Although expressions are a singular concept, they are divided into
+// multiple non-terminals to enforce precedence.
 
-// Non-terminals that have no value.
-// nonterminal xxx
-
+nonterminal program;
 nonterminal statementSingle, statementMultiple;
 nonterminal variableNamesSingle, variableNamesMultiple;
+nonterminal bound, generalBound;
+nonterminal scope;
 nonterminal outputSingle, outputMultiple;
 nonterminal inputSingle, inputMultiple;
+nonterminal type;
 nonterminal argumentsSingle, argumentsMultiple;
 nonterminal parametersSingle, parametersMultiple;
-
-//For Daphne's failed attempt at improving the expression code.
-//nonterminal anyExpression, orExpression, andExpression, negationExpression;
-nonterminal compareExpression, transitionExpression, multDivideExpression, unaryExpression;
-
-
-
-nonterminal simpleExpression, timesExpression, minusExpression, basicExpression, intExpression, andExpression, negationExpression;
-//The original nonterminals used in the expression code.
-//nonterminal expression, expression1, expression2, expression3, expression4, expression5, expression6, expression7, expression8;
+nonterminal variable;
 nonterminal expression;
-nonterminal program, scope, bound, generalBound;
-nonterminal type, variable, name;
-nonterminal variablename, arrayname, functionname, parametername, procedurename;
+nonterminal andExpression, orExpression, notExpression, compareExpression, addSubExpression;
+nonterminal multDivExpression, negativeExpression, parenExpression, intExpression;
+nonterminal name;
 
-/*****************************************************************************
 
-The nonterminals from your grammar go here
-
-***********************************************************/
-
-// Non-terminals that have a value.
-// nonterminal type  nameList ;
-
-// PLEASE NOTE: your grammar can not use the 'precedence'
-// feature of java-cup. The lines below should remain
-// commented.
-//
-//precedence left PLUS, MINUS;
-//precedence left TIMES, DIVIDE;    // Higher precedence.
-
-// The grammar section.
-
-// This specifies the initial symbol of the grammar.
-start with program;
-
-/* Notice that sometimes the action must be inside the production rule,
- * not after it.  This is a subtle yet significant difference from YACC.
- * This is because the CUP parser is looking ahead one token.  It ALWAYS
- * reads one more token before it will act on the production.
- */
-
-// most of the STATE and STATEn were create to avoid ambiguity
-//basically this is a simple transcript of the source language definition
-// all working except functions and variables inside expressions
-
-//The entire program must be in a scope.
 program ::= scope;
 
-//A single statement.
 statementSingle ::=         variable LESS EQUAL expression
                           | IF expression THEN statementMultiple END
                           | IF expression THEN statementMultiple ELSE statementMultiple END
@@ -216,17 +184,13 @@ statementSingle ::=         variable LESS EQUAL expression
                           | type FUNCTION name L_PAREN parametersMultiple R_PAREN scope
                           | PROCEDURE name scope
                           | PROCEDURE name L_PAREN parametersMultiple R_PAREN scope;
-
-//A combination of 1 or more statements.
 statementMultiple ::=       statementMultiple statementSingle
                           | statementSingle;    
 
 variableNamesSingle ::=     name
                           | name L_SQUARE bound R_SQUARE
                           | name L_SQUARE bound COMMA bound R_SQUARE;
-
-                          
-variableNamesMultiple ::=   variableNamesSingle COMMA variableNamesMultiple
+variableNamesMultiple ::=   variableNamesMultiple COMMA variableNamesSingle
                           | variableNamesSingle;
 
 bound ::=                   INTCONST
@@ -238,129 +202,72 @@ generalBound ::=            INTCONST
 scope ::=                   BEGIN statementMultiple END
                           | BEGIN END;
 
-outputSingle ::=            expression
-                          | TEXTCONST
-                          | SKIP;
-outputMultiple ::=          outputSingle COMMA outputMultiple
-                          | outputSingle;
-
-inputSingle ::=             variable;
-inputMultiple ::=           inputSingle COMMA inputMultiple
-                          | inputSingle;
-
 type ::=                    INTEGER
                           | BOOLEAN;
 
+outputSingle ::=            expression
+                          | TEXTCONST
+                          | SKIP;
+outputMultiple ::=          outputMultiple COMMA outputSingle
+                          | outputSingle;
+
+inputSingle ::=             variable;
+inputMultiple ::=           inputMultiple COMMA inputSingle
+                          | inputSingle;
+
 argumentsSingle ::=         expression;
-argumentsMultiple ::=       argumentsSingle COMMA argumentsMultiple
+argumentsMultiple ::=       argumentsMultiple COMMA argumentsSingle
                           | argumentsSingle;
 
 parametersSingle ::=        type name;
-parametersMultiple ::=      parametersSingle COMMA parametersMultiple
+parametersMultiple ::=      parametersMultiple COMMA parametersSingle
                           | parametersSingle;
 
 variable ::=                name
                           | name L_SQUARE expression R_SQUARE
                           | name L_SQUARE expression COMMA expression R_SQUARE;
 
-//Daphne's attempt at cleaning up the expression code. Right not this doesn't work.
-/*Jordan working on it, do not delete
-/*
-Comment::= 
-expression ::=              unaryExpression
-                            | anyExpression
-                            | expression OR andExpression;*/
-/*
-expression ::=            expression OR andExpression
-                          | parametername
-                          | L_CURLEY statementMultiple YIELDS anyExpression R_CURLEY 
-                          | andExpression;
+expression ::=              L_CURLEY statementMultiple YIELDS expression R_CURLEY
+                          | orExpression;
 
-andExpression ::=          andExpression AND negationExpression
-                          | negationExpression;
+orExpression ::=            orExpression OR andExpression 
+                          | andExpression ;
 
-negationExpression ::=      NOT transitionExpression
-                          | transitionExpression;
+andExpression ::=           andExpression AND notExpression 
+                          | notExpression;
 
-transitionExpression ::=       compareExpression LESS compareExpression
-                          | compareExpression LESS EQUAL compareExpression
-                          | compareExpression GREATER compareExpression
-                          | compareExpression GREATER EQUAL compareExpression
-                          | compareExpression EQUAL compareExpression
-                          | compareExpression NOT EQUAL compareExpression
+notExpression ::=           NOT notExpression 
                           | compareExpression;
 
-compareExpression ::=   compareExpression PLUS multDivideExpression
-                          | compareExpression MINUS multDivideExpression
-                          | TRUE
-                          | FALSE
-                          | multDivideExpression;
+compareExpression ::=       addSubExpression EQUAL addSubExpression 
+                          | addSubExpression NOT EQUAL addSubExpression 
+                          | addSubExpression LESS addSubExpression 
+                          | addSubExpression LESS EQUAL addSubExpression
+                          | addSubExpression GREATER addSubExpression 
+                          | addSubExpression GREATER EQUAL addSubExpression 
+                          | addSubExpression;
 
-multDivideExpression ::=    multDivideExpression TIMES unaryExpression 
-                          | multDivideExpression DIVIDE unaryExpression
-                          | unaryExpression;
+addSubExpression ::=        addSubExpression PLUS multDivExpression 
+                          | addSubExpression MINUS multDivExpression 
+                          | multDivExpression 
+                          | TRUE 
+                          | FALSE ; 
 
-unaryExpression ::=        MINUS expression
-                          | L_PAREN expression R_PAREN ;
+multDivExpression ::=       multDivExpression TIMES negativeExpression 
+                          | multDivExpression DIVIDE negativeExpression 
+                          | negativeExpression;
 
-finalExpression ::= INTCONST;*/
+negativeExpression ::=      MINUS negativeExpression 
+                          | parenExpression ;
 
-expression ::= expression OR andExpression 
-                     | L_CURLEY statementMultiple YIELDS expression R_CURLEY 
-                     | parametername
-                     | andExpression ;
+parenExpression ::=         L_PAREN expression R_PAREN 
+                          | intExpression ; 
 
-andExpression ::= andExpression AND negationExpression 
-                      | negationExpression;
-
-negationExpression ::= NOT compareExpression 
-                      | compareExpression;
-
-
-
-compareExpression ::= simpleExpression EQUAL simpleExpression 
-              | simpleExpression NOT EQUAL simpleExpression 
-              | simpleExpression LESS simpleExpression 
-              | simpleExpression LESS EQUAL simpleExpression
-              | simpleExpression GREATER simpleExpression 
-              | simpleExpression GREATER EQUAL simpleExpression 
-              | simpleExpression;
-
-
-simpleExpression ::= simpleExpression PLUS timesExpression 
-              | simpleExpression MINUS timesExpression 
-              | timesExpression 
-              | TRUE 
-              | FALSE ; 
-/*
-*  NOT NOT NOT NOThere should be also accepted functions and variable however it is not working
-* variable | functionname | functionname L_PAREN arguments R_PAREN;
-*/
-
-timesExpression ::= timesExpression TIMES minusExpression 
-              | timesExpression DIVIDE minusExpression 
-              | minusExpression;
-
-minusExpression ::= MINUS basicExpression 
-              | basicExpression ;
-
-basicExpression ::= L_PAREN expression R_PAREN 
-              | intExpression ; 
-
-intExpression ::= INTCONST | name | name L_PAREN argumentsMultiple R_PAREN;
-/*
-* here should be also accepted functions and variable however it is not working
-* variable | functionname | functionname L_PAREN arguments R_PAREN;
-*/
-
+intExpression ::=           INTCONST
+                          | name L_PAREN argumentsMultiple R_PAREN
+                          | variable;
 
 name ::= IDENT;
-
-//variablename ::= IDENT;
-//arrayname ::= IDENT;
-//functionname ::= IDENT;
-//parametername ::= IDENT;
-//procedurename ::= IDENT;
 
 
 

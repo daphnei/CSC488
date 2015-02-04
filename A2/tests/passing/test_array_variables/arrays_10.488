@@ -2,8 +2,8 @@ begin
 	integer n[10]
 
 	integer i
-	i = 0
+	i <= 0
 
-	n[i + 2] = 4
-	n[i + 4] = 19
+	n[i + 2] <= 4
+	n[i + 4] <= 19
 end

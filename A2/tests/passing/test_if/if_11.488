@@ -1,10 +1,10 @@
 begin
 
-if -(-15) then 
+if - -(-15) then 
       return 
    end
 
-if ! !(false) then 
+if ! ! ( ! false) then 
       return 
    end
 

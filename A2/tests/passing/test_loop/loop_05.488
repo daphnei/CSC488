@@ -10,6 +10,7 @@ begin
 			exit
 		end
 		while j < 7
+		do
 			j <= j + 1
 		end
 	end

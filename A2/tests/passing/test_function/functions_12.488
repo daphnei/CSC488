@@ -1,12 +1,12 @@
 begin
 
 % Function with no parameters
-int function func_1b(int a)
+integer function func_1b(integer a)
 begin
 	return (a * 2)
 end
 
-int a
+integer a
 a <= 3
 
 a <= func_1b(a)
