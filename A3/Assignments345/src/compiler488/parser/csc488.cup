@@ -159,9 +159,15 @@ start with program;
  * reads one more token before it will act on the production.
  */
 
+<<<<<<< HEAD
 program		::=	scope:sco					// the main program
                         {: RESULT = new Program(sco,scoleft,scoright);           :}
 			; 
+=======
+program		::=	scope:inside					// the main program
+                        {: RESULT = Program(inside);           :}
+            ; 
+>>>>>>> 729d8d7e24df984bc107629f5767d1ae49908067
 
 scope		::=	BEGIN declarationsAndStatements:in END  	// non empty scope
                         {: RESULT = new Scope(in,inleft,inright);           :} 
@@ -254,9 +260,15 @@ bound		::=	INTCONST:g					// positive array bound TO-DO
 		;
 		
 generalBound	::=	INTCONST:val		// positive array bound
+<<<<<<< HEAD
                         {: RESULT = val;           :}
 		|	MINUS INTCONST:val		// negative array bound
                         {: RESULT = -val;           :}
+=======
+                        {: RESULT = val; :}
+		|	MINUS INTCONST:val		// negative array bound
+                        {: RESULT = -val; :}
+>>>>>>> 729d8d7e24df984bc107629f5767d1ae49908067
 		;
 
 type		::=	INTEGER:in			// integer type
@@ -300,10 +312,16 @@ parameters	::=	parameter:par			// list of function/procedure formal parameters
                         {: RESULT = many.add(new ScalarDeclPart(more,midleft,midright));           :} 
 		;
 
+<<<<<<< HEAD
 parameter	::=	type:ty IDENT:id			// declare one parameter
                         {: ASTList<DeclarationPart> element = new ASTList<DeclarationPart>();
                             RESULT = element.add(new ScalarDecl(id,ty,varleft,varright));           :}
 			;
+=======
+parameter	::=	type:ty IDENT:var 			// declare one parameter
+                        {: ASTList<DeclarationPart> element = new ASTList<DeclarationPart>();
+                            RESULT = element.add(new ScalarDecl(var,ty,varleft,varright));           :} ;
+>>>>>>> 729d8d7e24df984bc107629f5767d1ae49908067
 
 expression	::=	conjunction:con			// disjunctions, associate left-to-right
                         {: RESULT = con;                    :}
@@ -370,8 +388,13 @@ primary		::=	constant:con				// integer or boolean constant
                         {: RESULT = new AnonFuncExpn(body,exp,midleft,midright);           :} 
 		;
 
+<<<<<<< HEAD
 constant	::=	INTCONST:in	// integer constant
                         {: RESULT = IntConstExpn(in);           :} 
+=======
+constant	::=	INTCONST:integer	// integer constant
+                        {: RESULT = IntConstExpn(integer);           :} 
+>>>>>>> 729d8d7e24df984bc107629f5767d1ae49908067
 		|	TRUE:t		// constant true
                         {: RESULT = BoolConstExpn(t);           :} 
 		|	FALSE:f		// constant false
