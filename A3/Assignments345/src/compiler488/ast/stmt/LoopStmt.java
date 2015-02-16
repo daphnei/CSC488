@@ -7,8 +7,8 @@ import compiler488.ast.PrettyPrinter;
  * Represents a loop in which the exit condition is evaluated before each pass.
  */
 public class LoopStmt extends LoopingStmt {
-    public LoopStmt(ASTList<Stmt> body) {
-        super(body);
+    public LoopStmt(ASTList<Stmt> body, int left, int right) {
+        super(body, left, right);
     }
 
     /**

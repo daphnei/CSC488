@@ -10,6 +10,9 @@ import compiler488.ast.expn.Expn;
 public class ProcedureCallStmt extends Stmt {
     /** The name of the procedure being called. */
     private String name;
+    
+    private int left;
+    private int right;
 
     /** The arguments passed to the procedure (if any.)
      *
@@ -18,15 +21,17 @@ public class ProcedureCallStmt extends Stmt {
      */
     private ASTList<Expn> arguments;
 
-    public ProcedureCallStmt(String name, ASTList<Expn> arguments) {
+    public ProcedureCallStmt(String name, ASTList<Expn> arguments,int left, int right) {
         super();
 
         this.name = name;
         this.arguments = arguments;
+        this.left = left;
+        this.right = right;
     }
 
-    public ProcedureCallStmt(String name) {
-        this(name, new ASTList<Expn>());
+    public ProcedureCallStmt(String name, int left, int right) {
+        this(name, new ASTList<Expn>(), left, right);
     }
 
     public String getName() {
@@ -35,6 +40,14 @@ public class ProcedureCallStmt extends Stmt {
 
     public ASTList<Expn> getArguments() {
         return arguments;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     @Override

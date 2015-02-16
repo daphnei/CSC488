@@ -1,3 +1,4 @@
+/* $Id: csc488.flex,v 1.1 2015/01/15 16:02:00 dw Exp dw $ */
 
 /* This is one of the original comments, included for attribution:
  *

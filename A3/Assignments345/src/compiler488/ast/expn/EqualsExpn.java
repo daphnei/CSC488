@@ -9,8 +9,8 @@ public class EqualsExpn extends BinaryExpn {
     public final static String OP_EQUAL 	= "=";
     public final static String OP_NOT_EQUAL	= "!=";
 
-    public EqualsExpn(String opSymbol, Expn left, Expn right) {
-        super(opSymbol, left, right);
+    public EqualsExpn(String opSymbol, Expn first, Expn second, int left, int right) {
+        super(opSymbol, first, second,left, right);
 
         assert ((opSymbol == OP_EQUAL) ||
                 (opSymbol == OP_NOT_EQUAL));

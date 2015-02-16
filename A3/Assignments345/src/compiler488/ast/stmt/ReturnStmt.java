@@ -9,26 +9,38 @@ import compiler488.ast.expn.Expn;
 public class ReturnStmt extends Stmt {
     /* The value to be returned by the function (if any.) */
     private Expn value = null;
-
+    
+    private int left;
+    private int right;
     /**
      * Construct a function <code>return <em>value</em></code> statement with a value expression.
      *   @param  value  AST for the return expression
      */
-    public ReturnStmt(Expn value) {
+    public ReturnStmt(Expn value, int left, int right) {
         super();
 
         this.value = value;
+        this.left = left;
+        this.right = right;
     }
 
     /**
      * Construct a procedure <code>return</code> statement (with no return value)
      */
-    public ReturnStmt() {
-        this(null);
+    public ReturnStmt(int left, int right) {
+        this(null, left, right);
     }
 
     public Expn getValue() {
         return value;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     public void prettyPrint(PrettyPrinter p) {

@@ -8,8 +8,8 @@ import compiler488.ast.expn.Expn;
  * Represents a loop in which the exit condition is evaluated before each pass.
  */
 public class WhileDoStmt extends LoopingStmt {
-    public WhileDoStmt(Expn expn, ASTList<Stmt> body) {
-        super(expn, body);
+    public WhileDoStmt(Expn expn, ASTList<Stmt> body, int left, int right) {
+        super(expn, body, left, right);
     }
 
     @Override

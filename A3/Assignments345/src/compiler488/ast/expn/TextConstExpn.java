@@ -8,15 +8,28 @@ import compiler488.ast.Printable;
 public class TextConstExpn extends ConstExpn implements Printable {
     /** The value of this literal. */
     private String value;
+    
+    private int left;
+    private int right;
 
-    public TextConstExpn(String value) {
+    public TextConstExpn(String value, int left, int right) {
         super();
 
         this.value = value;
+        this.left = left;
+        this.right = right;
     }
 
     public String getValue() {
         return value;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     /**

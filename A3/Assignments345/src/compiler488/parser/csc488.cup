@@ -110,14 +110,33 @@ terminal String  TEXTCONST	;
 // Non-terminals that have no value.
 // nonterminal xxx
 
-nonterminal	program,statement,	declaration,	scope	;
-nonterminal	variablenames,		output			;
-nonterminal	type,  	arguments,	parameters,	variable	;
-nonterminal 	expression,	variablename 			;
-
-nonterminal	declarationsAndStatements , inputs, outputs, bound , generalBound ;
-nonterminal	procedureCall, parameter, conjunction, negation, compareExpn ;
-nonterminal	arithExpn, term, factor, primary, constant ;
+nonterminal Program program;
+nonterminal Stmt statement;
+nonterminal Declaration declaration;
+nonterminal Scope scope;
+nonterminal ASTList<DeclarationPart> variablenames;
+nonterminal ASTList<Printable> output;
+nonterminal Type type;
+nonterminal ASTList<Expn> arguments;
+nonterminal ASTList<ScalarDecl> parameters;
+nonterminal Expn variable;
+nonterminal Expn expression;
+nonterminal ASTList<DeclarationPart> variablename;
+nonterminal ASTList<Expn> declarationsAndStatements;
+nonterminal ASTList<Expn> inputs;
+nonterminal ASTList<Printable> outputs;
+nonterminal int[] bound;
+nonterminal int generalBound;
+nonterminal ProdedureCallStmt procedureCall;
+nonterminal ASTList<DeclarationPart> parameter;
+nonterminal Expn conjunction;
+nonterminal Expn negation;
+nonterminal Expn compareExpn;
+nonterminal Expn arithExpn;
+nonterminal Expn term;
+nonterminal Expn factor;
+nonterminal Expn primary;
+nonterminal Expn constant;
 
 // Non-terminals that have a value.
 // nonterminal type  nameList ;
@@ -140,30 +159,37 @@ start with program;
  * reads one more token before it will act on the production.
  */
 
-program		::=	scope:inside	;				// the main program
-                        {: RESULT = Program(inside);           :} 
+program		::=	scope:sco					// the main program
+                        {: RESULT = new Program(sco,scoleft,scoright);           :}
+			; 
 
-scope		::=	BEGIN declarationsAndStatements:inside END  	// non empty scope
-                        {: RESULT = Scope(inside);           :} 
+scope		::=	BEGIN declarationsAndStatements:in END  	// non empty scope
+                        {: RESULT = new Scope(in,inleft,inright);           :} 
 		|	BEGIN END				// empty scope
-                        {: RESULT = Scope();           :}
+                        {: RESULT = new Scope(inleft,inright);           :}
 		;
 
 //  sequence of arbitrarily intermixed declarations and statements
-declarationsAndStatements	::=	statement 
-				|	declaration
-				|	declarationsAndStatements statement
-				|	declarationsAndStatements declaration
+declarationsAndStatements	::=	statement:stm
+                        {: ASTList<Stmt> element = new ASTList<Stmt>();
+                            RESULT = element.add(stm);           :}
+				|	declaration:dec
+                        {: ASTList<Stmt> element = new ASTList<Stmt>();
+                            RESULT = element.add(dec);           :}
+				|	declarationsAndStatements:many statement:more
+                        {: RESULT = many.add(more);           :}
+				|	declarationsAndStatements:many declaration:more
+                        {: RESULT = many.add(more);           :}
 				;
 
 statement	::=	variable:left LESS:mid EQUAL expression:right				// assignment statement
                         {: RESULT = new AssignStmt(left,right,midleft,midright);           :} 
-		|	IF:mid expression:if THEN declarationsAndStatements:then END 	// if statements
-                        {: RESULT = new IfStmt(if,then,midleft,midright);           :} 
-		|	IF:mid expression:if THEN declarationsAndStatements:then ELSE declarationsAndStatements:else END
-                        {: RESULT = new IfStmt(if,then,else,midleft,midright);           :} 
-		|	WHILE:mid expression:exp DO declarationsAndStatements:do END	// while statement
-                        {: RESULT = new WhileDoStmt(exp,do,midleft,midright);           :} 
+		|	IF:mid expression:exp THEN declarationsAndStatements:dec END 	// if statements
+                        {: RESULT = new IfStmt(exp,dec,midleft,midright);           :} 
+		|	IF:mid expression:exp THEN declarationsAndStatements:dec1 ELSE declarationsAndStatements:dec2 END
+                        {: RESULT = new IfStmt(exp,dec1,dec2,midleft,midright);           :} 
+		|	WHILE:mid expression:exp DO declarationsAndStatements:dec END	// while statement
+                        {: RESULT = new WhileDoStmt(exp,dec,midleft,midright);           :} 
 		|	LOOP:mid declarationsAndStatements:loop END			// loop statement
                         {: RESULT = new LoopStmt(loop,midleft,midright);           :} 
 		|	EXIT:mid							// exit statements
@@ -172,8 +198,8 @@ statement	::=	variable:left LESS:mid EQUAL expression:right				// assignment sta
                         {: RESULT = new ExitStmt(expmidleft,midright);           :} 
 		|	RETURN:mid 							// return statements
                         {: RESULT = new ReturnStmt(midleft,midright);           :} 
-		|	RETURN L_PAREN expression:exp R_PAREN
-                        {: RESULT = new ReturnStmt(exp);           :} 
+		|	RETURN:mid L_PAREN expression:exp R_PAREN
+                        {: RESULT = new ReturnStmt(exp,midleft,midright);           :} 
 		|	PUT:mid outputs:out						// input/output statments
                         {: RESULT = new PutStmt(out,midleft,midright);           :} 
 		|	GET:mid inputs:in
@@ -184,8 +210,10 @@ statement	::=	variable:left LESS:mid EQUAL expression:right				// assignment sta
                         {: RESULT = in;    :}
 		;
 
-procedureCall	::=	IDENT 					// call procedure with no parameters
-		|	IDENT L_PAREN arguments R_PAREN  	// call procedure with parameters
+procedureCall	::=	IDENT:id 					// call procedure with no parameters
+                        {: RESULT = new ProdedureCallStmt(id,idleft,idright);        :}
+		|	IDENT:id L_PAREN:mid arguments:arg R_PAREN  	// call procedure with parameters
+                        {: RESULT = new ProdedureCallStmt(id,arg,midleft,midright);        :}
 		;
 
 declaration	::=	type:ty variablenames:var 			// declare scalar/array variables
@@ -200,7 +228,8 @@ declaration	::=	type:ty variablenames:var 			// declare scalar/array variables
                         {: RESULT = new RoutineDecl(id,para,sc,midleft,midright);           :} 
 		;
 
-variablenames	::=	variablename  				// list of variables being declared
+variablenames	::=	variablename:var  				// list of variables being declared
+                        {: RESULT = var;        :}
 		|	variablenames:many COMMA:mid variablename:more 
                         {: RESULT = many.add(more);           :} 
 		;
@@ -216,65 +245,86 @@ variablename	::=	IDENT:var 						// scalar variable
                             RESULT = element.add(new ArrayDeclPart(var,b1[0],b1[1],b2[0],b2[1],varleft,varright));           :} 
 		;
 
-bound		::=	INTCONST:g					// positive array bound
-                        {: RESULT = {g,0}           :}
-		|	generalBound:g1 DOT DOT generalBound:g2		// positive or negative array bounds
-                        {: RESULT = {g1,g2}           :}
+bound		::=	INTCONST:g					// positive array bound TO-DO
+                        {: int[] in = {g,0};
+                            RESULT = in;           :}
+		|	generalBound:g1 DOT DOT generalBound:g2		// positive or negative array bounds TO-DO
+                        {: int[] in = {g1,g2};
+                            RESULT = in;           :}
 		;
 		
 generalBound	::=	INTCONST:val		// positive array bound
-                        {: RESULT = val           :}
+                        {: RESULT = val;           :}
 		|	MINUS INTCONST:val		// negative array bound
-                        {: RESULT = -val           :}
+                        {: RESULT = -val;           :}
 		;
 
-type		::=	INTEGER			// integer type
-		|	BOOLEAN			// boolean type
+type		::=	INTEGER:in			// integer type
+                        {: RESULT = new IntegerType(inleft,inright);      :}
+		|	BOOLEAN	:bool		// boolean type
+                        {: RESULT = new BooleanType(boolleft,boolright);     :}
 		;
 
-outputs		::=	output			// list of output expressions
-		|	outputs COMMA output
+outputs		::=	output:var			// list of output expressions
+                        {: ASTList<Printable> element = new ASTList<Printable>();
+                            RESULT = element.add(var);           :}
+		|	outputs:many COMMA:mid output:more
+                        {: RESULT = many.add(more);           :}
 		;
 
-output		::=	expression		// integer expression
+output		::=	expression:exp		// integer expression
+                        {: RESULT = exp;                              :}
 		|	TEXTCONST:txt		// text constant
-                        {: RESULT = many.add(ScalarDeclPart(more,midleft,midright));           :}
-		|	SKIP			// skip pseudo constant
+                        {: RESULT = new TextConstExpn(txt,txtleft,txtright);      :}
+		|	SKIP:mid			// skip pseudo constant
+                        {: RESULT = new SkipConstExpn(midleft,midright);                        :}
 		;
 
-inputs		::=	variable		// list of variables being read into
-		|	inputs COMMA variable
+inputs		::=	variable:var		// list of variables being read into
+                        {: ASTList<Expn> element = new ASTList<Expn>();
+                            RESULT = element.add(var);           :}
+		|	inputs:many COMMA:mid variable:more
+                        {: RESULT = many.add(more);           :}
 		;
 
-arguments	::=	expression			// list of function/procedure arguments
-		|	arguments COMMA:mid expression
+arguments	::=	expression:exp			// list of function/procedure arguments
+                        {: ASTList<Expn> element = new ASTList<Expn>();
+                            RESULT = exp           :}
+		|	arguments:many COMMA:mid expression:more
+                        {: RESULT = many.add(new ScalarDeclPart(more,midleft,midright));           :} 
 		;
 
-parameters	::=	parameter			// list of function/procedure formal parameters
+parameters	::=	parameter:par			// list of function/procedure formal parameters
+                        {: RESULT = par;      :}
 		|	parameters:many COMMA:mid parameter:more
                         {: RESULT = many.add(new ScalarDeclPart(more,midleft,midright));           :} 
 		;
 
-parameter	::=	type:ty IDENT:var ;			// declare one parameter
+parameter	::=	type:ty IDENT:id			// declare one parameter
                         {: ASTList<DeclarationPart> element = new ASTList<DeclarationPart>();
-                            RESULT = element.add(new ScalarDecl(var,ty,varleft,varright));           :}
+                            RESULT = element.add(new ScalarDecl(id,ty,varleft,varright));           :}
+			;
 
-expression	::=	conjunction			// disjunctions, associate left-to-right
+expression	::=	conjunction:con			// disjunctions, associate left-to-right
+                        {: RESULT = con;                    :}
 		|	expression:exp1 OR:mid conjunction:exp2
                         {: RESULT = new BoolExpn("|",exp1,exp2,midleft,midright);           :} 
 		;
 
-conjunction	::=	negation			// conjunctions, associate left-to-right
+conjunction	::=	negation:neg			// conjunctions, associate left-to-right
+                        {: RESULT = neg;                            :} 
 		|	conjunction:exp1 AND:mid negation:exp2
                         {: RESULT = new BoolExpn("&",exp1,exp2,midleft,midright);           :} 
 		;
 
-negation	::=	compareExpn 			// negations
+negation	::=	compareExpn:com 			// negations
+                        {: RESULT = com;          :}
 		|	NOT:mid negation:neg
                         {: RESULT = new NotExpn(neg,midleft,midright);           :} 
 		;
 
-compareExpn	::=	arithExpn			// comparisons, do not associate
+compareExpn	::=	arithExpn:ari			// comparisons, do not associate
+                        {: RESULT = ari;                       :}
 		|	arithExpn:exp1 EQUAL:mid arithExpn:exp2
                         {: RESULT = new EqualsExpn("=",exp1,exp2,midleft,midright);           :} 
 		| 	arithExpn:exp1 NOT:mid EQUAL arithExpn:exp2
@@ -296,19 +346,22 @@ arithExpn	::=	term				// expressions, associate + , - left-to-right
                         {: RESULT = new ArithExpn("-",left,right,midleft,midright);           :}
 		;
 
-term		::=	factor				// terms, associate * , /   left-to-right
+term		::=	factor:fac				// terms, associate * , /   left-to-right
+                        {: RESULT = fac;           :}
 		|	term:left TIMES:mid factor:right
                         {: RESULT = new ArithExpn("*",left,right,midleft,midright);           :}
 		|	term:left DIVIDE:mid factor:right
                         {: RESULT = new ArithExpn("/",left,right,midleft,midright);           :}
 		;
 
-factor		::=	primary				// unary minus
+factor		::=	primary:pri				// unary minus
+                        {:  RESULT = pri;        :}
 		|	MINUS:mid factor:fac
                         {: RESULT = new UnaryMinusExpn(fac,midleft,midright);           :}
 		;
 
-primary		::=	constant				// integer or boolean constant
+primary		::=	constant:con				// integer or boolean constant
+                        {: RESULT = con;       :}
 		|	variable				// scalar, array variable or function call
 		|	IDENT:id L_PAREN:mid arguments:arg R_PAREN 	// function call
                         {: RESULT = new FunctionCallExpn(id,arg,midleft,midright);           :} 
@@ -317,8 +370,8 @@ primary		::=	constant				// integer or boolean constant
                         {: RESULT = new AnonFuncExpn(body,exp,midleft,midright);           :} 
 		;
 
-constant	::=	INTCONST:int	// integer constant
-                        {: RESULT = IntConstExpn(int);           :} 
+constant	::=	INTCONST:in	// integer constant
+                        {: RESULT = IntConstExpn(in);           :} 
 		|	TRUE:t		// constant true
                         {: RESULT = BoolConstExpn(t);           :} 
 		|	FALSE:f		// constant false

@@ -21,8 +21,8 @@ public class ArrayDeclPart extends DeclarationPart {
     /** True iff this is an 2D array */
     private Boolean isTwoDimensional = false;
 
-    public ArrayDeclPart(String name, Integer lb1, Integer ub1) {
-        super(name);
+    public ArrayDeclPart(String name, Integer lb1, Integer ub1,int left, int right) {
+        super(name, left, right);
 
         this.lb1 = lb1;
         this.ub1 = ub1;
@@ -32,20 +32,20 @@ public class ArrayDeclPart extends DeclarationPart {
         this.ub2 = null;
     }
 
-    public ArrayDeclPart(String name, Integer lb1, Integer ub1, Integer lb2, Integer ub2) {
-        this(name, lb1, ub1);
+    public ArrayDeclPart(String name, Integer lb1, Integer ub1, Integer lb2, Integer ub2, int left, int right) {
+        this(name, lb1, ub1, left, right);
 
         this.isTwoDimensional = true;
         this.lb2 = lb2;
         this.ub2 = ub2;
     }
 
-    public ArrayDeclPart(String name, Integer[] dim1) {
-        this(name, dim1[0], dim1[1]);
+    public ArrayDeclPart(String name, Integer[] dim1, int left, int right) {
+        this(name, dim1[0], dim1[1], left , right);
     }
 
-    public ArrayDeclPart(String name, Integer[] dim1, Integer[] dim2) {
-        this(name, dim1[0], dim1[1], dim2[0], dim2[1]);
+    public ArrayDeclPart(String name, Integer[] dim1, Integer[] dim2, int left, int right) {
+        this(name, dim1[0], dim1[1], dim2[0], dim2[1], left, right);
     }
 
     /**

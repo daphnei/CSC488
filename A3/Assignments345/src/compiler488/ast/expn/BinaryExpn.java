@@ -7,10 +7,13 @@ import compiler488.ast.PrettyPrinter;
  */
 public abstract class BinaryExpn extends Expn {
     /** Left operand of the binary operator. */
-    protected Expn left;
+    protected Expn first;
 
     /** Right operand of the binary operator. */
-    protected Expn right;
+    protected Expn second;
+    
+    protected int left;
+    protected int right;
 
     /** Symbol of the operator.
      *
@@ -19,10 +22,12 @@ public abstract class BinaryExpn extends Expn {
      */
     protected String opSymbol;
 
-    protected BinaryExpn(String opSymbol, Expn left, Expn right) {
+    protected BinaryExpn(String opSymbol, Expn first, Expn second, int left, int right) {
         super();
 
         this.opSymbol = opSymbol;
+        this.first = first;
+        this.second = second;
         this.left = left;
         this.right = right;
     }
@@ -30,21 +35,29 @@ public abstract class BinaryExpn extends Expn {
     public String getOpSymbol() {
         return opSymbol;
     }
+    
+    public Expn getFirst(){
+        return first;
+    }
+    
+    public Expn getSecond(){
+        return second;
+    }
 
-    public Expn getLeft() {
+    public int getLeft() {
         return left;
     }
 
-    public Expn getRight() {
+    public int getRight() {
         return right;
     }
 
     @Override
     public void prettyPrint(PrettyPrinter p) {
         p.print("(");
-        left.prettyPrint(p);
+        first.prettyPrint(p);
         p.print(") " + opSymbol + " (");
-        right.prettyPrint(p);
+        second.prettyPrint(p);
         p.print(")");
     }
 

@@ -10,15 +10,28 @@ import compiler488.ast.Printable;
 public class PutStmt extends Stmt {
     /** The values to be printed. */
     private ASTList<Printable> outputs;
+    
+    private int left;
+    private int right;
 
-    public PutStmt(ASTList<Printable> outputs) {
+    public PutStmt(ASTList<Printable> outputs, int left, int right) {
         super();
 
         this.outputs = outputs;
+        this.left = left;
+        this.right = right;
     }
 
     public ASTList<Printable> getOutputs() {
         return outputs;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     @Override

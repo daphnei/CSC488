@@ -9,21 +9,32 @@ import compiler488.ast.PrettyPrinter;
 public class Scope extends Stmt {
     /** Body of the scope, mixed list of declarations and statements. */
     protected ASTList<Stmt> body;
+    
+    private int left;
+    private int right;
 
-    public Scope() {
+    public Scope(int left, int right) {
         super();
 
         this.body = null;
     }
 
-    public Scope(ASTList<Stmt> body) {
-        this();
+    public Scope(ASTList<Stmt> body, int left, int right) {
+        this(left, right);
 
         this.body = body;
     }
 
     public ASTList<Stmt> getBody() {
         return body;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     @Override

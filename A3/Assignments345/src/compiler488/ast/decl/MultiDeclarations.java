@@ -11,8 +11,8 @@ public class MultiDeclarations extends Declaration {
     /** The parts being declared */
     private ASTList<DeclarationPart> elements;
 
-    public MultiDeclarations(Type type, ASTList<DeclarationPart> elements) {
-        super(null, type);
+    public MultiDeclarations(Type type, ASTList<DeclarationPart> elements,int left, int right) {
+        super(null, type, left, right);
 
         this.elements = elements;
     }

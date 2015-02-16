@@ -11,6 +11,9 @@ public abstract class UnaryExpn extends Expn {
 
     /** Operand of the unary operator. */
     private Expn operand;
+    
+    private int left;
+    private int right;
 
     /**
      * The symbol of the operator.
@@ -20,11 +23,13 @@ public abstract class UnaryExpn extends Expn {
      */
     private String opSymbol;
 
-    public UnaryExpn(String opSymbol, Expn operand) {
+    public UnaryExpn(String opSymbol, Expn operand,int left, int right) {
         super();
 
         this.opSymbol = opSymbol;
         this.operand = operand;
+        this.left = left;
+        this.right = right;
 
         assert ((opSymbol == OP_NOT) ||
                 (opSymbol == OP_MINUS));
@@ -36,6 +41,14 @@ public abstract class UnaryExpn extends Expn {
 
     public String getOpSymbol() {
         return opSymbol;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     @Override

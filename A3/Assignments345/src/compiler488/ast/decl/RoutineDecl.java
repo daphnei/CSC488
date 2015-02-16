@@ -26,8 +26,8 @@ public class RoutineDecl extends Declaration {
      *   @param  parameters   List of parameters to the routine
      *   @param  body	      Body scope for the routine
      */
-    public RoutineDecl(String name, Type type, ASTList<ScalarDecl> parameters, Scope body) {
-        super(name, type);
+    public RoutineDecl(String name, Type type, ASTList<ScalarDecl> parameters, Scope body, int left, int right) {
+        super(name, type, left , right);
 
         this.parameters = parameters;
         this.body = body;
@@ -39,8 +39,8 @@ public class RoutineDecl extends Declaration {
      *   @param  type	      Type returned by the function
      *   @param  body	      Body scope for the routine
      */
-    public RoutineDecl(String name, Type type, Scope body) {
-        this(name, type, new ASTList<ScalarDecl>(), body);
+    public RoutineDecl(String name, Type type, Scope body, int left, int right) {
+        this(name, type, new ASTList<ScalarDecl>(), body, left, right);
     }
 
     /**
@@ -49,8 +49,8 @@ public class RoutineDecl extends Declaration {
      *   @param  parameters   List of parameters to the routine
      *   @param  body	      Body scope for the routine
      */
-    public RoutineDecl(String name, ASTList<ScalarDecl> parameters, Scope body) {
-        this(name, null, parameters, body);
+    public RoutineDecl(String name, ASTList<ScalarDecl> parameters, Scope body, int left, int right) {
+        this(name, null, parameters, body, left , right);
 
         this.parameters = parameters;
         this.body = body;
@@ -61,8 +61,8 @@ public class RoutineDecl extends Declaration {
      *   @param  name	      Name of the routine
      *   @param  body	      Body scope for the routine
      */
-    public RoutineDecl(String name, Scope body) {
-        this(name, null, new ASTList<ScalarDecl>(), body);
+    public RoutineDecl(String name, Scope body, int left, int right) {
+        this(name, null, new ASTList<ScalarDecl>(), body, left, right);
     }
 
     public ASTList<ScalarDecl> getParameters() {

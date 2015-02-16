@@ -14,12 +14,17 @@ public class AnonFuncExpn extends Expn {
 
     /** The expression whose value is yielded. */
     private Expn expn;
+    
+    private int left;
+    private int right;
 
-    public AnonFuncExpn(ASTList<Stmt> body, Expn expn) {
+    public AnonFuncExpn(ASTList<Stmt> body, Expn expn, int left, int right) {
         super();
 
         this.body = body;
         this.expn = expn;
+        this.left = left;
+        this.right = right;
     }
 
     public ASTList<Stmt> getBody() {
@@ -28,6 +33,14 @@ public class AnonFuncExpn extends Expn {
 
     public Expn getExpn() {
         return expn;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     public void prettyPrint(PrettyPrinter p) {

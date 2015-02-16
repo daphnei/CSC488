@@ -13,20 +13,25 @@ public class IfStmt extends Stmt {
 
     /** Represents the statement to execute when the condition is true. */
     private ASTList<Stmt> whenTrue;
+    
+    private int left;
+    private int right;
 
     /** Represents the statement to execute when the condition is false. */
     private ASTList<Stmt> whenFalse = null;
 
-    public IfStmt(Expn condition, ASTList<Stmt> whenTrue, ASTList<Stmt> whenFalse) {
+    public IfStmt(Expn condition, ASTList<Stmt> whenTrue, ASTList<Stmt> whenFalse, int left, int right) {
         super();
 
         this.condition = condition;
         this.whenTrue = whenTrue;
         this.whenFalse = whenFalse;
+        this.left = left;
+        this.right = right;
     }
 
-    public IfStmt(Expn condition, ASTList<Stmt> whenTrue) {
-        this(condition, whenTrue, null);
+    public IfStmt(Expn condition, ASTList<Stmt> whenTrue, int left, int right) {
+        this(condition, whenTrue, null,left, right);
     }
 
     public Expn getCondition() {
@@ -39,6 +44,14 @@ public class IfStmt extends Stmt {
 
     public ASTList<Stmt> getWhenFalse() {
         return whenFalse;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     /**

@@ -10,15 +10,28 @@ import compiler488.ast.expn.Expn;
 public class GetStmt extends Stmt {
     /** A list of locations to store the values read. */
     private ASTList<Expn> inputs;
+    
+    private int left;
+    private int right;
 
-    public GetStmt (ASTList<Expn> inputs) {
+    public GetStmt (ASTList<Expn> inputs, int left, int right) {
         super();
 
         this.inputs = inputs;
+        this.left = left;
+        this.right = right;
     }
 
     public ASTList<Expn> getInputs() {
         return inputs;
+    }
+    
+    public int getLeft() {
+        return left;
+    }
+
+    public int getRight() {
+        return right;
     }
 
     public void prettyPrint(PrettyPrinter p) {

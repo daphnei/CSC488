@@ -12,24 +12,36 @@ public class SubsExpn extends Expn implements Readable {
 
     /** First subscript. */
     private Expn subscript1;
+    private int left;
+    private int right;
 
     /** Second subscript (if any.) */
     private Expn subscript2 = null;
 
-    public SubsExpn(String variable, Expn subscript1, Expn subscript2) {
+    public SubsExpn(String variable, Expn subscript1, Expn subscript2,int left, int right) {
         super();
 
         this.variable = variable;
         this.subscript1 = subscript1;
         this.subscript2 = subscript2;
+        this.left = left;
+        this.right = right;
     }
 
-    public SubsExpn(String variable, Expn subscript1) {
-        this(variable, subscript1, null);
+    public SubsExpn(String variable, Expn subscript1,int left, int right) {
+        this(variable, subscript1, null,left,right);
     }
 
     public String getVariable() {
         return variable;
+    }
+    
+    public int getLeft(){
+        return left;
+    }
+    
+    public int getRight(){
+        return right;
     }
 
     public Expn getSubscript1() {

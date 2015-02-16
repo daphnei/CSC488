@@ -4,8 +4,8 @@ package compiler488.ast.decl;
  * Represents the declaration of a simple variable.
  */
 public class ScalarDeclPart extends DeclarationPart {
-    public ScalarDeclPart(String name) {
-        super(name);
+    public ScalarDeclPart(String name, int left, int right) {
+        super(name, left, right);
     }
 
     /**
