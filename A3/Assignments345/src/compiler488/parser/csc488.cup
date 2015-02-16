@@ -140,8 +140,9 @@ start with program;
  * reads one more token before it will act on the production.
  */
 
-program		::=	scope:inside	;				// the main program
-                        {: RESULT = Program(inside);           :} 
+program		::=	scope:inside					// the main program
+                        {: RESULT = Program(inside);           :}
+            ; 
 
 scope		::=	BEGIN declarationsAndStatements:inside END  	// non empty scope
                         {: RESULT = Scope(inside);           :} 
@@ -223,9 +224,9 @@ bound		::=	INTCONST:g					// positive array bound
 		;
 		
 generalBound	::=	INTCONST:val		// positive array bound
-                        {: RESULT = val           :}
+                        {: RESULT = val; :}
 		|	MINUS INTCONST:val		// negative array bound
-                        {: RESULT = -val           :}
+                        {: RESULT = -val; :}
 		;
 
 type		::=	INTEGER			// integer type
@@ -255,9 +256,9 @@ parameters	::=	parameter			// list of function/procedure formal parameters
                         {: RESULT = many.add(new ScalarDeclPart(more,midleft,midright));           :} 
 		;
 
-parameter	::=	type:ty IDENT:var ;			// declare one parameter
+parameter	::=	type:ty IDENT:var 			// declare one parameter
                         {: ASTList<DeclarationPart> element = new ASTList<DeclarationPart>();
-                            RESULT = element.add(new ScalarDecl(var,ty,varleft,varright));           :}
+                            RESULT = element.add(new ScalarDecl(var,ty,varleft,varright));           :} ;
 
 expression	::=	conjunction			// disjunctions, associate left-to-right
 		|	expression:exp1 OR:mid conjunction:exp2
@@ -317,8 +318,8 @@ primary		::=	constant				// integer or boolean constant
                         {: RESULT = new AnonFuncExpn(body,exp,midleft,midright);           :} 
 		;
 
-constant	::=	INTCONST:int	// integer constant
-                        {: RESULT = IntConstExpn(int);           :} 
+constant	::=	INTCONST:integer	// integer constant
+                        {: RESULT = IntConstExpn(integer);           :} 
 		|	TRUE:t		// constant true
                         {: RESULT = BoolConstExpn(t);           :} 
 		|	FALSE:f		// constant false
