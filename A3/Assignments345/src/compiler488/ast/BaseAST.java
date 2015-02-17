@@ -1,5 +1,7 @@
 package compiler488.ast;
 
+import compiler488.utilities.IVisitable;
+
 /**
  * Base class implementation for the AST hierarchy.
  *
@@ -7,7 +9,7 @@ package compiler488.ast;
  *
  * @author Dave Wortman, Marsha Chechik, Danny House, Peter McCormick
  */
-public abstract class BaseAST implements AST {
+public abstract class BaseAST implements AST, IVisitable {
     /**
      * Default constructor.
      *

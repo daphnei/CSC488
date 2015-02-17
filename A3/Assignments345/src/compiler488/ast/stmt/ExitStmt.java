@@ -2,6 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.expn.*;
+import compiler488.utilities.IVisitor;
 
 /**
  * Represents the command to exit from a loop.
@@ -46,5 +47,10 @@ public class ExitStmt extends Stmt {
             expn.prettyPrint(p);
         }
     }
+    
+    @Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 
 }

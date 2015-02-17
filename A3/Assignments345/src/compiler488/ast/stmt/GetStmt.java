@@ -3,6 +3,7 @@ package compiler488.ast.stmt;
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.expn.Expn;
+import compiler488.utilities.IVisitor;
 
 /**
  * The command to read data into one or more variables.
@@ -39,4 +40,8 @@ public class GetStmt extends Stmt {
         inputs.prettyPrintCommas(p);
     }
 
+    @Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

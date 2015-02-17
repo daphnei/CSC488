@@ -3,6 +3,7 @@ package compiler488.ast.stmt;
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.expn.Expn;
+import compiler488.utilities.IVisitor;
 
 /**
  * Represents an if-then or an if-then-else construct.
@@ -73,4 +74,8 @@ public class IfStmt extends Stmt {
         p.println("end");
     }
 
+    @Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

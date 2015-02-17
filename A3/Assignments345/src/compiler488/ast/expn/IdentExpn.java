@@ -1,6 +1,7 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Readable;
+import compiler488.utilities.IVisitor;
 
 /**
  *  References to a scalar variable or function call without parameters.
@@ -39,4 +40,8 @@ public class IdentExpn extends Expn implements Readable {
         return ident;
     }
 
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

@@ -2,6 +2,7 @@ package compiler488.ast.expn;
 
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.Readable;
+import compiler488.utilities.IVisitor;
 
 /**
  * References to an array element variable
@@ -69,4 +70,8 @@ public class SubsExpn extends Expn implements Readable {
         p.print("]");
     }
 
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

@@ -2,6 +2,7 @@ package compiler488.ast.decl;
 
 import compiler488.ast.stmt.Stmt;
 import compiler488.ast.type.Type;
+import compiler488.utilities.IVisitor;
 
 /**
  * The common features of declarations.
@@ -39,4 +40,9 @@ public abstract class Declaration extends Stmt {
     public Type getType() {
         return type;
     }
+    
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

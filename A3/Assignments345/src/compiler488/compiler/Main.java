@@ -493,8 +493,9 @@ public class Main {
 	Object parserResult  ;	// the result of parsing and AST building
         Program  programAST  = null ;
 
-        System.out.println(System.lineSeparator() + "Compiling file: " + sourceFileName );
-
+        //System.out.println(System.lineSeparator() + "Compiling file: " + sourceFileName );
+        System.out.println("\nCompiling file: " + sourceFileName );
+        
 	/* Scan and Parse the program	*/
 	try {
 	    Parser p = new Parser(new Lexer(new FileReader(sourceFileName )));

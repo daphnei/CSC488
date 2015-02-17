@@ -1,5 +1,7 @@
 package compiler488.ast.expn;
 
+import compiler488.utilities.IVisitor;
+
 
 /**
  * Place holder for all binary expression where both operands must be boolean
@@ -15,5 +17,10 @@ public class BoolExpn extends BinaryExpn {
         assert ((opSymbol == OP_OR) ||
                 (opSymbol == OP_AND));
     }
+    
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 
 }

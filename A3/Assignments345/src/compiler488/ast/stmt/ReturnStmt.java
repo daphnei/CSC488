@@ -2,6 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.expn.Expn;
+import compiler488.utilities.IVisitor;
 
 /**
  * The command to return from a function.
@@ -53,4 +54,8 @@ public class ReturnStmt extends Stmt {
         }
     }
 
+    @Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

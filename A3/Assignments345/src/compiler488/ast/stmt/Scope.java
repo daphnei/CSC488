@@ -2,6 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
+import compiler488.utilities.IVisitor;
 
 /**
  * Represents the declarations and instructions of a scope construct.
@@ -46,4 +47,8 @@ public class Scope extends Stmt {
         p.print("end");
     }
 
+    @Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

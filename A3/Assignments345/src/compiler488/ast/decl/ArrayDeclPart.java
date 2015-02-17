@@ -1,6 +1,7 @@
 package compiler488.ast.decl;
 
 import compiler488.ast.PrettyPrinter;
+import compiler488.utilities.IVisitor;
 
 /**
  * Holds the declaration part of an array.
@@ -102,5 +103,10 @@ public class ArrayDeclPart extends DeclarationPart {
 
         p.print("]");
     }
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 
 }

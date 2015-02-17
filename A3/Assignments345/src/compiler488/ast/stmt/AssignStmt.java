@@ -2,6 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.expn.Expn;
+import compiler488.utilities.IVisitor;
 
 /**
  * Holds the assignment of an expression to a variable.
@@ -47,4 +48,8 @@ public class AssignStmt extends Stmt {
         rval.prettyPrint(p);
     }
 
+    @Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

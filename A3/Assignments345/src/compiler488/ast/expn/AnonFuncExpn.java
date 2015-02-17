@@ -3,6 +3,7 @@ package compiler488.ast.expn;
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.stmt.Stmt;
+import compiler488.utilities.IVisitor;
 
 /**
  * Represents the parameters and instructions associated with a function or
@@ -57,4 +58,8 @@ public class AnonFuncExpn extends Expn {
         p.println("}");
     }
 
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }
