@@ -41,7 +41,13 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 
-
+/**
+ * The interface for a class that will be able to "visit" 
+ * and check the semantics of each element of the AST.
+ * 
+ * @author daphne
+ *
+ */
 public interface IVisitor {	
 	public void visit(ArrayDeclPart visitable);
 	public void visit(Declaration visitable);
