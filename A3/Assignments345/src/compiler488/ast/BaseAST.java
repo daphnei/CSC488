@@ -10,6 +10,13 @@ import compiler488.utilities.IVisitableElement;
  * @author Dave Wortman, Marsha Chechik, Danny House, Peter McCormick
  */
 public abstract class BaseAST implements AST, IVisitableElement {
+	/**
+	 * Return the right and left columns of this statement 
+	 * in the input script file.
+	 */
+	protected int left;
+	protected int right;
+	
     /**
      * Default constructor.
      *
@@ -28,4 +35,18 @@ public abstract class BaseAST implements AST, IVisitableElement {
         p.print(toString());
     }
 
+    /**
+	 * @return the column number of the beginning of this statement.
+	 */
+    public int getLeft() {
+        return left;
+    }
+
+    /**
+     * @return the column number of the right of this statement.
+     */
+    public int getRight() {
+        return right;
+    }
+    
 }

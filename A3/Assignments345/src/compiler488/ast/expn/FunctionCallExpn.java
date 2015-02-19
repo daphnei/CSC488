@@ -11,8 +11,6 @@ public class FunctionCallExpn extends Expn {
     /** The name of the function. */
     private String ident;
     
-    private int left;
-    private int right;
     /** The arguments passed to the function. */
     private ASTList<Expn> arguments;
 
@@ -33,14 +31,6 @@ public class FunctionCallExpn extends Expn {
         return ident;
     }
     
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
-    }
-
     public void prettyPrint(PrettyPrinter p) {
         p.print(ident);
 

@@ -13,9 +13,6 @@ public abstract class UnaryExpn extends Expn {
     /** Operand of the unary operator. */
     private Expn operand;
     
-    private int left;
-    private int right;
-
     /**
      * The symbol of the operator.
      *
@@ -44,14 +41,6 @@ public abstract class UnaryExpn extends Expn {
         return opSymbol;
     }
     
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
-    }
-
     @Override
     public void prettyPrint(PrettyPrinter p) {
         p.print(opSymbol + "(");

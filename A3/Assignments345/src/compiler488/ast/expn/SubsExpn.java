@@ -13,8 +13,6 @@ public class SubsExpn extends Expn implements Readable {
 
     /** First subscript. */
     private Expn subscript1;
-    private int left;
-    private int right;
 
     /** Second subscript (if any.) */
     private Expn subscript2 = null;
@@ -37,14 +35,6 @@ public class SubsExpn extends Expn implements Readable {
         return variable;
     }
     
-    public int getLeft(){
-        return left;
-    }
-    
-    public int getRight(){
-        return right;
-    }
-
     public Expn getSubscript1() {
         return subscript1 ;
     }

@@ -10,8 +10,6 @@ import compiler488.utilities.IVisitor;
 public abstract class Declaration extends Stmt {
     /** The name of the thing being declared. */
     protected String name;
-    protected int left;
-    protected int right;
 
     /** The type of thing being declared. */
     protected Type type = null;
@@ -29,14 +27,6 @@ public abstract class Declaration extends Stmt {
         return name;
     }
     
-    public int getLeft(){
-        return left;
-    }
-    
-    public int getRight(){
-        return right;
-    }
-
     public Type getType() {
         return type;
     }

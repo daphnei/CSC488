@@ -16,9 +16,6 @@ public class AnonFuncExpn extends Expn {
     /** The expression whose value is yielded. */
     private Expn expn;
     
-    private int left;
-    private int right;
-
     public AnonFuncExpn(ASTList<Stmt> body, Expn expn, int left, int right) {
         super();
 
@@ -36,14 +33,6 @@ public class AnonFuncExpn extends Expn {
         return expn;
     }
     
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
-    }
-
     public void prettyPrint(PrettyPrinter p) {
         p.println("{");
         p.enterBlock();

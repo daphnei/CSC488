@@ -10,9 +10,6 @@ public class TextConstExpn extends ConstExpn implements Printable {
     /** The value of this literal. */
     private String value;
     
-    private int left;
-    private int right;
-
     public TextConstExpn(String value, int left, int right) {
         super();
 
@@ -25,14 +22,6 @@ public class TextConstExpn extends ConstExpn implements Printable {
         return value;
     }
     
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
-    }
-
     /**
      * Returns a description of the literal text constant.
      */

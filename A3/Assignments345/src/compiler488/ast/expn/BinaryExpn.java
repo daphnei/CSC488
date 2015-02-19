@@ -13,9 +13,6 @@ public abstract class BinaryExpn extends Expn {
     /** Right operand of the binary operator. */
     protected Expn second;
     
-    protected int left;
-    protected int right;
-
     /** Symbol of the operator.
      *
      * <p>Must be a <code>static final</code> constant defined in a subclass of
@@ -43,14 +40,6 @@ public abstract class BinaryExpn extends Expn {
     
     public Expn getSecond(){
         return second;
-    }
-
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
     }
 
     @Override
