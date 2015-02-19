@@ -15,9 +15,6 @@ public class IfStmt extends Stmt {
     /** Represents the statement to execute when the condition is true. */
     private ASTList<Stmt> whenTrue;
     
-    private int left;
-    private int right;
-
     /** Represents the statement to execute when the condition is false. */
     private ASTList<Stmt> whenFalse = null;
 
@@ -45,14 +42,6 @@ public class IfStmt extends Stmt {
 
     public ASTList<Stmt> getWhenFalse() {
         return whenFalse;
-    }
-    
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
     }
 
     /**

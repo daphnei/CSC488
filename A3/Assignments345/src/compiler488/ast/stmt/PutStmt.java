@@ -11,9 +11,6 @@ import compiler488.utilities.IVisitor;
 public class PutStmt extends Stmt {
     /** The values to be printed. */
     private ASTList<Printable> outputs;
-    
-    private int left;
-    private int right;
 
     public PutStmt(ASTList<Printable> outputs, int left, int right) {
         super();
@@ -25,14 +22,6 @@ public class PutStmt extends Stmt {
 
     public ASTList<Printable> getOutputs() {
         return outputs;
-    }
-    
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
     }
 
     @Override

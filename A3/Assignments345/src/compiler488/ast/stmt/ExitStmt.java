@@ -10,9 +10,6 @@ import compiler488.utilities.IVisitor;
 public class ExitStmt extends Stmt {
     /** Condition expression for <code>exit when</code> variation. */
     private Expn expn = null;
-    
-    private int left;
-    private int right;
 
     public ExitStmt(Expn expn, int left, int right) {
         super();
@@ -28,14 +25,6 @@ public class ExitStmt extends Stmt {
 
     public Expn getExpn() {
         return expn;
-    }
-    
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
     }
 
     @Override

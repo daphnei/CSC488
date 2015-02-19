@@ -11,8 +11,6 @@ public class ReturnStmt extends Stmt {
     /* The value to be returned by the function (if any.) */
     private Expn value = null;
     
-    private int left;
-    private int right;
     /**
      * Construct a function <code>return <em>value</em></code> statement with a value expression.
      *   @param  value  AST for the return expression
@@ -34,14 +32,6 @@ public class ReturnStmt extends Stmt {
 
     public Expn getValue() {
         return value;
-    }
-    
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
     }
 
     public void prettyPrint(PrettyPrinter p) {

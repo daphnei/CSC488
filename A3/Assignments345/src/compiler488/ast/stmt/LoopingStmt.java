@@ -10,8 +10,6 @@ public abstract class LoopingStmt extends Stmt {
     /** The control expression for the looping construct (if any.) */
     protected Expn expn = null;
 
-    private int left;
-    private int right;
     /** The body of the looping construct. */
     protected ASTList<Stmt> body;
 
@@ -34,14 +32,6 @@ public abstract class LoopingStmt extends Stmt {
 
     public ASTList<Stmt> getBody() {
         return body;
-    }
-    
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
     }
 
 }

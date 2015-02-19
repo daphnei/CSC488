@@ -11,8 +11,6 @@ public class AssignStmt extends Stmt {
     /** The location being assigned to. */
     private Expn lval;
 
-    private int left;
-    private int right;
     /** The value being assigned. */
     private Expn rval;
 
@@ -50,6 +48,8 @@ public class AssignStmt extends Stmt {
 
     @Override
 	public void accept(IVisitor visitor) {
+    	visitor.visit(this.lval);
+    	visitor.visit(this.rval);
 		visitor.visit(this);	
 	}
 }

@@ -11,9 +11,6 @@ import compiler488.utilities.IVisitor;
 public class ProcedureCallStmt extends Stmt {
     /** The name of the procedure being called. */
     private String name;
-    
-    private int left;
-    private int right;
 
     /** The arguments passed to the procedure (if any.)
      *
@@ -41,14 +38,6 @@ public class ProcedureCallStmt extends Stmt {
 
     public ASTList<Expn> getArguments() {
         return arguments;
-    }
-    
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
     }
 
     @Override

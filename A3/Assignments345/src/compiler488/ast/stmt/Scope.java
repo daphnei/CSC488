@@ -10,9 +10,6 @@ import compiler488.utilities.IVisitor;
 public class Scope extends Stmt {
     /** Body of the scope, mixed list of declarations and statements. */
     protected ASTList<Stmt> body;
-    
-    private int left;
-    private int right;
 
     public Scope(int left, int right) {
         super();
@@ -28,14 +25,6 @@ public class Scope extends Stmt {
 
     public ASTList<Stmt> getBody() {
         return body;
-    }
-    
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
     }
 
     @Override
