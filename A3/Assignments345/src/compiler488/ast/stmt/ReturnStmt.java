@@ -46,6 +46,12 @@ public class ReturnStmt extends Stmt {
 
     @Override
 	public void accept(IVisitor visitor) {
+    	
+    	//Return statemenets aren't requried to return a value, in which case "value" will be null.
+    	if (this.value != null) {
+    		this.value.accept(visitor);
+    	}
+    	
 		visitor.visit(this);	
 	}
 }

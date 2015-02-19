@@ -39,6 +39,8 @@ public class ExitStmt extends Stmt {
     
     @Override
 	public void accept(IVisitor visitor) {
+    	this.expn.accept(visitor);
+    	
 		visitor.visit(this);	
 	}
 

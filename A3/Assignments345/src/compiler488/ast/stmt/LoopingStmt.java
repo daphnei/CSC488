@@ -2,9 +2,11 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.expn.Expn;
+import compiler488.utilities.IVisitor;
 
 /**
- * Represents the common parts of loops.
+ * Represents the common parts of loops.This is abstract, ie, it is never
+ * used directly, only extended.
  */
 public abstract class LoopingStmt extends Stmt {
     /** The control expression for the looping construct (if any.) */
@@ -34,4 +36,16 @@ public abstract class LoopingStmt extends Stmt {
         return body;
     }
 
+    @Override
+	public void accept(IVisitor visitor) {
+    	//TODO: I am not sure I have this one right.
+    	
+    	this.expn.accept(visitor);
+    	
+    	for (Stmt bodyStmt : this.body) {
+    		bodyStmt.accept(visitor);
+    	}
+    	
+		visitor.visit(this);	
+	}
 }

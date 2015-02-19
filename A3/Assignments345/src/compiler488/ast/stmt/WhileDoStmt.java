@@ -23,9 +23,4 @@ public class WhileDoStmt extends LoopingStmt {
 
         p.println("end");
     }
-
-    @Override
-	public void accept(IVisitor visitor) {
-		visitor.visit(this);	
-	}
 }

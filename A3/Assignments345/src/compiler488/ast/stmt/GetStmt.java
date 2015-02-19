@@ -31,6 +31,10 @@ public class GetStmt extends Stmt {
 
     @Override
 	public void accept(IVisitor visitor) {
+    	for (Expn input : this.inputs) {
+    		input.accept(visitor);
+    	}
+    	
 		visitor.visit(this);	
 	}
 }
