@@ -18,10 +18,4 @@ public class ScalarDeclPart extends DeclarationPart {
     public String toString() {
         return name;
     }
-    
-	@Override
-	public void accept(IVisitor visitor) {
-		visitor.visit(this);	
-	}
-
 }

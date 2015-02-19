@@ -16,10 +16,4 @@ public class ScalarDecl extends Declaration {
     public void prettyPrint(PrettyPrinter p) {
         p.print(type + " " + name);
     }
-    
-	@Override
-	public void accept(IVisitor visitor) {
-		visitor.visit(this);	
-	}
-
 }

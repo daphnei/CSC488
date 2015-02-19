@@ -49,6 +49,14 @@ public class AnonFuncExpn extends Expn {
 
 	@Override
 	public void accept(IVisitor visitor) {
+		//TODO: Am I accepting these in the right order?
+		
+		for (Stmt bodyStmt : this.body) {
+			bodyStmt.accept(visitor);
+		}
+		
+		this.expn.accept(visitor);
+		
 		visitor.visit(this);	
 	}
 }
