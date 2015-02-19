@@ -11,13 +11,17 @@ public class Symbol {
 	/** 
 	 * My scope index. Maybe this should be some sort of Scope object instead?
 	 */
-	private int scopeIndex;
+	private  SymTableScope scope;
 	
 	private Type type;
 	
-	public Symbol(String identifier, int scopeIndex, Type type) {
+	public Symbol(String identifier, SymTableScope scope, Type type) {
 		this.identifier = identifier;
-		this.scopeIndex = scopeIndex;
+		this.scope = scope;
 		this.type = type;
+	}
+	
+	public SymTableScope getScope() {
+		return this.scope;
 	}
 }
