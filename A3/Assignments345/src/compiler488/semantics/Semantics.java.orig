@@ -42,324 +42,324 @@ import compiler488.ast.type.Type;
 import compiler488.symbol.SymbolTable;
 import compiler488.utilities.IVisitor;
 
-/** Implement semantic analysis for compiler 488
+/** Implement semantic analysis for compiler 488 
  *  @author  <B> Put your names here </B>
  */
 public class Semantics implements IVisitor {
 
-	/** flag for tracing semantic analysis */
-	private boolean traceSemantics = false;
-	/** file sink for semantic analysis trace */
-	private String traceFile = new String();
-	public FileWriter Tracer;
-	public File f;
+    /** flag for tracing semantic analysis */
+    private boolean traceSemantics = false;
+    /** file sink for semantic analysis trace */
+    private String traceFile = new String();
+    public FileWriter Tracer;
+    public File f;
 
-	/**
-	 * Variables added by us
-	 */
-	private SymbolTable symbolTable;
+    /**
+     * Variables added by us
+     */
+    private SymbolTable symbolTable;
 
-	/** SemanticAnalyzer constructor */
-	public Semantics () {
+    /** SemanticAnalyzer constructor */
+    public Semantics (){
 
-	}
+    }
 
-	/**  semanticsInitialize - called once by the parser at the      */
-	/*                        start of  compilation                 */
-	void Initialize() {
+    /**  semanticsInitialize - called once by the parser at the      */
+    /*                        start of  compilation                 */
+    void Initialize() {
 
-		/*   Initialize the symbol table             */
+        /*   Initialize the symbol table             */
 
-		// Symbol.Initialize();
+        // Symbol.Initialize();
 
-		/*********************************************/
-		/*  Additional initialization code for the   */
-		/*  semantic analysis module                 */
-		/*  GOES HERE                                */
-		/*********************************************/
+        /*********************************************/
+        /*  Additional initialization code for the   */
+        /*  semantic analysis module                 */
+        /*  GOES HERE                                */
+        /*********************************************/
 
-		this.symbolTable = new SymbolTable();
-	}
+        this.symbolTable = new SymbolTable();
+    }
 
-	/**  semanticsFinalize - called by the parser once at the        */
-	/*                      end of compilation                      */
-	void Finalize() {
+    /**  semanticsFinalize - called by the parser once at the        */
+    /*                      end of compilation                      */
+    void Finalize(){
 
-		/*  Finalize the symbol table                 */
+        /*  Finalize the symbol table                 */
 
-		// Symbol.Finalize();
+        // Symbol.Finalize();
 
-		/*********************************************/
-		/*  Additional finalization code for the      */
-		/*  semantics analysis module                 */
-		/*  GOES here.                                */
-		/**********************************************/
+        /*********************************************/
+        /*  Additional finalization code for the      */
+        /*  semantics analysis module                 */
+        /*  GOES here.                                */
+        /**********************************************/
 
-	}
+    }
 
-	/**
-	 *  Perform one semantic analysis action
-	 *  @param  actionNumber  semantic analysis action number
-	 */
-	void semanticAction( int actionNumber ) {
+    /**
+     *  Perform one semantic analysis action
+     *  @param  actionNumber  semantic analysis action number
+     */
+    void semanticAction( int actionNumber ) {
 
-		if( traceSemantics ) {
-			if(traceFile.length() > 0 ) {
-				//output trace to the file represented by traceFile
-				try {
-					//open the file for writing and append to it
-					File f = new File(traceFile);
-					Tracer = new FileWriter(traceFile, true);
+        if( traceSemantics ){
+            if(traceFile.length() > 0 ){
+                //output trace to the file represented by traceFile
+                try{
+                    //open the file for writing and append to it
+                    File f = new File(traceFile);
+                    Tracer = new FileWriter(traceFile, true);
 
-					Tracer.write("Sematics: S" + actionNumber + "\n");
-					//always be sure to close the file
-					Tracer.close();
-				}
-				catch (IOException e) {
-					System.out.println(traceFile +
-					                   " could be opened/created.  It may be in use.");
-				}
-			}
-			else {
-				//output the trace to standard out.
-				System.out.println("Sematics: S" + actionNumber );
-			}
+                    Tracer.write("Sematics: S" + actionNumber + "\n");
+                    //always be sure to close the file
+                    Tracer.close();
+                }
+                catch (IOException e) {
+                    System.out.println(traceFile + 
+                            " could be opened/created.  It may be in use.");
+                }
+            }
+            else{
+                //output the trace to standard out.
+                System.out.println("Sematics: S" + actionNumber );
+            }
 
-		}
+        }
 
-		/*************************************************************/
-		/*  Code to implement each semantic action GOES HERE         */
-		/*  This stub semantic analyzer just prints the actionNumber */
-		/*                                                           */
-		/*  FEEL FREE TO ignore or replace this procedure            */
-		/*************************************************************/
+        /*************************************************************/
+        /*  Code to implement each semantic action GOES HERE         */
+        /*  This stub semantic analyzer just prints the actionNumber */   
+        /*                                                           */
+        /*  FEEL FREE TO ignore or replace this procedure            */
+        /*************************************************************/
 
-		System.out.println("Semantic Action: S" + actionNumber  );
-		return ;
-	}
+        System.out.println("Semantic Action: S" + actionNumber  );
+        return ;
+    }
 
 	@Override
 	public void visit(ArrayDeclPart visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(Declaration visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(DeclarationPart visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(MultiDeclarations visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(RoutineDecl visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(ScalarDecl visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(ScalarDeclPart visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(AnonFuncExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(ArithExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(BoolConstExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(BoolExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(CompareExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(EqualsExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(Expn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(FunctionCallExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(IdentExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(IntConstExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(NotExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(SkipConstExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(SubsExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(TextConstExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(UnaryMinusExpn visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(AssignStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(ExitStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(GetStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(IfStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(LoopStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(ProcedureCallStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(Program visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(PutStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(ReturnStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(Scope visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(Stmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(WhileDoStmt visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(BooleanType visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(IntegerType visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void visit(Type visitable) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
-	// ADDITIONAL FUNCTIONS TO IMPLEMENT SEMANTIC ANALYSIS GO HERE
+    // ADDITIONAL FUNCTIONS TO IMPLEMENT SEMANTIC ANALYSIS GO HERE
 
 }

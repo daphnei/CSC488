@@ -5,10 +5,10 @@ package compiler488.ast;
  *  @author Peter McCormick
  */
 public interface PrettyPrintable {
-	/**
-	 * Pretty-print this object using the provided printer.
-	 *
-	 * @param p the printer to print with
-	 */
-	public void prettyPrint(PrettyPrinter p);
+    /**
+     * Pretty-print this object using the provided printer.
+     *
+     * @param p the printer to print with
+     */
+    public void prettyPrint(PrettyPrinter p);
 }

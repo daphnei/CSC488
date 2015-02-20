@@ -1,11 +1,12 @@
-package compiler488.semantics;
+package compiler488.symbol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
 import compiler488.ast.type.Type;
-import compiler488.semantics.SymTableScope.ScopeType;
+import compiler488.semantics.SemanticError;
+import compiler488.symbol.SymTableScope.ScopeType;
 
 public class SymbolTable {
 	/**
@@ -27,6 +28,31 @@ public class SymbolTable {
 		this.scopes = new Stack<SymTableScope>();
 	}
 
+	/**  Initialize - called once by semantic analysis  
+	 *                at the start of  compilation     
+	 *                May be unnecessary if constructor
+ 	 *                does all required initialization	
+	 */
+	public void Initialize() {
+	
+	   /**   Initialize the symbol table             
+	    *	Any additional symbol table initialization
+	    *  GOES HERE                                	
+	    */
+	   
+	}
+
+	/**  Finalize - called once by Semantics at the end of compilation
+	 *              May be unnecessary 		
+	 */
+	public void Finalize(){
+	
+	  /**  Additional finalization code for the 
+	   *  symbol table  class GOES HERE.
+	   *  
+	   */
+	}
+	
 	public void newMajorScope() {
 		SymTableScope newScope = new SymTableScope(this.scopes.size(), ScopeType.MAJOR);
 		this.scopes.add(newScope);

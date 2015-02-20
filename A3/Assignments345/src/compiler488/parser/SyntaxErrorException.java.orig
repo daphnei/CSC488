@@ -6,8 +6,8 @@ package compiler488.parser;
  */
 public class SyntaxErrorException  extends Exception
 {
-	public  SyntaxErrorException( String msg )
-	{
-		super( msg ) ;
-	}
+  public  SyntaxErrorException( String msg )
+  {
+    super( msg ) ;
+  }
 }

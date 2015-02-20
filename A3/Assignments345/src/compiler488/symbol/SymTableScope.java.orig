@@ -1,4 +1,4 @@
-package compiler488.semantics;
+package compiler488.symbol;
 
 /**
  * A scope for use in the symbol table. In the textbook, they just use a single

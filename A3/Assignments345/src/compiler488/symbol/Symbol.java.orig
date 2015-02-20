@@ -1,4 +1,4 @@
-package compiler488.semantics;
+package compiler488.symbol;
 
 import compiler488.ast.type.Type;
 
