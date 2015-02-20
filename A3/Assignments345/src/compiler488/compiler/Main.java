@@ -540,6 +540,16 @@ public class Main {
 			return ;
 		}
 
+		System.out.println("TODO: Finished the semantic analysis. GET OUTTA HERE!");
+
+		boolean yes = true;
+		if ( yes ) {
+			System.out.println("sad");
+			System.exit(0);
+			errorOccurred = true;
+                	return;
+		}
+
 		// Dump AST after semantic analysis  if requested
 		if( dumpAST2 )
 			dumpAST( programAST , "Exception during AST dump after semantic analysis");
