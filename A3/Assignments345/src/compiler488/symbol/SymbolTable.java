@@ -53,12 +53,12 @@ public class SymbolTable {
 		 */
 	}
 
-	public void newMajorScope() {
+	public void openMajorScope() {
 		SymTableScope newScope = new SymTableScope(this.scopes.size(), ScopeType.MAJOR);
 		this.scopes.add(newScope);
 	}
 
-	public void newMinorScope() {
+	public void openMinorScope() {
 		SymTableScope newScope = new SymTableScope(this.scopes.size(), ScopeType.MINOR);
 		this.scopes.add(newScope);
 	}
@@ -68,6 +68,23 @@ public class SymbolTable {
 	}
 
 
+	/**
+	 * Returns the symbol with the specified identifier that is 
+	 * located in the nearest most scope. Returns null if no
+	 * symbol exists with the specified identifier.
+	 * @param identifier The identifier to look for.
+	 * @return
+	 */
+	public Symbol retrieveSymbol(String identifier) {
+		ArrayList<Symbol> symbols = this.table.get(identifier);
+
+		if (symbols == null || symbols.isEmpty()) {
+			return null;
+		} else {
+			return symbols.get(0);
+		}
+	}
+	
 	public void addSymbolToCurScope(String identifier, Type type) throws SemanticError {
 		//TODO: Implement this
 

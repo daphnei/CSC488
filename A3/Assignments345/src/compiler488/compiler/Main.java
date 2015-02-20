@@ -145,7 +145,7 @@ public class Main {
 		int i, j, k;		//just a counter
 		String argTmp ;		//temp argument strings for -D and -T
 		final String badUsage = "Incorrect usage of command line arguments."
-		                        + " Please refer to the compiler man page." ;
+				+ " Please refer to the compiler man page." ;
 
 		if (length > 0)
 			try {		// catch arrayOutOfBoundsException for bad argument list
@@ -163,7 +163,7 @@ public class Main {
 						for( j = 0 ; j < k ; j++ )
 							if( "abxy".indexOf( argTmp.charAt(j)) < 0 )
 								System.err.println("Invalid flag '" +
-								                   argTmp.charAt(j) + "' for -D option (ignored)");
+										argTmp.charAt(j) + "' for -D option (ignored)");
 					}
 					else if (arguments[i].equals("-T")) {
 						i++;   // advance to next argument
@@ -179,7 +179,7 @@ public class Main {
 						for( j = 0 ; j < k ; j++ )
 							if( "lpasycx".indexOf( argTmp.charAt(j)) < 0 )
 								System.err.println("Invalid flag '" +
-								                   argTmp.charAt(j) + "' for -T option (ignored)");
+										argTmp.charAt(j) + "' for -T option (ignored)");
 					}
 					else if(arguments[i].equals("-E")) {
 						i++;   // advance to next argument
@@ -222,11 +222,11 @@ public class Main {
 				}  // end for length loop
 			}
 		//  ran off end of argv
-			catch(ArrayIndexOutOfBoundsException arrayBounds ) {
-				System.err.println( badUsage );
-				errorOccurred = true ;
-				return ;
-			}
+		catch(ArrayIndexOutOfBoundsException arrayBounds ) {
+			System.err.println( badUsage );
+			errorOccurred = true ;
+			return ;
+		}
 	}
 
 	/** Set System.in to be the specified file
@@ -244,7 +244,7 @@ public class Main {
 		catch( Exception e ) {
 			System.err.println("Unable to open file " + fileName );
 			System.err.println(e.getClass().getName()
-			                   + ": " + e.getMessage());
+					+ ": " + e.getMessage());
 			return ;  // continue with System.in  unchanged
 		}
 		try {
@@ -254,7 +254,7 @@ public class Main {
 		catch( Exception e ) {
 			System.err.println("Unable to set input stream to  file " + fileName );
 			System.err.println(e.getClass().getName()
-			                   + ": " + e.getMessage());
+					+ ": " + e.getMessage());
 			return ;  // continue with System.in  unchanged
 		}
 	}
@@ -271,7 +271,7 @@ public class Main {
 		catch( Exception e ) {
 			System.err.println("Unable to open file " + fileName );
 			System.err.println(e.getClass().getName()
-			                   + ": " + e.getMessage());
+					+ ": " + e.getMessage());
 			return ;  // continue with System.out  unchanged
 		}
 		try {
@@ -282,7 +282,7 @@ public class Main {
 		catch( Exception e ) {
 			System.err.println("Unable to set output stream to  file " + fileName );
 			System.err.println(e.getClass().getName()
-			                   + ": " + e.getMessage());
+					+ ": " + e.getMessage());
 			return ;  // continue with System.out  unchanged
 		}
 	}
@@ -299,7 +299,7 @@ public class Main {
 		catch( Exception e ) {
 			System.err.println("Unable to open file " + fileName );
 			System.err.println(e.getClass().getName()
-			                   + ": " + e.getMessage());
+					+ ": " + e.getMessage());
 			return ;  // continue with System.err  unchanged
 		}
 		try {
@@ -310,7 +310,7 @@ public class Main {
 		catch( Exception e ) {
 			System.err.println("Unable to set error stream to  file " + fileName );
 			System.err.println(e.getClass().getName()
-			                   + ": " + e.getMessage());
+					+ ": " + e.getMessage());
 			return ;  // continue with System.err  unchanged
 		}
 	}
@@ -334,7 +334,7 @@ public class Main {
 		catch( Exception e ) {
 			System.err.println("Unable to open trace file " + fileName );
 			System.err.println(e.getClass().getName()
-			                   + ": " + e.getMessage());
+					+ ": " + e.getMessage());
 		}
 		try {
 			traceFileStream = new FileOutputStream( traceFile );
@@ -344,7 +344,7 @@ public class Main {
 		catch( Exception e ) {
 			System.err.println("Unable to set trace stream to  file " + fileName );
 			System.err.println(e.getClass().getName()
-			                   + ": " + e.getMessage());
+					+ ": " + e.getMessage());
 			traceStream = saveSysOut ;
 		}
 	}
@@ -460,7 +460,7 @@ public class Main {
 		catch( ExecutionException e)
 		{
 			System.err.println("Exception during Machine Execution"
-			                   + e.getMessage());
+					+ e.getMessage());
 			// Run error has already dumped machine state.
 			return ;
 		}
@@ -561,10 +561,10 @@ public class Main {
 		return ;		// normal termination after compilation
 	}
 
-	/*------------------------------------------------------------*/
-	/*								*/
-	/*    Main Program 						*/
-	/*								*/
+	/*-----------------------------------------------------------*/
+	/*															 */
+	/*    Main Program 							   				 */
+	/*															 */
 	/*-----------------------------------------------------------*/
 
 	/** The main driver for the system.
