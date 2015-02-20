@@ -534,9 +534,19 @@ public class Main {
 		/*  Do semantic analysis on the program		*/
 		semanticAnalysis( programAST );
 
-		if( errorOccurred ){
+		if ( errorOccurred ){
 			System.out.println("Processing Terminated due to errors during semantic analysis");
 			return ;
+		}
+
+		System.out.println("TODO: Finished the semantic analysis. GET OUTTA HERE!");
+
+		boolean yes = true;
+		if ( yes ) {
+			System.out.println("sad");
+			System.exit(0);
+			errorOccurred = true;
+                	return;
 		}
 
 		// Dump AST after semantic analysis  if requested
