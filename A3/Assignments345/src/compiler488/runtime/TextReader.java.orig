@@ -129,8 +129,8 @@ import java.io.*;
    * import java.io.*;
    </pre></blockquote>
 
-   Questions about this class can be sent to
-   <a href="http://www.cs.arizona.edu/people/reges">Stuart Reges</a>
+   Questions about this class can be sent to 
+   <a href="http://www.cs.arizona.edu/people/reges">Stuart Reges</a> 
    (<a href="mailto:reges@cs.arizona.edu">reges@cs.arizona.edu</a>).
 
    @version 1.1,  1/7/01
@@ -138,166 +138,166 @@ import java.io.*;
 
 public class TextReader
 {
-	/**
-	   Create a text-reading stream.
-	   @param input the input stream to read from
-	*/
-	public TextReader(InputStream input)
-	{
-		myInput = input;
-		myUndefinedState = true;
-	}
+    /**
+       Create a text-reading stream.
+       @param input the input stream to read from
+    */
+    public TextReader(InputStream input)
+    {
+        myInput = input;
+        myUndefinedState = true;
+    }
 
-	private int read()
-	// post: reads a character from the stream, converting \r\n into \n
-	{
-		try {
-			int result = myInput.read();
-			if (result == '\r')
-				result = myInput.read();
-			return result;
-		} catch (IOException e) {
-			throw new RuntimeException(e.toString());
-		}
-	}
+    private int read()
+    // post: reads a character from the stream, converting \r\n into \n
+    {
+        try {
+            int result = myInput.read();
+            if (result == '\r')
+                result = myInput.read();
+            return result;
+        } catch (IOException e) {
+            throw new RuntimeException(e.toString());
+        }
+    }   
 
-	private void checkState()
-	// post: used to implement lazy input; defines state if it is
-	//       currently undefined (should be called as late as possible)
-	{
-		if (myUndefinedState) {
-			myUndefinedState = false;
-			myNextChar = read();
-		}
-	}
+    private void checkState()
+    // post: used to implement lazy input; defines state if it is
+    //       currently undefined (should be called as late as possible)
+    {
+        if (myUndefinedState) {
+            myUndefinedState = false;
+            myNextChar = read();
+        }
+    }
 
-	/**
-	   Read a single character (including whitespace).
-	   @return next character in the stream
-	   @throws RuntimeException if end-of-file
-	*/
-	public char readChar()
-	{
-		checkState();
-		if (myNextChar == -1)
-			throw new RuntimeException("Attempt to read past end of file");
-		else {
-			char result = (char)myNextChar;
-			if (myNextChar == '\n')  // lazy input, don't read yet
-				myUndefinedState = true;
-			else {
-				myNextChar = read();
-				if (myNextChar == -1)   // unexpected end-of-file
-					myNextChar = '\n';  // insert virtual \n
-			}
-			return result;
-		}
-	}
+    /**
+       Read a single character (including whitespace).
+       @return next character in the stream
+       @throws RuntimeException if end-of-file
+    */
+    public char readChar()
+    {
+        checkState();
+        if (myNextChar == -1)
+            throw new RuntimeException("Attempt to read past end of file");
+        else {
+            char result = (char)myNextChar;
+            if (myNextChar == '\n')  // lazy input, don't read yet
+                myUndefinedState = true;
+            else {
+                myNextChar = read();
+                if (myNextChar == -1)   // unexpected end-of-file 
+                    myNextChar = '\n';  // insert virtual \n
+            }
+            return result;
+        }
+    }
 
-	/**
-	   Peek ahead one character.
-	   @return the character that a subsequent call on readChar() would return
-	   @throws RuntimeException if end-of-file
-	*/
-	public char peek()
-	{
-		checkState();
-		if (myNextChar == -1)
-			throw new RuntimeException("Attempt to peek past end of file");
-		return (char)myNextChar;
-	}
+    /**
+       Peek ahead one character.
+       @return the character that a subsequent call on readChar() would return
+       @throws RuntimeException if end-of-file
+    */
+    public char peek()
+    {
+        checkState();
+        if (myNextChar == -1)
+            throw new RuntimeException("Attempt to peek past end of file");
+        return (char)myNextChar;
+    }
 
-	/**
-	   Tell whether this stream is ready to be read.
-	   @return true if ready, false if not
-	*/
-	public boolean ready()
-	{
-		checkState();
-		return myNextChar != -1;
-	}
+    /**
+       Tell whether this stream is ready to be read.
+       @return true if ready, false if not
+    */
+    public boolean ready()
+    {
+        checkState();
+        return myNextChar != -1;
+    }
 
-	/**
-	   Reads a line of text.
-	   @return the line of text without the '\n'
-	   @throws RuntimeException if end-of-file
-	*/
-	public String readLine()
-	{
-		checkState();
-		String result = "";
-		for(;;) {
-			char next = readChar();
-			if (next == '\n')
-				break;
-			result += next;
-		}
-		return result;
-	}
+    /**
+       Reads a line of text.
+       @return the line of text without the '\n'
+       @throws RuntimeException if end-of-file
+    */
+    public String readLine()
+    {
+        checkState();
+        String result = "";
+        for(;;) {
+            char next = readChar();
+            if (next == '\n')
+                break;
+            result += next;
+        }
+        return result;
+    }
 
-	/**
-	   Determine whether or not ends of line are treated as tokens.
-	   This method affects only the token-reading methods (readWord,
-	   readInt, readDouble).
-	   @param flag whether end-of-line characters should be left in stream */
-	public void eolIsSignificant(boolean flag)
+    /**
+       Determine whether or not ends of line are treated as tokens.
+       This method affects only the token-reading methods (readWord,
+       readInt, readDouble).
+       @param flag whether end-of-line characters should be left in stream */
+    public void eolIsSignificant(boolean flag)
 
-	{
-		mySignificantEol = flag;
-	}
+    {
+        mySignificantEol = flag;
+    }
 
-	/**
-	   Skip whitespace.
-	   @param skipEoln whether or not to skip end-of-line characters
-	*/
-	public void skipWhite(boolean skipEoln)
-	{
-		checkState();
-		while (ready() && Character.isWhitespace(peek()) &&
-		        (skipEoln || peek() != '\n'))
-			readChar();
-	}
+    /**
+       Skip whitespace.
+       @param skipEoln whether or not to skip end-of-line characters
+    */
+    public void skipWhite(boolean skipEoln)
+    {
+        checkState();
+        while (ready() && Character.isWhitespace(peek()) &&
+               (skipEoln || peek() != '\n'))
+            readChar();
+    }
 
-	/**
-	   Read the next token delineated by whitespace.
-	   @return the word read (empty string if end-of-file reached)
-	*/
-	public String readWord()
-	{
-		String result = "";
-		skipWhite(true);
-		while (ready() && !Character.isWhitespace(peek()))
-			result += readChar();
-		skipWhite(false);
-		if (ready() && peek() == '\n' && !mySignificantEol)
-			readChar();
-		return result;
-	}
+    /**
+       Read the next token delineated by whitespace.
+       @return the word read (empty string if end-of-file reached)
+    */
+    public String readWord()
+    {
+        String result = "";
+        skipWhite(true);
+        while (ready() && !Character.isWhitespace(peek()))
+            result += readChar();
+        skipWhite(false);
+        if (ready() && peek() == '\n' && !mySignificantEol)
+            readChar();
+        return result;
+    }
 
-	/**
-	   Read the next token as an integer.
-	   @return next integer in input stream
-	   @throws RuntimeException if no token or next token not an integer
-	*/
-	public int readInt()
-	{
-		return Integer.parseInt(readWord());
-	}
+    /**
+       Read the next token as an integer.
+       @return next integer in input stream
+       @throws RuntimeException if no token or next token not an integer
+    */
+    public int readInt()
+    {
+        return Integer.parseInt(readWord());
+    }
 
-	/**
-	   Read the next token as a double.
-	   @return next double in input stream
-	   @throws RuntimeException if no token or next token not a double
-	*/
-	public double readDouble()
-	{
-		return Double.parseDouble(readWord());
-	}
+    /**
+       Read the next token as a double.
+       @return next double in input stream
+       @throws RuntimeException if no token or next token not a double
+    */
+    public double readDouble()
+    {
+        return Double.parseDouble(readWord());
+    }
 
-	private InputStream myInput;       // input stream
-	private int myNextChar;            // one-char lookahead
-	private boolean myUndefinedState;  // for lazy input; if true,
-	// then myNextChar is undefined
-	private boolean mySignificantEol;  // whether or not newline should be
-	// kept in stream when reading tokens
+    private InputStream myInput;       // input stream
+    private int myNextChar;            // one-char lookahead
+    private boolean myUndefinedState;  // for lazy input; if true,
+                                       // then myNextChar is undefined
+    private boolean mySignificantEol;  // whether or not newline should be
+                                       // kept in stream when reading tokens
 }

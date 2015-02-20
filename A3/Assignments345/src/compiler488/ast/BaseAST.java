@@ -11,42 +11,42 @@ import compiler488.utilities.IVisitableElement;
  */
 public abstract class BaseAST implements AST, IVisitableElement {
 	/**
-	 * Return the right and left columns of this statement 
+	 * Return the right and left columns of this statement
 	 * in the input script file.
 	 */
 	protected int left;
 	protected int right;
-	
-    /**
-     * Default constructor.
-     *
-     * <p>Add additional information to your AST tree nodes here.</p>
-     */
+
+	/**
+	 * Default constructor.
+	 *
+	 * <p>Add additional information to your AST tree nodes here.</p>
+	 */
 	public BaseAST() {
 	}
 
-    /**
-     * A default pretty-printer implementation that uses <code>toString</code>.
-     *
-     * @param p the printer to use
-     */
-    @Override
-    public void prettyPrint(PrettyPrinter p) {
-        p.print(toString());
-    }
+	/**
+	 * A default pretty-printer implementation that uses <code>toString</code>.
+	 *
+	 * @param p the printer to use
+	 */
+	@Override
+	public void prettyPrint(PrettyPrinter p) {
+		p.print(toString());
+	}
 
-    /**
+	/**
 	 * @return the column number of the beginning of this statement.
 	 */
-    public int getLeft() {
-        return left;
-    }
+	public int getLeft() {
+		return left;
+	}
 
-    /**
-     * @return the column number of the right of this statement.
-     */
-    public int getRight() {
-        return right;
-    }
-    
+	/**
+	 * @return the column number of the right of this statement.
+	 */
+	public int getRight() {
+		return right;
+	}
+
 }

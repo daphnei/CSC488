@@ -2,7 +2,7 @@ package compiler488.semantics;
 
 /**
  * This error should be thrown when a method discovers something fishy with the semantics.
- *
+ * 
  * @author daphne
  *
  */

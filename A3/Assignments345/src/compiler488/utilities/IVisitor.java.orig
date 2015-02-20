@@ -42,13 +42,13 @@ import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 
 /**
- * The interface for a class that will be able to "visit"
+ * The interface for a class that will be able to "visit" 
  * and check the semantics of each element of the AST.
- *
+ * 
  * @author daphne
  *
  */
-public interface IVisitor {
+public interface IVisitor {	
 	public void visit(ArrayDeclPart visitable);
 	public void visit(Declaration visitable);
 	public void visit(DeclarationPart visitable);
@@ -56,7 +56,7 @@ public interface IVisitor {
 	public void visit(RoutineDecl visitable);
 	public void visit(ScalarDecl visitable);
 	public void visit(ScalarDeclPart visitable);
-
+	
 	public void visit(AnonFuncExpn visitable);
 	public void visit(ArithExpn visitable);
 	public void visit(BoolConstExpn visitable);
