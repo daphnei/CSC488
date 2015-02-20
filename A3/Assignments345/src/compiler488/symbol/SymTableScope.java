@@ -11,6 +11,12 @@ package compiler488.symbol;
  *
  */
 public class SymTableScope {
+	/**
+	 * A major scope is a program, function or precedure.
+	 * A minor scope is an if statement or loop.
+	 * @author daphne
+	 *
+	 */
 	public enum ScopeType {MAJOR, MINOR}
 
 	/**
@@ -23,10 +29,10 @@ public class SymTableScope {
 	 * It might be redundant to store this since the index should be equal to
 	 * the scope's position in the scopes list of the symbol table.
 	 */
-	private int index;
+	private int depthIndex;
 
-	public SymTableScope(int index, ScopeType scopeType) {
-		this.index = index;
+	public SymTableScope(int depthIndex, ScopeType scopeType) {
+		this.depthIndex = depthIndex;
 		this.scopeType = scopeType;
 	}
 }
