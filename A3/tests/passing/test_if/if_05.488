@@ -1,0 +1,8 @@
+begin
+	if ( 2 = 2 )
+	then
+		put "false"
+	else
+		put "true"
+	end
+end

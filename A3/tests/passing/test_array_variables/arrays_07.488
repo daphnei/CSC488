@@ -1,0 +1,3 @@
+begin
+	boolean cats[10, 19]
+end

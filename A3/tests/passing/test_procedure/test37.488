@@ -1,0 +1,7 @@
+begin
+
+   procedure my_first_procedure_ begin
+	put "Playstation! Playstation! Playstation!"
+   end
+
+end

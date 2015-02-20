@@ -1,0 +1,16 @@
+begin
+
+% Function with no parameters
+integer function func_1b(integer a)
+begin
+	return (a * 2)
+end
+
+integer a
+a <= 3
+
+a <= func_1b(a)
+
+end
+
+

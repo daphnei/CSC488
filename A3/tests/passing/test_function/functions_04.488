@@ -1,0 +1,11 @@
+begin
+integer a1
+boolean a2
+
+integer function first_function
+   begin
+      integer a3
+   end
+
+
+end

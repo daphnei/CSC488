@@ -1,0 +1,10 @@
+begin                                
+	integer i
+	integer j
+	
+	i <= 1
+	loop
+		i <= i + 1
+		exit when i > 10
+	end
+end

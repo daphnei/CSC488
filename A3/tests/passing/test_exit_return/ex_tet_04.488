@@ -1,0 +1,11 @@
+begin
+integer a1
+boolean a2
+integer a3[5]
+
+
+
+exit
+return
+
+end

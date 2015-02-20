@@ -1,0 +1,13 @@
+begin 
+
+% Function that returns whether or not param1 is a non-negative integer
+boolean function func_2b (integer param1)
+begin
+	if (param1 < = 0) then
+		return (false)
+	else
+		return (true)
+	end
+end
+
+end

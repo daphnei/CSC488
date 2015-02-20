@@ -1,0 +1,6 @@
+begin
+	%Check a bunch of '-' symbols used both in binary and unary format.
+
+	integer p
+	p <= - - - 1 - - - 1
+end

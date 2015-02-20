@@ -1,0 +1,7 @@
+begin
+%Missing right ")"
+procedure my_procedure (integer var1 begin
+   put "hello"
+end
+
+end

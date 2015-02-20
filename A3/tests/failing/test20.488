@@ -1,0 +1,9 @@
+begin
+
+%Cant have a "put" inside a "while"
+while put var1 var2 begin
+   put "hello"
+end
+
+
+end

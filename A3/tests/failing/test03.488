@@ -1,0 +1,7 @@
+begin 
+
+%Waiting statement inside scope, instead of expression
+15 + 20
+
+
+end

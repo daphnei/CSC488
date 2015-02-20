@@ -1,0 +1,6 @@
+begin
+	boolean dogs[-10 .. 10, -10 .. 10]
+
+	dogs[-5, -5] <= true
+	dogs[11 - 15, 2 + 4] <= false
+end

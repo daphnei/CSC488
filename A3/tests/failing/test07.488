@@ -1,0 +1,9 @@
+begin
+
+%Waiting expression inside "while", got statement
+while put variable do
+   put "Something not useful"
+end
+
+end
+

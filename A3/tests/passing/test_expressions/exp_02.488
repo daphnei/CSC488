@@ -1,0 +1,6 @@
+begin 
+	%Check for order of operations correctness.
+
+	integer p
+	p <= 2 * 3 + 5 * 6
+end

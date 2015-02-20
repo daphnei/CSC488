@@ -1,0 +1,8 @@
+begin 
+
+%Statement inside expression is invalid
+if  true | put "Hi!" then
+   put "Hello"
+end
+
+end 

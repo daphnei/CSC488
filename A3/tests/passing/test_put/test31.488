@@ -1,0 +1,8 @@
+begin
+
+put true
+put "Hello world"
+put skip
+
+
+end
