@@ -227,8 +227,8 @@ declarationsAndStatements   ::= statement:stm
                                     RESULT = many; :}
                             ;
 
-statement                   ::= variable:left LESS:mid EQUAL expression:right               // assignment statement
-                                {:  RESULT = new AssignStmt(left, right, midleft, midright); :} 
+statement                   ::= variable:var LESS:mid EQUAL expression:dec               // assignment statement
+                                {:  RESULT = new AssignStmt(var, dec, midleft, midright); :} 
                             |   IF:mid expression:exp THEN declarationsAndStatements:dec END    // if statements
                                 {:  RESULT = new IfStmt(exp, dec, midleft, midright); :} 
                             |   IF:mid expression:exp THEN declarationsAndStatements:dec1 ELSE declarationsAndStatements:dec2 END

@@ -1,70 +1,85 @@
 package compiler488.symbol;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
 import compiler488.ast.type.Type;
 import compiler488.semantics.SemanticError;
-import compiler488.symbol.SymTableScope.ScopeType;
 
 public class SymbolTable {
+	protected static enum ScopeType {MAJOR, MINOR};
+	
 	/**
 	 * The table maps from the identifier name (such as foo)
 	 * to a list of symbols using that identifier name.
 	 * In each list, the first item should be the one in the nearest-most scope,
 	 * and the last item, the one in the farthest.
 	 */
-	private HashMap<String, ArrayList<Symbol>> table;
+	private HashMap<String, Stack<Symbol>> table;
 
 	/**
-	 * The stack of open scopes.
+	 * The index of the innermost opened scope.
 	 */
-	private Stack<SymTableScope> scopes;
+	private int curScopeIndex;
 
+	/**
+	 * Keeps track of whether each scope is major or minor.
+	 */
+	private Stack<ScopeType> scopeTypes;
+	
 	public SymbolTable()
 	{
-		this.table = new HashMap<String, ArrayList<Symbol>>();
-		this.scopes = new Stack<SymTableScope>();
+		//Don't use this. Instead use Initialize. This allows us to recycle one SymbolTable object.
 	}
 
 	/**  Initialize - called once by semantic analysis
-	 *                at the start of  compilation
-	 *                May be unnecessary if constructor
-	 *                does all required initialization
+	 *                at the start of compilation
 	 */
 	public void Initialize() {
-
-		/**   Initialize the symbol table
-		 *	Any additional symbol table initialization
-		 *  GOES HERE
-		 */
-
+		this.table = new HashMap<String, Stack<Symbol>>();
+		this.scopeTypes = new Stack<SymbolTable.ScopeType>();
+		
+		this.curScopeIndex = -1; //Set this to -1 so that the first scope created will have index 0.
 	}
 
 	/**  Finalize - called once by Semantics at the end of compilation
 	 *              May be unnecessary
 	 */
 	public void Finalize() {
-
-		/**  Additional finalization code for the
-		 *  symbol table  class GOES HERE.
-		 *
-		 */
+		this.table.clear();
+		this.scopeTypes.clear();
 	}
 
 	public void openMajorScope() {
-		SymTableScope newScope = new SymTableScope(this.scopes.size(), ScopeType.MAJOR);
-		this.scopes.add(newScope);
+		this.curScopeIndex++;
+		this.scopeTypes.push(ScopeType.MAJOR);
 	}
 
 	public void openMinorScope() {
-		SymTableScope newScope = new SymTableScope(this.scopes.size(), ScopeType.MINOR);
-		this.scopes.add(newScope);
+		this.curScopeIndex++;
+		this.scopeTypes.push(ScopeType.MINOR);
 	}
 
-	public void closeCurrentScope() {
-		//TODO: Implement this
+	public void closeCurrentScope() throws SemanticError {
+		this.checkIfThereIsAnyScope();
+		
+		//Destroy all the variables that are in the current scope.
+		for (String identifier : this.table.keySet()) {
+			Stack<Symbol> symbols = this.table.get(identifier);
+			
+			//Check if any symbols exist for this identifier.
+			if (symbols != null && !symbols.isEmpty()) {
+				//If symbols do exist, check if the first one is in the current scope.
+				if (symbols.peek().getScope() == this.curScopeIndex) {
+					symbols.pop();
+				}
+			}
+		}
+		
+		//All of the symbols that were declared in the current scope have been removed.
+		//Now decrement the scope index.
+		this.curScopeIndex--;
+		this.scopeTypes.pop();
 	}
 
 
@@ -74,44 +89,58 @@ public class SymbolTable {
 	 * symbol exists with the specified identifier.
 	 * @param identifier The identifier to look for.
 	 * @return
+	 * @throws SemanticError TODO: Add helpful information to the error being thrown.
 	 */
 	public Symbol retrieveSymbol(String identifier) {
-		ArrayList<Symbol> symbols = this.table.get(identifier);
+		Stack<Symbol> symbols = this.table.get(identifier);
 
 		if (symbols == null || symbols.isEmpty()) {
 			return null;
 		} else {
-			return symbols.get(0);
+			return symbols.peek();
 		}
 	}
 	
 	public void addSymbolToCurScope(String identifier, Type type) throws SemanticError {
-		//TODO: Implement this
+		this.checkIfThereIsAnyScope();
 
 		//Get the list of symbols associated with this identifier.
-		ArrayList<Symbol> symbols = this.table.get(identifier);
+		Stack<Symbol> symbols = this.table.get(identifier);
 
 		if (symbols == null || symbols.isEmpty()) {
 			//If "symbols" is empty or null, then no symbol with this name exists. Yay!
 
 			//Create the new symbol to the front of the symbol list.
-			Symbol newSymbol = new Symbol(identifier, this.curScope(), type);
-			symbols.add(0, newSymbol);
+			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
+			symbols.add(newSymbol);
 		}
-		else if (symbols.get(0).getScope() == this.curScope()) {
-			//If a symbol with the input identifier already exists in this scope, then it is an error.
-
+		else if (symbols.get(0).getScope() == this.curScopeIndex) {
+			//If a symbol with the input identifier already exists in the current scope, then it is an error.
 			throw new SemanticError();
 		}
 		else {
 			//A symbol with the input identifier exists but it is in an upper scope.
-
-			//TODO: Figure out what should happen here. The behavior should be different
-			//      if the symbol is in a  major vs minor scope?
+			
+			//This is unacceptable if the current scope is minor.
+			if (this.scopeTypes.peek() == ScopeType.MINOR) {
+				throw new SemanticError();
+			}
+			
+			//The current scope is major, so it is ok to redeclare a variable that was declared
+			//in an upper scope.
+			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
+			symbols.add(newSymbol);
 		}
 	}
-
-	private SymTableScope curScope() {
-		return this.scopes.peek();
+	
+	/**
+	 * Checks is any scope exists.
+	 * @throws SemanticError if no scope exists.
+	 */
+	private void checkIfThereIsAnyScope() throws SemanticError {
+		if (this.curScopeIndex < 0) {
+			//There is no open scope. This is a semantic error.
+			throw new SemanticError();
+		}
 	}
 }

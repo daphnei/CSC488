@@ -9,19 +9,22 @@ public class Symbol {
 	private String identifier;
 
 	/**
-	 * My scope index. Maybe this should be some sort of Scope object instead?
+	 * My scope index.
 	 */
-	private  SymTableScope scope;
+	private int scopeIndex;
 
 	private Type type;
 
-	public Symbol(String identifier, SymTableScope scope, Type type) {
+	public Symbol(String identifier, int scopeIndex, Type type) {
 		this.identifier = identifier;
-		this.scope = scope;
+		this.scopeIndex = scopeIndex;
 		this.type = type;
 	}
 
-	public SymTableScope getScope() {
-		return this.scope;
+	/**
+	 * @return The index of the scope in which this symbol was declared.
+	 */
+	public int getScope() {
+		return this.scopeIndex;
 	}
 }
