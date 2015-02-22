@@ -1,6 +1,4 @@
-package compiler488.semantics;
-
-import java.io.*;
+package compiler488.utilities;
 
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.Declaration;
@@ -39,276 +37,229 @@ import compiler488.ast.stmt.WhileDoStmt;
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
-import compiler488.symbol.SymbolTable;
-import compiler488.utilities.IVisitor;
-import compiler488.utilities.NodeVisitor;
 
-/**
- * The Semantics class implements IVisitor. It will trace through an AST tree
- * and check each node for the appropriate semantic actions.
- * 
- * @author g2robint
- */
-public class Semantics extends NodeVisitor {
-
-	/**
-	 * Flag for tracing semantic analysis.
-	 */
-	private boolean traceSemantics = false;
-
-	/**
-	 * File sink for semantic analysis trace.
-	 */
-	private String traceFile = new String();
-	public FileWriter Tracer;
-	public File f;
-
-	/**
-	 * The symbol table we are using for this analysis.
-	 */
-	private SymbolTable symbolTable;
-
-	public Semantics() {
-
-	}
-
-	/**
-	 * Initialize the symbol table.
-	 */
-	public void Initialize() {
-		this.symbolTable = new SymbolTable();
-		this.symbolTable.Initialize();
-	}
-
-	/**
-	 * Finalize the symbol table.
-	 */
-	public void Finalize() {
-
-	}
-
-	/**
-	 * Perform one semantic analysis action.
-	 * 
-	 * @param actionNumber
-	 *            Semantic analysis action number.
-	 */
-	void semanticAction(int actionNumber) {
-
-		if (traceSemantics) {
-			if (traceFile.length() > 0) {
-				// output trace to the file represented by traceFile
-				try {
-					// open the file for writing and append to it
-					File f = new File(traceFile);
-					Tracer = new FileWriter(traceFile, true);
-
-					Tracer.write("Sematics: S" + actionNumber + "\n");
-					// always be sure to close the file
-					Tracer.close();
-				} catch (IOException e) {
-					System.out.println(traceFile + " could be opened/created.  It may be in use.");
-				}
-			} else {
-				// output the trace to standard out.
-				System.out.println("Sematics: S" + actionNumber);
-			}
-
-		}
-
-		/*************************************************************/
-		/* Code to implement each semantic action GOES HERE */
-		/* This stub semantic analyzer just prints the actionNumber */
-		/*                                                           */
-		/* FEEL FREE TO ignore or replace this procedure */
-		/*************************************************************/
-
-		System.out.println("Semantic Action: S" + actionNumber);
-		return;
-	}
-
-	@Override
-	public void visit(Program visitable) {
-		super.visit(visitable);
-	}
+public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(ArrayDeclPart visitable) {
-		super.visit(visitable);
+		// No children.		
 	}
 
 	@Override
 	public void visit(Declaration visitable) {
-		super.visit(visitable);
+		// No children.
 	}
 
 	@Override
 	public void visit(DeclarationPart visitable) {
-		super.visit(visitable);
+		// No children.		
 	}
 
 	@Override
 	public void visit(MultiDeclarations visitable) {
-		super.visit(visitable);
+		for (DeclarationPart element : visitable.getParts()) {
+			element.accept(this);
+		}		
 	}
 
 	@Override
 	public void visit(RoutineDecl visitable) {
-		super.visit(visitable);
+		for (ScalarDecl param : visitable.getParameters()) {
+			param.accept(this);
+		}
+		visitable.getBody().accept(this);		
 	}
 
 	@Override
 	public void visit(ScalarDecl visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(ScalarDeclPart visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(AnonFuncExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(ArithExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(BoolConstExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(BoolExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(CompareExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(EqualsExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(Expn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(FunctionCallExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(IdentExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(IntConstExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(NotExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(SkipConstExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(SubsExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(TextConstExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(UnaryMinusExpn visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(AssignStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(ExitStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(GetStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(IfStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(LoopStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(ProcedureCallStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void visit(Program visitable) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(PutStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(ReturnStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(Scope visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(Stmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(WhileDoStmt visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(BooleanType visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(IntegerType visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
 	public void visit(Type visitable) {
-		super.visit(visitable);
+		// TODO Auto-generated method stub
+		
 	}
+
 }

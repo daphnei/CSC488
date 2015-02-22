@@ -98,13 +98,7 @@ public class RoutineDecl extends Declaration {
     }
     
 	@Override
-	public void accept(IVisitor visitor) {
-		for (ScalarDecl param : this.parameters) {
-			param.accept(visitor);
-		}
-		
-		body.accept(visitor);
-		
+	public void accept(IVisitor visitor) {	
 		visitor.visit(this);	
 	}
 }

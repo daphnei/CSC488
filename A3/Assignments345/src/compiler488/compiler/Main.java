@@ -372,8 +372,9 @@ public class Main {
 	private static void semanticAnalysis( Program  programAST ) {
 		try {
 			Semantics visitor = new Semantics();
-			visitor.Initalize();			
+			visitor.Initialize();			
 			programAST.accept(visitor);
+			visitor.Finalize();
 			
 			BasePrettyPrinter printer = new BasePrettyPrinter();
 			programAST.prettyPrint(printer);

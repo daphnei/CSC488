@@ -108,5 +108,4 @@ public class ArrayDeclPart extends DeclarationPart {
 	public void accept(IVisitor visitor) {
 		visitor.visit(this);	
 	}
-
 }

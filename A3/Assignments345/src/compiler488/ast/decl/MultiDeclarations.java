@@ -29,10 +29,6 @@ public class MultiDeclarations extends Declaration {
     
 	@Override
 	public void accept(IVisitor visitor) {
-		for (DeclarationPart element : this.elements) {
-			element.accept(visitor);
-		}
-		
 		visitor.visit(this);	
 	}
 
