@@ -124,6 +124,11 @@ public class SymbolTable {
 		if (symbols == null || symbols.isEmpty()) {
 			//If "symbols" is empty or null, then no symbol with this name exists. Yay!
 
+			if (symbols == null) {
+				symbols = new Stack<Symbol>();
+				this.table.put(identifier, symbols);
+			}
+			
 			//Create the new symbol to the front of the symbol list.
 			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
 			symbols.add(newSymbol);
