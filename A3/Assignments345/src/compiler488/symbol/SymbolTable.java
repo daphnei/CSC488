@@ -60,6 +60,11 @@ public class SymbolTable {
 		this.scopeTypes.push(ScopeType.MINOR);
 	}
 
+	/**
+	 * Closes the current scope and deletes all of the symbols that were defined in it.
+	 * 
+	 * @throws SemanticError when there is no existing open scope.
+	 */
 	public void closeCurrentScope() throws SemanticError {
 		this.checkIfThereIsAnyScope();
 		
@@ -91,7 +96,9 @@ public class SymbolTable {
 	 * @return
 	 * @throws SemanticError TODO: Add helpful information to the error being thrown.
 	 */
-	public Symbol retrieveSymbol(String identifier) {
+	public Symbol retrieveSymbol(String identifier) throws SemanticError {
+		this.checkIfThereIsAnyScope();
+		
 		Stack<Symbol> symbols = this.table.get(identifier);
 
 		if (symbols == null || symbols.isEmpty()) {
@@ -131,6 +138,13 @@ public class SymbolTable {
 			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
 			symbols.add(newSymbol);
 		}
+	}
+	
+	/**
+	 * @return the index of the currently open scope, or -1 if no scope has been opened yet.
+	 */
+	public int getCurrentScope() {
+		return this.curScopeIndex;
 	}
 	
 	/**
