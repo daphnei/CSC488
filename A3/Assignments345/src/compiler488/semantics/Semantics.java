@@ -42,100 +42,95 @@ import compiler488.ast.type.Type;
 import compiler488.symbol.SymbolTable;
 import compiler488.utilities.IVisitor;
 
-/** Implement semantic analysis for compiler 488
- *  @author  <B> Put your names here </B>
+/**
+ * The Semantics class implements IVisitor. It will trace through an AST tree
+ * and check each node for the appropriate semantic actions.
+ * 
+ * @author g2robint
  */
 public class Semantics implements IVisitor {
 
-	/** flag for tracing semantic analysis */
+	/**
+	 * Flag for tracing semantic analysis.
+	 */
 	private boolean traceSemantics = false;
-	/** file sink for semantic analysis trace */
+
+	/**
+	 * File sink for semantic analysis trace.
+	 */
 	private String traceFile = new String();
 	public FileWriter Tracer;
 	public File f;
 
 	/**
-	 * Variables added by us
+	 * The symbol table we are using for this analysis.
 	 */
 	private SymbolTable symbolTable;
 
-	/** SemanticAnalyzer constructor */
-	public Semantics () {
-
-	}
-
-	/**  semanticsInitialize - called once by the parser at the      */
-	/*                        start of  compilation                 */
-	void Initialize() {
-
-		/*   Initialize the symbol table             */
-
-		// Symbol.Initialize();
-
-		/*********************************************/
-		/*  Additional initialization code for the   */
-		/*  semantic analysis module                 */
-		/*  GOES HERE                                */
-		/*********************************************/
-
-		this.symbolTable = new SymbolTable();
-	}
-
-	/**  semanticsFinalize - called by the parser once at the        */
-	/*                      end of compilation                      */
-	void Finalize() {
-
-		/*  Finalize the symbol table                 */
-
-		// Symbol.Finalize();
-
-		/*********************************************/
-		/*  Additional finalization code for the      */
-		/*  semantics analysis module                 */
-		/*  GOES here.                                */
-		/**********************************************/
+	
+	public Semantics() {
 
 	}
 
 	/**
-	 *  Perform one semantic analysis action
-	 *  @param  actionNumber  semantic analysis action number
+	 * Initialize the symbol table.
 	 */
-	void semanticAction( int actionNumber ) {
+	public void Initialize() {
+		this.symbolTable = new SymbolTable();
+		this.symbolTable.Initialize();
+	}
 
-		if( traceSemantics ) {
-			if(traceFile.length() > 0 ) {
-				//output trace to the file represented by traceFile
+	/**
+	 * Finalize the symbol table.
+	 */
+	public void Finalize() {
+
+	}
+
+	/**
+	 * Perform one semantic analysis action.
+	 * 
+	 * @param actionNumber
+	 *            Semantic analysis action number.
+	 */
+	void semanticAction(int actionNumber) {
+
+		if (traceSemantics) {
+			if (traceFile.length() > 0) {
+				// output trace to the file represented by traceFile
 				try {
-					//open the file for writing and append to it
+					// open the file for writing and append to it
 					File f = new File(traceFile);
 					Tracer = new FileWriter(traceFile, true);
 
 					Tracer.write("Sematics: S" + actionNumber + "\n");
-					//always be sure to close the file
+					// always be sure to close the file
 					Tracer.close();
+				} catch (IOException e) {
+					System.out.println(traceFile + " could be opened/created.  It may be in use.");
 				}
-				catch (IOException e) {
-					System.out.println(traceFile +
-					                   " could be opened/created.  It may be in use.");
-				}
-			}
-			else {
-				//output the trace to standard out.
-				System.out.println("Sematics: S" + actionNumber );
+			} else {
+				// output the trace to standard out.
+				System.out.println("Sematics: S" + actionNumber);
 			}
 
 		}
 
 		/*************************************************************/
-		/*  Code to implement each semantic action GOES HERE         */
-		/*  This stub semantic analyzer just prints the actionNumber */
+		/* Code to implement each semantic action GOES HERE          */
+		/* This stub semantic analyzer just prints the actionNumber  */
 		/*                                                           */
-		/*  FEEL FREE TO ignore or replace this procedure            */
+		/* FEEL FREE TO ignore or replace this procedure             */
 		/*************************************************************/
 
-		System.out.println("Semantic Action: S" + actionNumber  );
-		return ;
+		System.out.println("Semantic Action: S" + actionNumber);
+		return;
+	}
+
+	@Override
+	public void visit(Program visitable) {
+		// TODO Auto-generated method stub
+
 	}
 
 	@Override
@@ -302,12 +297,6 @@ public class Semantics implements IVisitor {
 
 	@Override
 	public void visit(ProcedureCallStmt visitable) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
-	public void visit(Program visitable) {
 		// TODO Auto-generated method stub
 
 	}

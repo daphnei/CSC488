@@ -69,17 +69,17 @@ parser code {:
      */
     public void report_error(String message, Object info)
     {
-    String st =  "Error";
+    	String st =  "Error";
    
         if (info instanceof java_cup.runtime.Symbol)
         {
             java_cup.runtime.Symbol s = ((java_cup.runtime.Symbol) info);
 
-        /* s.left is supposed to hold the line number of the error.
-         * s.right is supposed to hold the column number.
+        	/* s.left is supposed to hold the line number of the error.
+         	 * s.right is supposed to hold the column number.
              * If either is < 0 the parser may have run off the end of the program
              * and a Syntax Error message without line number may be printed.
-         */
+         	*/
    
             if (s.left >= 0)                // Check line number.
         {
@@ -118,6 +118,7 @@ init with {:
  * this comment, replace the line after that with your code, and uncomment
  * the line after that.
  */
+
 // scan with {:
 // your code goes here
 // :};
@@ -227,7 +228,7 @@ declarationsAndStatements   ::= statement:stm
                                     RESULT = many; :}
                             ;
 
-statement                   ::= variable:var LESS:mid EQUAL expression:dec               // assignment statement
+statement                   ::= variable:var LESS:mid EQUAL expression:dec                      // assignment statement
                                 {:  RESULT = new AssignStmt(var, dec, midleft, midright); :} 
                             |   IF:mid expression:exp THEN declarationsAndStatements:dec END    // if statements
                                 {:  RESULT = new IfStmt(exp, dec, midleft, midright); :} 
@@ -235,23 +236,23 @@ statement                   ::= variable:var LESS:mid EQUAL expression:dec      
                                 {:  RESULT = new IfStmt(exp, dec1, dec2, midleft, midright); :} 
                             |   WHILE:mid expression:exp DO declarationsAndStatements:dec END   // while statement
                                 {:  RESULT = new WhileDoStmt(exp, dec, midleft, midright); :} 
-                            |   LOOP:mid declarationsAndStatements:loop END         // loop statement
+                            |   LOOP:mid declarationsAndStatements:loop END                     // loop statement
                                 {:  RESULT = new LoopStmt(loop, midleft, midright); :} 
-                            |   EXIT:mid                            // exit statements
+                            |   EXIT:mid                                                        // exit statements
                                 {:  RESULT = new ExitStmt(midleft, midright); :} 
                             |   EXIT:mid WHEN expression:exp
                                 {:  RESULT = new ExitStmt(exp, midleft, midright); :} 
-                            |   RETURN:mid                          // return statements
+                            |   RETURN:mid                                                      // return statements
                                 {:  RESULT = new ReturnStmt(midleft, midright); :} 
                             |   RETURN:mid L_PAREN expression:exp R_PAREN
                                 {:  RESULT = new ReturnStmt(exp, midleft, midright); :} 
-                            |   PUT:mid outputs:out                     // input/output statments
+                            |   PUT:mid outputs:out                                             // input/output statments
                                 {:  RESULT = new PutStmt(out, midleft, midright); :} 
                             |   GET:mid inputs:in
                                 {:  RESULT = new GetStmt(in, midleft, midright); :} 
-                            |   procedureCall:proc                      // procedure call
+                            |   procedureCall:proc                                              // procedure call
                                 {:  RESULT = proc; :} 
-                            |   scope:in                            // embedded scope
+                            |   scope:in                                                        // embedded scope
                                 {:  RESULT = in; :}
                             ;
 
@@ -283,11 +284,11 @@ variablenames               ::= variablename:var                // list of varia
                             ;
 
 variablename                ::= IDENT:var                       // scalar variable
-                                {:  RESULT = new ScalarDeclPart(var, varleft, varright);           :} 
+                                {:  RESULT = new ScalarDeclPart(var, varleft, varright); :} 
                             |   IDENT:var L_SQUARE bound:b R_SQUARE         // one dimensional array variable
-                                {:  RESULT = new ArrayDeclPart(var, b[0], b[1], varleft, varright);           :} 
+                                {:  RESULT = new ArrayDeclPart(var, b[0], b[1], varleft, varright); :} 
                             |   IDENT:var L_SQUARE bound:b1 COMMA bound:b2  R_SQUARE    // two dimensional array variable
-                                {:  RESULT = new ArrayDeclPart(var, b1[0], b1[1], b2[0], b2[1], varleft, varright);           :} 
+                                {:  RESULT = new ArrayDeclPart(var, b1[0], b1[1], b2[0], b2[1], varleft, varright); :} 
                             ;
 
 bound                       ::= INTCONST:g                  // positive array bound TO-DO
