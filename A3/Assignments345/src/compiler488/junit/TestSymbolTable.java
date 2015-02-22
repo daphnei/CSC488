@@ -10,7 +10,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import compiler488.semantics.SemanticError;
+import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
+import compiler488.ast.type.*;;
 
 public class TestSymbolTable {
 	private SymbolTable symbolTable;
@@ -53,14 +55,109 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testCloseScopeInvalid() throws SemanticError {
+	public void testCloseScopeInvalid1() throws SemanticError {
 		//Close a scope before any scope has been opened.
 		this.thrown.expect(SemanticError.class);
 		this.symbolTable.closeCurrentScope();
-		
+	}
+	
+	/**
+	 * Test closing more scopes than there are open.
+	 * @throws SemanticError
+	 */
+	@Test
+	public void testCloseScopeInvalid2() throws SemanticError {
 		this.symbolTable.openMinorScope();
 		this.symbolTable.closeCurrentScope();
+		
 		this.thrown.expect(SemanticError.class);
 		this.symbolTable.closeCurrentScope();
+	}
+	
+	/**
+	 * Test adding symbols within a single scope.
+	 * @throws SemanticError
+	 */
+	@Test
+	public void testAddSymbolsOneScope() throws SemanticError {
+		this.symbolTable.openMajorScope();
+	
+		Symbol s = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		Symbol s2 = this.symbolTable.retrieveSymbol("foo");
+		assertEquals(s, s2);
+		
+		s = this.symbolTable.addSymbolToCurScope("bar", new IntegerType());
+		s2 = this.symbolTable.retrieveSymbol("bar");
+		assertEquals(s, s2);
+	}
+	
+	/**
+	 * Test add symbol when no scope exists.
+	 * @throws SemanticError
+	 */
+	@Test
+	public void testAddSymbolsNoScope() throws SemanticError {
+		this.symbolTable.openMajorScope();
+		this.symbolTable.closeCurrentScope();
+		
+		this.thrown.expect(SemanticError.class);
+		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+	}
+	
+	/**
+	 * Test retrieving a symbol that does not exist.
+	 * @throws SemanticError
+	 */
+	@Test
+	public void testRetrieveSymbolsInvalid1() throws SemanticError {
+		this.symbolTable.openMajorScope();
+		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		this.symbolTable.closeCurrentScope();
+		
+		this.thrown.expect(SemanticError.class);
+		
+		//the scope containing foo was closed.
+		this.symbolTable.retrieveSymbol("foo");
+	}
+	
+	/**
+	 * Test retrieving a symbol that does not exist.
+	 * @throws SemanticError
+	 */
+	@Test
+	public void testRetrieveSymbolsInvalid2() throws SemanticError {
+		this.symbolTable.openMajorScope();
+		
+		this.thrown.expect(SemanticError.class);
+		
+		//foo has not been declared yet.
+		this.symbolTable.retrieveSymbol("foo");
+	}
+	
+	/**
+	 * Test addSymbol and retrieveSymbol when symbols exist in different scopes.
+	 * @throws SemanticError
+	 */
+	@Test
+	public void testMultipleScopes() throws SemanticError {
+		this.symbolTable.openMajorScope();
+		
+		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		
+		this.symbolTable.openMajorScope();
+		
+		//foo exists in an upper scope.
+		assertEquals(foo, this.symbolTable.retrieveSymbol("foo"));
+		
+		//Create a new symbol for foo in the current scope. This should be allowable
+		//since the current scope is a major one.
+		Symbol foo2 = this.symbolTable.addSymbolToCurScope("foo", new IntegerType());
+		
+		assertEquals(foo2, this.symbolTable.retrieveSymbol("foo"));
+		
+		//If the current scope is closed, the original foo should be retrieved.
+		this.symbolTable.closeCurrentScope();
+		
+		assertEquals(foo, this.symbolTable.retrieveSymbol("foo"));
 	}
 }
