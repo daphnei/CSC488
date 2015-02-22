@@ -108,7 +108,14 @@ public class SymbolTable {
 		}
 	}
 	
-	public void addSymbolToCurScope(String identifier, Type type) throws SemanticError {
+	/**
+	 * Adds a new symbol to the currently open scope
+	 * @param identifier The variable name.
+	 * @param type The type of the variable (boolean of integer)
+	 * @return the newly created symbol, or null if it was not possible to create a symbol
+	 * @throws SemanticError
+	 */
+	public Symbol addSymbolToCurScope(String identifier, Type type) throws SemanticError {
 		this.checkIfThereIsAnyScope();
 
 		//Get the list of symbols associated with this identifier.
@@ -120,6 +127,8 @@ public class SymbolTable {
 			//Create the new symbol to the front of the symbol list.
 			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
 			symbols.add(newSymbol);
+			
+			return newSymbol;
 		}
 		else if (symbols.get(0).getScope() == this.curScopeIndex) {
 			//If a symbol with the input identifier already exists in the current scope, then it is an error.
@@ -137,6 +146,8 @@ public class SymbolTable {
 			//in an upper scope.
 			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
 			symbols.add(newSymbol);
+			
+			return newSymbol;
 		}
 	}
 	
