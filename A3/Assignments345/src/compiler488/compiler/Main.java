@@ -371,14 +371,14 @@ public class Main {
 	 */
 	private static void semanticAnalysis( Program  programAST ) {
 		try {
+			BasePrettyPrinter printer = new BasePrettyPrinter();
+			programAST.prettyPrint(printer);
+			System.out.println();
+			
 			Semantics visitor = new Semantics();
 			visitor.Initialize();			
 			programAST.accept(visitor);
 			visitor.Finalize();
-			
-			BasePrettyPrinter printer = new BasePrettyPrinter();
-			programAST.prettyPrint(printer);
-			System.out.println();
 		}
 		catch( Exception e)
 		{

@@ -228,8 +228,8 @@ declarationsAndStatements   ::= statement:stm
                                     RESULT = many; :}
                             ;
 
-statement                   ::= variable:var LESS:mid EQUAL expression:dec                      // assignment statement
-                                {:  RESULT = new AssignStmt(var, dec, midleft, midright); :} 
+statement                   ::= variable:var LESS:mid EQUAL expression:expr                      // assignment statement
+                                {:  RESULT = new AssignStmt(var, expr, midleft, midright); :} 
                             |   IF:mid expression:exp THEN declarationsAndStatements:dec END    // if statements
                                 {:  RESULT = new IfStmt(exp, dec, midleft, midright); :} 
                             |   IF:mid expression:exp THEN declarationsAndStatements:dec1 ELSE declarationsAndStatements:dec2 END
@@ -393,7 +393,8 @@ compareExpn                 ::= arithExpn:ari           // comparisons,  do not 
                                 {:  RESULT = new CompareExpn(">=", exp1, exp2, midleft, midright); :} 
                             ;
 
-arithExpn                   ::= term                // expressions,  associate + ,  - left-to-right
+arithExpn                   ::= term:t                // expressions,  associate + ,  - left-to-right
+                                {:  RESULT = t; :}
                             |   arithExpn:left  PLUS:mid  term:right
                                 {:  RESULT = new ArithExpn("+", left, right, midleft, midright); :}
                             |   arithExpn:left  MINUS:mid term:right
@@ -409,17 +410,19 @@ term                        ::= factor:fac              // terms,  associate * ,
                             ;
 
 factor                      ::= primary:pri             // unary minus
-                                {:   RESULT = pri; :}
+                                {:  RESULT = pri; :}
                             |   MINUS:mid factor:fac
                                 {:  RESULT = new UnaryMinusExpn(fac, midleft, midright); :}
                             ;
 
 primary                     ::= constant:con                // integer or boolean constant
-                                {:  RESULT = con; :}
-                            |   variable                // scalar,  array variable or function call
+                                {:  RESULT = con; :}  
+                            |   variable:var                // scalar,  array variable or function call
+                                {:  RESULT = var; :}
                             |   IDENT:id L_PAREN:mid arguments:arg R_PAREN  // function call
                                 {:  RESULT = new FunctionCallExpn(id, arg, midleft, midright); :} 
-                            |   L_PAREN  expression  R_PAREN        // parenthesized expression
+                            |   L_PAREN expression:expn R_PAREN        // parenthesized expression
+                                {:  RESULT = expn; :}
                             |   L_CURLEY declarationsAndStatements:body YIELDS:mid expression:exp R_CURLEY  // anon function
                                 {:  RESULT = new AnonFuncExpn(body, exp, midleft, midright); :} 
                             ;

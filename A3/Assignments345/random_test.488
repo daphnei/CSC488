@@ -1,0 +1,6 @@
+begin
+  integer cat
+  cat <= 1
+  put cat + cat
+  cat <= cat + cat
+end

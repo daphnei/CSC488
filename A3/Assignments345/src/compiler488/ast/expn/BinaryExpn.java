@@ -1,5 +1,6 @@
 package compiler488.ast.expn;
 
+import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.PrettyPrinter;
 import compiler488.utilities.IVisitor;
 
@@ -22,7 +23,7 @@ public abstract class BinaryExpn extends Expn {
 
     protected BinaryExpn(String opSymbol, Expn first, Expn second, int left, int right) {
         super();
-
+        
         this.opSymbol = opSymbol;
         this.first = first;
         this.second = second;

@@ -1,5 +1,6 @@
 package compiler488.ast.expn;
 
+import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.Readable;
 import compiler488.utilities.IVisitor;
 
@@ -12,7 +13,6 @@ public class IdentExpn extends Expn implements Readable {
 
     public IdentExpn(String ident, int left, int right) {
         super();
-
         this.ident = ident;
         this.left = left;
         this.right = right;

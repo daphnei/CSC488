@@ -72,14 +72,14 @@ public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(ScalarDecl visitable) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("kittens2");
+		// No children.	
 	}
 
 	@Override
 	public void visit(ScalarDeclPart visitable) {
-		// TODO Auto-generated method stub
-		
+		System.out.println("kittens");
+		// No children.
 	}
 
 	@Override

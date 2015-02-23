@@ -30,14 +30,6 @@ public class AssignStmt extends Stmt {
     public Expn getRval() {
         return rval;
     }
-    
-    public int getLeft() {
-        return left;
-    }
-
-    public int getRight() {
-        return right;
-    }
 
     @Override
     public void prettyPrint(PrettyPrinter p) {
