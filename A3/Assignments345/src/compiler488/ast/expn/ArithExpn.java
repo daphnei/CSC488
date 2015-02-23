@@ -12,7 +12,7 @@ public class ArithExpn extends BinaryExpn {
     public final static String OP_TIMES 	= "*";
     public final static String OP_DIVIDE 	= "/";
 
-    public ArithExpn(String opSymbol, Expn first, Expn second,int left, int right) {
+    public ArithExpn(String opSymbol, Expn first, Expn second, int left, int right) {
         super(opSymbol, first, second, left, right);
 
         assert ((opSymbol == OP_PLUS) ||
@@ -24,5 +24,5 @@ public class ArithExpn extends BinaryExpn {
 	@Override
 	public void accept(IVisitor visitor) {		
 		visitor.visit(this);	
-	}    
+	}	
 }

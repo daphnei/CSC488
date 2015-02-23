@@ -1,5 +1,6 @@
 package compiler488.ast.expn;
 
+import compiler488.semantics.SemanticErrorException;
 import compiler488.utilities.IVisitor;
 
 
@@ -23,4 +24,5 @@ public class EqualsExpn extends BinaryExpn {
 	public void accept(IVisitor visitor) {		
 		visitor.visit(this);	
 	}
+
 }

@@ -101,8 +101,8 @@ public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(ArithExpn visitable) {
-		visitable.getFirst().accept(this);
-		visitable.getSecond().accept(this);
+		visitable.getFirstExpression().accept(this);
+		visitable.getSecondExpression().accept(this);
 	}
 
 	@Override
@@ -113,20 +113,20 @@ public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(BoolExpn visitable) {
-		visitable.getFirst().accept(this);
-		visitable.getSecond().accept(this);
+		visitable.getFirstExpression().accept(this);
+		visitable.getSecondExpression().accept(this);
 	}
 
 	@Override
 	public void visit(CompareExpn visitable) {
-		visitable.getFirst().accept(this);
-		visitable.getSecond().accept(this);
+		visitable.getFirstExpression().accept(this);
+		visitable.getSecondExpression().accept(this);
 	}
 
 	@Override
 	public void visit(EqualsExpn visitable) {
-		visitable.getFirst().accept(this);
-		visitable.getSecond().accept(this);
+		visitable.getFirstExpression().accept(this);
+		visitable.getSecondExpression().accept(this);
 	}
 
 	@Override

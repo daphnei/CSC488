@@ -134,7 +134,7 @@ public class Semantics extends NodeVisitor {
 			errorMessage = "Trying to operate on a non-existent scope.";
 		} catch (SymbolConflictException exception) {
 			// TODO: How do we get the line number?
-			errorMessage = "Identifier " + exception.symbolName + " on line " + visitable.getLeft() + " has already been declared.";
+			errorMessage = "Identifier " + exception.symbolName + " on line " + visitable.getLeftColumnNumber() + " has already been declared.";
 		} catch (SemanticErrorException error) {
 			errorMessage = error.getMessage();
 		}
@@ -347,11 +347,13 @@ public class Semantics extends NodeVisitor {
 
 	@Override
 	public void visit(BooleanType visitable) {
+		this.semanticAction(22, visitable);
 		super.visit(visitable);
 	}
 
 	@Override
 	public void visit(IntegerType visitable) {
+		this.semanticAction(21, visitable);
 		super.visit(visitable);
 	}
 

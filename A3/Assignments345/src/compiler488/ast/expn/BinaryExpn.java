@@ -35,11 +35,11 @@ public abstract class BinaryExpn extends Expn {
         return opSymbol;
     }
     
-    public Expn getFirst(){
+    public Expn getFirstExpression(){
         return first;
     }
     
-    public Expn getSecond(){
+    public Expn getSecondExpression(){
         return second;
     }
 
