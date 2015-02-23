@@ -53,12 +53,6 @@ public class ProcedureCallStmt extends Stmt {
 
     @Override
 	public void accept(IVisitor visitor) {
-    	//It is possible for there not to be any argument, in which case it will be null.
-    	if (this.arguments != null) {
-    		for (Expn arg : this.arguments) {
-    			arg.accept(visitor);
-    		}
-    	}
 		visitor.visit(this);	
 	}
 }

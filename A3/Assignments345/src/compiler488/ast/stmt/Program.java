@@ -1,6 +1,7 @@
 package compiler488.ast.stmt;
 
 import compiler488.ast.ASTList;
+import compiler488.utilities.IVisitor;
 
 /**
  * Placeholder for the scope that is the entire program
@@ -13,5 +14,9 @@ public class Program extends Scope {
     public Program(Scope scope,int left, int right) {
         super(scope.getBody(), left, right);
     }
-
+    
+    @Override
+	public void accept(IVisitor visitor) {   	
+		visitor.visit(this);	
+	}
 }

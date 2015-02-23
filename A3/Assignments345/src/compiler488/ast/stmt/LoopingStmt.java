@@ -37,15 +37,7 @@ public abstract class LoopingStmt extends Stmt {
     }
 
     @Override
-	public void accept(IVisitor visitor) {
-    	//TODO: I am not sure I have this one right.
-    	
-    	this.expn.accept(visitor);
-    	
-    	for (Stmt bodyStmt : this.body) {
-    		bodyStmt.accept(visitor);
-    	}
-    	
+	public void accept(IVisitor visitor) {	
 		visitor.visit(this);	
 	}
 }

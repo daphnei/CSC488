@@ -37,11 +37,7 @@ public class Scope extends Stmt {
     }
 
     @Override
-	public void accept(IVisitor visitor) {
-    	for (Stmt bodyStmt : this.body) {
-    		bodyStmt.accept(visitor);
-    	}
-    	
+	public void accept(IVisitor visitor) {   	
 		visitor.visit(this);	
 	}
 }

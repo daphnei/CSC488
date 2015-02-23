@@ -2,6 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
+import compiler488.utilities.IVisitor;
 
 /**
  * Represents a loop in which the exit condition is evaluated before each pass.
@@ -20,4 +21,9 @@ public class LoopStmt extends LoopingStmt {
         body.prettyPrintNewlines(p);
         p.println("end");
     }
+    
+    @Override
+	public void accept(IVisitor visitor) {	
+		visitor.visit(this);	
+	}
 }
