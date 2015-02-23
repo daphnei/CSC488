@@ -46,7 +46,7 @@ public class SemanticActions {
 			// multi-declarations
 			MultiDeclarations allDeclarations = (MultiDeclarations) element;
 			for (DeclarationPart part : allDeclarations.getParts()) {
-				table.addSymbolToCurScope(part.getName(), allDeclarations.getResultType());
+				table.addSymbolToCurScope(part.getName(), allDeclarations.getType());
 			}
 			break;
 		case 20: // Set result type to boolean.

@@ -1,6 +1,6 @@
 package compiler488.symbol;
 
-import compiler488.ast.BaseAST.ResultType;
+import compiler488.ast.type.Type;
 
 public class Symbol {
 	/**
@@ -17,9 +17,9 @@ public class Symbol {
 	 * TODO: This is wrong. We should be storing something that allows for procedure.
 	 * function types as well?
 	 */
-	private ResultType type;
+	private Type type;
 
-	public Symbol(String identifier, int scopeIndex, ResultType type) {
+	public Symbol(String identifier, int scopeIndex, Type type) {
 		this.identifier = identifier;
 		this.scopeIndex = scopeIndex;
 		this.type = type;

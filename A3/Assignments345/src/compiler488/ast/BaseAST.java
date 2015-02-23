@@ -10,28 +10,7 @@ import compiler488.utilities.IVisitableElement;
  * @author Dave Wortman, Marsha Chechik, Danny House, Peter McCormick
  */
 public abstract class BaseAST implements AST, IVisitableElement {
-	public static enum ResultType {
-		INTEGER("integer"),
-		BOOLEAN("boolean"),
-		EXPRESSION("expression"),
-		ANON_FUNCTION("anonymous function"),
-		PARAMETER_NAME("parameter name"),
-		VARIABLE_NAME("variable name"),
-		ARRAY_ELEMENT("array element"),
-		FUNCTION("function");
-		
-		private String humanReadable;
-		private ResultType(String humanReadable) {
-			this.humanReadable = humanReadable;
-		}
-		
-		@Override
-		public String toString() {
-			return this.humanReadable;
-		}
-	};
 	
-	private ResultType resultType;
 
 	/**
 	 * Return the right and left columns of this statement
@@ -46,7 +25,6 @@ public abstract class BaseAST implements AST, IVisitableElement {
 	 * <p>Add additional information to your AST tree nodes here.</p>
 	 */
 	public BaseAST() {
-		this.resultType = null;
 	}
 
 	/**
@@ -73,11 +51,4 @@ public abstract class BaseAST implements AST, IVisitableElement {
 		return right;
 	}
 
-	public ResultType getResultType() {
-		return resultType;
-	}
-
-	public void setResultType(ResultType resultType) {
-		this.resultType = resultType;
-	}
 }
