@@ -46,7 +46,7 @@ public class SemanticActions {
 			// multi-declarations
 			MultiDeclarations allDeclarations = (MultiDeclarations) element;
 			for (DeclarationPart part : allDeclarations.getParts()) {
-				table.addSymbolToCurScope(part.getName(), allDeclarations.getType());
+				table.addSymbolToCurScope(part.getName(), allDeclarations.getResultType());
 			}
 			break;
 		case 20: // Set result type to boolean.
@@ -90,11 +90,13 @@ public class SemanticActions {
 		case 34: // Check that variable and expression in assignment are the same type.
 			checkAssignmentTypesMatch((AssignStmt) element);			
 			break;
-		case 35: //Check that expression type matches the return type of enclosing function.
+		case 35: // Check that expression type matches the return type of enclosing function.
 			checkReturnType((ReturnStmt) element);
 			break;
-		case 36: //Check that type of argument expression matches type of corresponding formal parameter.
+		case 36: // Check that type of argument expression matches type of corresponding formal parameter.
+			checkArgumentTypeMatch(element);
 		case 37: //Check that identifier has been declared as a scalar variable.
+			checkVariableDeclaration(element);
 		case 38: //Check that identifier has been declared as an array.
 		case 39: //Check that identifier has been declared as a parameter.	
 			
@@ -109,6 +111,14 @@ public class SemanticActions {
 		}
 	}
 	
+	private static void checkVariableDeclaration(IVisitableElement element) throws SemanticErrorException {
+		throw new UnsupportedOperationException("TODO.");		
+	}
+
+	private static void checkArgumentTypeMatch(IVisitableElement element) throws SemanticErrorException {
+		throw new UnsupportedOperationException("TODO.");		
+	}
+
 	private static void checkReturnType(ReturnStmt returnStmt) throws SemanticErrorException {
 		if (returnStmt.getResultType() != returnStmt.getValue().getResultType()) {
 			throw new SemanticErrorException("Function returns a " + returnStmt.getValue().getResultType() + 

@@ -12,6 +12,7 @@ import org.junit.rules.ExpectedException;
 import compiler488.semantics.SemanticErrorException;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
+import compiler488.ast.BaseAST.ResultType;
 import compiler488.ast.type.*;;
 
 public class TestSymbolTable {
@@ -82,11 +83,11 @@ public class TestSymbolTable {
 	public void testAddSymbolsOneScope() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 	
-		Symbol s = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		Symbol s = this.symbolTable.addSymbolToCurScope("foo", ResultType.BOOLEAN);
 		Symbol s2 = this.symbolTable.retrieveSymbol("foo");
 		assertEquals(s, s2);
 		
-		s = this.symbolTable.addSymbolToCurScope("bar", new IntegerType());
+		s = this.symbolTable.addSymbolToCurScope("bar", ResultType.INTEGER);
 		s2 = this.symbolTable.retrieveSymbol("bar");
 		assertEquals(s, s2);
 	}
@@ -100,7 +101,7 @@ public class TestSymbolTable {
 		this.symbolTable.openMajorScope();
 		this.symbolTable.closeCurrentScope();
 		this.thrown.expect(SemanticErrorException.class);
-		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		this.symbolTable.addSymbolToCurScope("foo", ResultType.BOOLEAN);
 	}
 	
 	/**
@@ -110,7 +111,7 @@ public class TestSymbolTable {
 	@Test
 	public void testRetrieveSymbolsNoScope() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
-		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		this.symbolTable.addSymbolToCurScope("foo", ResultType.BOOLEAN);
 		this.symbolTable.closeCurrentScope();
 		
 		this.thrown.expect(SemanticErrorException.class);
@@ -132,7 +133,7 @@ public class TestSymbolTable {
 		assertEquals(s, null);
 		
 		this.symbolTable.openMajorScope();
-		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		this.symbolTable.addSymbolToCurScope("foo", ResultType.BOOLEAN);
 		this.symbolTable.closeCurrentScope();
 				
 		//the scope containing foo was closed; however, these still is some open scope.
@@ -148,7 +149,7 @@ public class TestSymbolTable {
 	public void testMultipleScopes() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 		
-		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", ResultType.BOOLEAN);
 		
 		this.symbolTable.openMajorScope();
 		
@@ -157,7 +158,7 @@ public class TestSymbolTable {
 		
 		//Create a new symbol for foo in the current scope. This should be allowable
 		//since the current scope is a major one.
-		Symbol foo2 = this.symbolTable.addSymbolToCurScope("foo", new IntegerType());
+		Symbol foo2 = this.symbolTable.addSymbolToCurScope("foo", ResultType.INTEGER);
 		
 		assertEquals(foo2, this.symbolTable.retrieveSymbol("foo"));
 		
@@ -174,12 +175,12 @@ public class TestSymbolTable {
 	public void testRedeclareInMinorScope() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 		
-		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", ResultType.BOOLEAN);
 		
 		this.symbolTable.openMinorScope();
 		
 		//this.thrown.expect(SemanticError.class);
-		Symbol bar = this.symbolTable.addSymbolToCurScope("foo", new IntegerType());
+		Symbol bar = this.symbolTable.addSymbolToCurScope("foo", ResultType.INTEGER);
 		
 	}
 }

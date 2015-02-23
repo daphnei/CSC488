@@ -3,7 +3,7 @@ package compiler488.symbol;
 import java.util.HashMap;
 import java.util.Stack;
 
-import compiler488.ast.type.Type;
+import compiler488.ast.BaseAST.ResultType;
 import compiler488.semantics.InvalidScopeException;
 import compiler488.semantics.SemanticErrorException;
 import compiler488.semantics.SymbolConflictException;
@@ -131,7 +131,7 @@ public class SymbolTable {
 	 *         create a symbol.
 	 * @throws SemanticError
 	 */
-	public Symbol addSymbolToCurScope(String identifier, Type type) throws SemanticErrorException {
+	public Symbol addSymbolToCurScope(String identifier, ResultType type) throws SemanticErrorException {
 		this.checkIfThereIsAnyScope();
 
 		// Get the list of symbols associated with this identifier.
