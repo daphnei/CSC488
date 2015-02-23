@@ -47,11 +47,8 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.symbol.SymbolTable;
-<<<<<<< HEAD
 import compiler488.utilities.IVisitableElement;
 import compiler488.utilities.IVisitor;
-=======
->>>>>>> f935411eb6be98940bbc3714a9a6bb289ec697ea
 import compiler488.utilities.NodeVisitor;
 
 /**
