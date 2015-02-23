@@ -1,7 +1,10 @@
 package compiler488.semantics;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
+import compiler488.ast.BaseAST;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.Declaration;
 import compiler488.ast.decl.DeclarationPart;
@@ -40,6 +43,7 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.symbol.SymbolTable;
+import compiler488.utilities.IVisitableElement;
 import compiler488.utilities.IVisitor;
 import compiler488.utilities.NodeVisitor;
 
@@ -87,7 +91,7 @@ public class Semantics extends NodeVisitor {
 	 * Finalize the symbol table.
 	 */
 	public void Finalize() {
-
+		
 	}
 
 	/**
@@ -96,7 +100,7 @@ public class Semantics extends NodeVisitor {
 	 * @param actionNumber
 	 *            Semantic analysis action number.
 	 */
-	void semanticAction(int actionNumber) {
+	void semanticAction(int actionNumber, BaseAST visitable) {
 
 		if (traceSemantics) {
 			if (traceFile.length() > 0) {
@@ -117,13 +121,29 @@ public class Semantics extends NodeVisitor {
 				System.out.println("Sematics: S" + actionNumber);
 			}
 		}
-
-		/*************************************************************/
-		/* Code to implement each semantic action GOES HERE */
-		/* This stub semantic analyzer just prints the actionNumber */
-		/*                                                           */
-		/* FEEL FREE TO ignore or replace this procedure */
-		/*************************************************************/
+		
+		switch (actionNumber) {
+			case 1:
+			case 3:
+				break;
+			default:
+				break;
+		}
+				
+		try {
+			Method method = SemanticActions.class.getMethod(String.format("check_%02d", actionNumber), IVisitableElement.class);
+			method.invoke(null, visitable);
+		} catch (NoSuchMethodException e) {
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
 
 		System.out.println("Semantic Action: S" + actionNumber);
 		return;
