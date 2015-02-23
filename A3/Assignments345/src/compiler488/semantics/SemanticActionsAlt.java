@@ -1,6 +1,8 @@
 package compiler488.semantics;
 
-public class SemanticActions {
+import compiler488.utilities.IVisitableElement;
+
+public class SemanticActionsAlt {
 	public static void check_00(IVisitableElement visitable) {
 
 	}
