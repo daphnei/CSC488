@@ -1,6 +1,8 @@
 package compiler488.semantics;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.Declaration;
@@ -40,7 +42,6 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.symbol.SymbolTable;
-import compiler488.utilities.IVisitor;
 import compiler488.utilities.NodeVisitor;
 
 /**
