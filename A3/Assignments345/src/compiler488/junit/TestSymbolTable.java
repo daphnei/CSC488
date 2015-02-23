@@ -167,4 +167,20 @@ public class TestSymbolTable {
 		
 		assertEquals(foo, this.symbolTable.retrieveSymbol("foo"));
 	}
+	
+	/**
+	 * Test that an error is thrown if user attempts to redeclare a symbol in a minor scope.
+	 * @throws SemanticError
+	 */
+	public void testRedeclareInMinorScope() throws SemanticError {
+		this.symbolTable.openMajorScope();
+		
+		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		
+		this.symbolTable.openMinorScope();
+		
+		//this.thrown.expect(SemanticError.class);
+		Symbol bar = this.symbolTable.addSymbolToCurScope("foo", new IntegerType());
+		
+	}
 }
