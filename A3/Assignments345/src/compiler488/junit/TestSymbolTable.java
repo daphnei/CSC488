@@ -105,11 +105,11 @@ public class TestSymbolTable {
 	}
 	
 	/**
-	 * Test retrieving a symbol that does not exist.
+	 * Test retrieving a symbol when there is no open scope.
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testRetrieveSymbolsInvalid1() throws SemanticError {
+	public void testRetrieveSymbolsNoScope() throws SemanticError {
 		this.symbolTable.openMajorScope();
 		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
 		this.symbolTable.closeCurrentScope();
@@ -121,17 +121,24 @@ public class TestSymbolTable {
 	}
 	
 	/**
-	 * Test retrieving a symbol that does not exist.
+	 * Test retrieving a symbol that does not exist in an open scope.
 	 * @throws SemanticError
 	 */
 	@Test
 	public void testRetrieveSymbolsInvalid2() throws SemanticError {
 		this.symbolTable.openMajorScope();
+				
+		//A scope exists, but foo has not been declared in it.
+		Symbol s = this.symbolTable.retrieveSymbol("foo");
+		assertEquals(s, null);
 		
-		this.thrown.expect(SemanticError.class);
-		
-		//foo has not been declared yet.
-		this.symbolTable.retrieveSymbol("foo");
+		this.symbolTable.openMajorScope();
+		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
+		this.symbolTable.closeCurrentScope();
+				
+		//the scope containing foo was closed; however, these still is some open scope.
+		s = this.symbolTable.retrieveSymbol("foo");
+		assertEquals(s, null);
 	}
 	
 	/**
