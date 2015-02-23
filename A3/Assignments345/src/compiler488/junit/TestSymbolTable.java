@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import compiler488.semantics.SemanticError;
+import compiler488.semantics.SemanticErrorException;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 import compiler488.ast.type.*;;
@@ -36,7 +37,7 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testOpenCloseScope() throws SemanticError {
+	public void testOpenCloseScope() throws SemanticErrorException {
 		//Test before nay scope has been opened.
 		assertEquals(this.symbolTable.getCurrentScope(), -1);
 		
@@ -55,7 +56,7 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testCloseScopeInvalid1() throws SemanticError {
+	public void testCloseScopeInvalid1() throws SemanticErrorException {
 		//Close a scope before any scope has been opened.
 		this.thrown.expect(SemanticError.class);
 		this.symbolTable.closeCurrentScope();
@@ -66,7 +67,7 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testCloseScopeInvalid2() throws SemanticError {
+	public void testCloseScopeInvalid2() throws SemanticErrorException {
 		this.symbolTable.openMinorScope();
 		this.symbolTable.closeCurrentScope();
 		
@@ -79,7 +80,7 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testAddSymbolsOneScope() throws SemanticError {
+	public void testAddSymbolsOneScope() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 	
 		Symbol s = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
@@ -96,7 +97,7 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testAddSymbolsNoScope() throws SemanticError {
+	public void testAddSymbolsNoScope() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 		this.symbolTable.closeCurrentScope();
 		
@@ -109,7 +110,7 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testRetrieveSymbolsNoScope() throws SemanticError {
+	public void testRetrieveSymbolsNoScope() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
 		this.symbolTable.closeCurrentScope();
@@ -125,7 +126,7 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testRetrieveSymbolsInvalid2() throws SemanticError {
+	public void testRetrieveSymbolsInvalid2() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 				
 		//A scope exists, but foo has not been declared in it.
@@ -146,7 +147,7 @@ public class TestSymbolTable {
 	 * @throws SemanticError
 	 */
 	@Test
-	public void testMultipleScopes() throws SemanticError {
+	public void testMultipleScopes() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 		
 		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
@@ -172,7 +173,7 @@ public class TestSymbolTable {
 	 * Test that an error is thrown if user attempts to redeclare a symbol in a minor scope.
 	 * @throws SemanticError
 	 */
-	public void testRedeclareInMinorScope() throws SemanticError {
+	public void testRedeclareInMinorScope() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 		
 		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", new BooleanType());

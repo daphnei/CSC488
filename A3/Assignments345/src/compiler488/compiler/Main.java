@@ -379,9 +379,7 @@ public class Main {
 			visitor.Initialize();			
 			programAST.accept(visitor);
 			visitor.Finalize();
-		}
-		catch( Exception e)
-		{
+		} catch( Exception e) {
 			System.err.println("Exception during Semantic Analysis");
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());
 			e.printStackTrace ();

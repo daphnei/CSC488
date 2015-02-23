@@ -46,9 +46,8 @@ import compiler488.ast.stmt.WhileDoStmt;
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
+import compiler488.compiler.Main;
 import compiler488.symbol.SymbolTable;
-import compiler488.utilities.IVisitableElement;
-import compiler488.utilities.IVisitor;
 import compiler488.utilities.NodeVisitor;
 
 /**
@@ -79,6 +78,7 @@ public class Semantics extends NodeVisitor {
 	 */
 	private SymbolTable symbolTable;
 
+	
 	public Semantics() {
 
 	}
@@ -126,28 +126,24 @@ public class Semantics extends NodeVisitor {
 			}
 		}
 		
-		switch (actionNumber) {
-			case 1:
-			case 3:
-				break;
-			default:
-				break;
-		}
-				
+		String errorMessage = null;
 		try {
-			Method method = SemanticActions.class.getMethod(String.format("check_%02d", actionNumber), IVisitableElement.class);
-			method.invoke(null, visitable);
-		} catch (NoSuchMethodException e) {
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
+			SemanticActions.checkSemanticRule(this.symbolTable, actionNumber, visitable);
+		} catch (InvalidScopeException exception) {
+			errorMessage = "Trying to operate on a non-existent scope.";
+		} catch (SymbolConflictException exception) {
+			// TODO: How do we get the line number?
+			errorMessage = "Identifier " + exception.symbolName + " on line " + visitable.getLeft() + " has already been declared.";
+		} catch (SemanticErrorException error) {
+			errorMessage = error.getMessage();
 		}
+		if (errorMessage != null) {
+			System.out.println("SEMANTIC ERROR: " + errorMessage);
+			Main.errorOccurred = true;
+		}
+
+		// TODO: If we want to go the reflective route, we could do this.
+		// SemanticActions.checkSemanticRule(actionNumber, visitable);
 
 		System.out.println("Semantic Action: S" + actionNumber);
 		return;
@@ -155,7 +151,9 @@ public class Semantics extends NodeVisitor {
 
 	@Override
 	public void visit(Program visitable) {
+		this.semanticAction(00, visitable);
 		super.visit(visitable);
+		this.semanticAction(01, visitable);
 	}
 
 	@Override
