@@ -78,7 +78,6 @@ public class Semantics extends NodeVisitor {
 	 */
 	private SymbolTable symbolTable;
 
-	
 	public Semantics() {
 
 	}
@@ -95,11 +94,13 @@ public class Semantics extends NodeVisitor {
 	 * Finalize the symbol table.
 	 */
 	public void Finalize() {
-		
+
 	}
 
 	/**
-	 * Perform one semantic analysis action.
+	 * Perform one semantic analysis action. It will record the action, perform
+	 * it, catch any semantic errors, and report them to the compiler if they
+	 * are found.
 	 * 
 	 * @param actionNumber
 	 *            Semantic analysis action number.
@@ -114,7 +115,7 @@ public class Semantics extends NodeVisitor {
 					File f = new File(traceFile);
 					Tracer = new FileWriter(traceFile, true);
 					Tracer.write("Sematics: S" + actionNumber + "\n");
-					
+
 					// Always be sure to close the file.
 					Tracer.close();
 				} catch (IOException e) {
@@ -125,7 +126,7 @@ public class Semantics extends NodeVisitor {
 				System.out.println("Sematics: S" + actionNumber);
 			}
 		}
-		
+
 		String errorMessage = null;
 		try {
 			SemanticActions.checkSemanticRule(this.symbolTable, actionNumber, visitable);
@@ -149,121 +150,23 @@ public class Semantics extends NodeVisitor {
 		return;
 	}
 
+	
+	// Program
+
 	@Override
 	public void visit(Program visitable) {
 		this.semanticAction(00, visitable);
 		super.visit(visitable);
 		this.semanticAction(01, visitable);
 	}
+	
+	// Statement
 
 	@Override
-	public void visit(ArrayDeclPart visitable) {
+	public void visit(Stmt visitable) {
+		// This is an abstract class, do nothing.
 		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(Declaration visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(DeclarationPart visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(MultiDeclarations visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(RoutineDecl visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(ScalarDecl visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(ScalarDeclPart visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(AnonFuncExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(ArithExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(BoolConstExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(BoolExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(CompareExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(EqualsExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(Expn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(FunctionCallExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(IdentExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(IntConstExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(NotExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(SkipConstExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(SubsExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(TextConstExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(UnaryMinusExpn visitable) {
-		super.visit(visitable);
+		this.printAbstractWarning();
 	}
 
 	@Override
@@ -312,14 +215,135 @@ public class Semantics extends NodeVisitor {
 	}
 
 	@Override
-	public void visit(Stmt visitable) {
+	public void visit(WhileDoStmt visitable) {
+		super.visit(visitable);
+	} 
+	
+	// Declarations
+	
+	@Override
+	public void visit(Declaration visitable) {
+		// This is an abstract class, do nothing.
+		super.visit(visitable);
+		this.printAbstractWarning();
+	}
+	
+	@Override
+	public void visit(MultiDeclarations visitable) {
+		// This is used for normal variable declaration.
+		super.visit(visitable);
+		this.semanticAction(10, visitable);
+		this.semanticAction(47, visitable);
+	}
+
+	@Override
+	public void visit(ArrayDeclPart visitable) {
+		super.visit(visitable);
+	}
+
+
+
+	@Override
+	public void visit(DeclarationPart visitable) {
 		super.visit(visitable);
 	}
 
 	@Override
-	public void visit(WhileDoStmt visitable) {
+	public void visit(RoutineDecl visitable) {
 		super.visit(visitable);
 	}
+
+	@Override
+	public void visit(ScalarDecl visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(ScalarDeclPart visitable) {
+		super.visit(visitable);
+	}
+	
+	// Expressions
+
+	@Override
+	public void visit(AnonFuncExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(ArithExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(BoolConstExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(BoolExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(CompareExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(EqualsExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(Expn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(FunctionCallExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(IdentExpn visitable) {
+		super.visit(visitable);
+		this.semanticAction(37, visitable);
+		this.semanticAction(39, visitable);
+	}
+
+	@Override
+	public void visit(IntConstExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(NotExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(SkipConstExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(SubsExpn visitable) {
+		super.visit(visitable);
+		this.semanticAction(38, visitable);
+	}
+
+	@Override
+	public void visit(TextConstExpn visitable) {
+		super.visit(visitable);
+	}
+
+	@Override
+	public void visit(UnaryMinusExpn visitable) {
+		super.visit(visitable);
+	}
+	
+	// Types
 
 	@Override
 	public void visit(BooleanType visitable) {
@@ -334,5 +358,11 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(Type visitable) {
 		super.visit(visitable);
+	}
+	
+	// Private Helper Methods
+	
+	private void printAbstractWarning() {
+		System.out.println("WARNING: This code should not be run! This is an abstract class!!!");
 	}
 }

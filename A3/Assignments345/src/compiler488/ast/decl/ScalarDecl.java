@@ -6,6 +6,7 @@ import compiler488.utilities.IVisitor;
 
 /**
  * Represents the declaration of a simple variable.
+ * NOTE: In the CUP file, we only use this type for parameter declarations.
  */
 public class ScalarDecl extends Declaration {
 	public ScalarDecl(String name, Type type, int left, int right) {

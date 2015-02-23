@@ -24,7 +24,7 @@ public class RoutineDecl extends Declaration {
      * Construct a function with parameters, and a definition of the body.
      *   @param  name	      Name of the routine
      *   @param  type	      Type returned by the function
-     *   @param  parameters   List of parameters to the routine
+     *   @param  parameters  List of parameters to the routine
      *   @param  body	      Body scope for the routine
      */
     public RoutineDecl(String name, Type type, ASTList<ScalarDecl> parameters, Scope body, int left, int right) {

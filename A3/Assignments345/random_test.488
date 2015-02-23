@@ -1,5 +1,6 @@
 begin
   integer cat
+  boolean cat
   cat <= 1
   put cat + cat
   cat <= cat + cat
