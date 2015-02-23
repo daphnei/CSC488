@@ -6,7 +6,7 @@ import compiler488.utilities.IVisitor;
 /**
  * The type of things that may be true or false.
  */
-public class BooleanType extends Type {
+public class BooleanType extends Type {	
     @Override
     public String toString() {
         return "boolean";

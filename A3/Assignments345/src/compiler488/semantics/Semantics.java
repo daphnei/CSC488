@@ -129,6 +129,7 @@ public class Semantics extends NodeVisitor {
 
 		String errorMessage = null;
 		try {
+			// Perform the action in this helper class.
 			SemanticActions.checkSemanticRule(this.symbolTable, actionNumber, visitable);
 		} catch (InvalidScopeException exception) {
 			errorMessage = "Trying to operate on a non-existent scope.";
@@ -142,9 +143,6 @@ public class Semantics extends NodeVisitor {
 			System.out.println("SEMANTIC ERROR: " + errorMessage);
 			Main.errorOccurred = true;
 		}
-
-		// TODO: If we want to go the reflective route, we could do this.
-		// SemanticActions.checkSemanticRule(actionNumber, visitable);
 
 		System.out.println("Semantic Action: S" + actionNumber);
 		return;
@@ -264,61 +262,87 @@ public class Semantics extends NodeVisitor {
 	}
 	
 	// Expressions
+	
+	@Override
+	public void visit(Expn visitable) {
+		super.visit(visitable);
+		this.printAbstractWarning();
+	}
+	
+	@Override
+	public void visit(UnaryMinusExpn visitable) {
+		super.visit(visitable);		
+		this.semanticAction(21, visitable.getOperand());
+		this.semanticAction(31, visitable);
+	}
+	
+	@Override
+	public void visit(ArithExpn visitable) {
+		super.visit(visitable);
+		this.semanticAction(21, visitable.getFirstExpression());
+		this.semanticAction(21, visitable.getSecondExpression());
+		this.semanticAction(31, visitable);
+	}
+	
+	@Override
+	public void visit(BoolConstExpn visitable) {
+		super.visit(visitable);
+		this.semanticAction(20, visitable);
+	}
+	
+	@Override
+	public void visit(NotExpn visitable) {
+		super.visit(visitable);
+		this.semanticAction(30, visitable);
+		this.semanticAction(20, visitable);
+	}
+	
+	@Override
+	public void visit(BoolExpn visitable) {
+		super.visit(visitable);
+		this.semanticAction(30, visitable.getFirstExpression());
+		this.semanticAction(30, visitable.getSecondExpression());
+		this.semanticAction(20, visitable);
+	}
+	
+	@Override
+	public void visit(EqualsExpn visitable) {
+		super.visit(visitable);
+		this.semanticAction(32, visitable);
+		this.semanticAction(20, visitable);
+	}
+	
+	@Override
+	public void visit(CompareExpn visitable) {
+		super.visit(visitable);
+		this.semanticAction(31, visitable.getFirstExpression());
+		this.semanticAction(31, visitable.getSecondExpression());
+		this.semanticAction(20, visitable);
+	}
 
 	@Override
 	public void visit(AnonFuncExpn visitable) {
 		super.visit(visitable);
+		this.semanticAction(24, visitable);
 	}
 
 	@Override
-	public void visit(ArithExpn visitable) {
+	public void visit(FunctionCallExpn visitable) {		
 		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(BoolConstExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(BoolExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(CompareExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(EqualsExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(Expn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(FunctionCallExpn visitable) {
-		super.visit(visitable);
+		this.semanticAction(28, visitable);
 	}
 
 	@Override
 	public void visit(IdentExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(37, visitable);
+		
+		this.semanticAction(37, visitable);
 		this.semanticAction(39, visitable);
 	}
 
 	@Override
 	public void visit(IntConstExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(NotExpn visitable) {
 		super.visit(visitable);
 	}
 
@@ -335,11 +359,6 @@ public class Semantics extends NodeVisitor {
 
 	@Override
 	public void visit(TextConstExpn visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(UnaryMinusExpn visitable) {
 		super.visit(visitable);
 	}
 	
