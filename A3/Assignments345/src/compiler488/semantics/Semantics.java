@@ -47,6 +47,9 @@ import compiler488.utilities.NodeVisitor;
  * The Semantics class implements IVisitor. It will trace through an AST tree
  * and check each node for the appropriate semantic actions.
  * 
+ * Please ensure each of the NodeVisitor methods call <i>super</i>! This will
+ * ensure the AST is fully traversed.
+ * 
  * @author g2robint
  */
 public class Semantics extends NodeVisitor {
@@ -97,23 +100,22 @@ public class Semantics extends NodeVisitor {
 
 		if (traceSemantics) {
 			if (traceFile.length() > 0) {
-				// output trace to the file represented by traceFile
+				// Output trace to the file represented by traceFile.
 				try {
-					// open the file for writing and append to it
+					// Open the file for writing and append to it.
 					File f = new File(traceFile);
 					Tracer = new FileWriter(traceFile, true);
-
 					Tracer.write("Sematics: S" + actionNumber + "\n");
-					// always be sure to close the file
+					
+					// Always be sure to close the file.
 					Tracer.close();
 				} catch (IOException e) {
 					System.out.println(traceFile + " could be opened/created.  It may be in use.");
 				}
 			} else {
-				// output the trace to standard out.
+				// Output the trace to standard out.
 				System.out.println("Sematics: S" + actionNumber);
 			}
-
 		}
 
 		/*************************************************************/
