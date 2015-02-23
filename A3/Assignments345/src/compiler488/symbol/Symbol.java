@@ -13,6 +13,10 @@ public class Symbol {
 	 */
 	private int scopeIndex;
 
+	/**
+	 * TODO: This is wrong. We should be storing something that allows for procedure.
+	 * function types as well?
+	 */
 	private Type type;
 
 	public Symbol(String identifier, int scopeIndex, Type type) {

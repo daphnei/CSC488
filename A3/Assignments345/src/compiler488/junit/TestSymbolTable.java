@@ -9,7 +9,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import compiler488.semantics.SemanticError;
 import compiler488.semantics.SemanticErrorException;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
@@ -58,7 +57,7 @@ public class TestSymbolTable {
 	@Test
 	public void testCloseScopeInvalid1() throws SemanticErrorException {
 		//Close a scope before any scope has been opened.
-		this.thrown.expect(SemanticError.class);
+		this.thrown.expect(SemanticErrorException.class);
 		this.symbolTable.closeCurrentScope();
 	}
 	
@@ -71,7 +70,7 @@ public class TestSymbolTable {
 		this.symbolTable.openMinorScope();
 		this.symbolTable.closeCurrentScope();
 		
-		this.thrown.expect(SemanticError.class);
+		this.thrown.expect(SemanticErrorException.class);
 		this.symbolTable.closeCurrentScope();
 	}
 	
@@ -100,8 +99,7 @@ public class TestSymbolTable {
 	public void testAddSymbolsNoScope() throws SemanticErrorException {
 		this.symbolTable.openMajorScope();
 		this.symbolTable.closeCurrentScope();
-		
-		this.thrown.expect(SemanticError.class);
+		this.thrown.expect(SemanticErrorException.class);
 		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
 	}
 	
@@ -115,7 +113,7 @@ public class TestSymbolTable {
 		this.symbolTable.addSymbolToCurScope("foo", new BooleanType());
 		this.symbolTable.closeCurrentScope();
 		
-		this.thrown.expect(SemanticError.class);
+		this.thrown.expect(SemanticErrorException.class);
 		
 		//the scope containing foo was closed.
 		this.symbolTable.retrieveSymbol("foo");
