@@ -1,5 +1,7 @@
 package compiler488.ast.expn;
 
+import compiler488.utilities.IVisitor;
+
 
 
 /**
@@ -16,4 +18,9 @@ public class BoolExpn extends BinaryExpn {
         assert ((opSymbol == OP_OR) ||
                 (opSymbol == OP_AND));
     }
+    
+	@Override
+	public void accept(IVisitor visitor) {		
+		visitor.visit(this);	
+	}
 }

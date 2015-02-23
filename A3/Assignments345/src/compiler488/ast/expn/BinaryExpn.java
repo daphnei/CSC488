@@ -53,11 +53,7 @@ public abstract class BinaryExpn extends Expn {
     }
     
 	@Override
-	public void accept(IVisitor visitor) {
-		this.first.accept(visitor);
-		this.second.accept(visitor);
-		
+	public void accept(IVisitor visitor) {		
 		visitor.visit(this);	
 	}
-
 }

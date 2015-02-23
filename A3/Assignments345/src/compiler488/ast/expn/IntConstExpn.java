@@ -1,5 +1,7 @@
 package compiler488.ast.expn;
 
+import compiler488.utilities.IVisitor;
+
 
 
 /**
@@ -26,4 +28,8 @@ public class IntConstExpn extends ConstExpn {
         return value.toString();
     }
 
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

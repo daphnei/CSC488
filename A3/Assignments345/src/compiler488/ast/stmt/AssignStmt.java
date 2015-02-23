@@ -39,10 +39,7 @@ public class AssignStmt extends Stmt {
     }
 
     @Override
-	public void accept(IVisitor visitor) {
-    	this.lval.accept(visitor);
-    	this.rval.accept(visitor);
-    	
+	public void accept(IVisitor visitor) {    	
 		visitor.visit(this);	
 	}
 }

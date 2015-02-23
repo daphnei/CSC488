@@ -51,9 +51,6 @@ public abstract class UnaryExpn extends Expn {
     
 	@Override
 	public void accept(IVisitor visitor) {
-		this.operand.accept(visitor);
-		
 		visitor.visit(this);	
 	}
-
 }

@@ -1,5 +1,7 @@
 package compiler488.ast.expn;
 
+import compiler488.utilities.IVisitor;
+
 
 
 /**
@@ -20,4 +22,9 @@ public class CompareExpn extends BinaryExpn {
                 (opSymbol == OP_GREATER) ||
                 (opSymbol == OP_GREATER_EQUAL));
     }
+    
+	@Override
+	public void accept(IVisitor visitor) {		
+		visitor.visit(this);	
+	}
 }

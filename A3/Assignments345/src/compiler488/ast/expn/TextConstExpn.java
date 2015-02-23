@@ -29,4 +29,9 @@ public class TextConstExpn extends ConstExpn implements Printable {
     public String toString() {
         return "\"" + value + "\"";
     }
+    
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);	
+	}
 }

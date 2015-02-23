@@ -331,10 +331,10 @@ output                      ::= expression:exp      // integer expression
 inputs                      ::= variable:var        // list of variables being read into
                                 {:  ASTList<Expn> element = new ASTList<Expn>();
                                     element.add(var);
-                                    RESULT = element;           :}
+                                    RESULT = element; :}
                             |   inputs:many COMMA:mid variable:more
                                 {:  many.add(more);
-                                    RESULT = many;           :}
+                                    RESULT = many; :}
                             ;
 
 arguments                   ::= expression:exp          // list of function/procedure arguments

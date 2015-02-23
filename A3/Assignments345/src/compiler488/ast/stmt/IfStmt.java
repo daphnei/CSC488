@@ -64,20 +64,7 @@ public class IfStmt extends Stmt {
     }
 
     @Override
-	public void accept(IVisitor visitor) {
-    	this.condition.accept(visitor);
-    	
-    	for (Stmt trueStmt : this.whenTrue) {
-    		trueStmt.accept(visitor);
-    	}
-    	
-    	//IF ther is no else, then "whenFalse" will be null.
-    	if (this.whenFalse != null) {
-	    	for (Stmt falseStmt : this.whenFalse) {
-	    		falseStmt.accept(visitor);
-	    	}
-    	}
-    	
+	public void accept(IVisitor visitor) {    	
 		visitor.visit(this);	
 	}
 }

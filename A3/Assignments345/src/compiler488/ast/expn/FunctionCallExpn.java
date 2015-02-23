@@ -43,11 +43,6 @@ public class FunctionCallExpn extends Expn {
     
 	@Override
 	public void accept(IVisitor visitor) {
-		if (this.arguments != null) {
-			for (Expn arg : this.arguments) {
-				arg.accept(visitor);
-			}
-		}
 		visitor.visit(this);	
 	}
 

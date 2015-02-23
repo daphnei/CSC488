@@ -38,6 +38,12 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 
+/**
+ * The NodeVisitor class traverses an AST and calls accept on each node.
+ * This class should be extended so that work is done at each node.
+ * 
+ * @author g2robint
+ */
 public class NodeVisitor implements IVisitor {
 
 	@Override
@@ -72,134 +78,144 @@ public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(ScalarDecl visitable) {
-		System.out.println("kittens2");
 		// No children.	
 	}
 
 	@Override
 	public void visit(ScalarDeclPart visitable) {
-		System.out.println("kittens");
 		// No children.
 	}
 
 	@Override
 	public void visit(AnonFuncExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		// TODO: Am I accepting these in the right order?		
+		for (Stmt bodyStmt : visitable.getBody()) {
+			bodyStmt.accept(this);
+		}
+		visitable.getExpn().accept(this);
 	}
 
 	@Override
 	public void visit(ArithExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getFirst().accept(this);
+		visitable.getSecond().accept(this);		
 	}
 
 	@Override
 	public void visit(BoolConstExpn visitable) {
-		// TODO Auto-generated method stub
+		// No children.
 		
 	}
 
 	@Override
 	public void visit(BoolExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getFirst().accept(this);
+		visitable.getSecond().accept(this);
 	}
 
 	@Override
 	public void visit(CompareExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getFirst().accept(this);
+		visitable.getSecond().accept(this);		
 	}
 
 	@Override
 	public void visit(EqualsExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getFirst().accept(this);
+		visitable.getSecond().accept(this);		
 	}
 
 	@Override
 	public void visit(Expn visitable) {
-		// TODO Auto-generated method stub
-		
+		// Abstract class - no children.
 	}
 
 	@Override
-	public void visit(FunctionCallExpn visitable) {
-		// TODO Auto-generated method stub
-		
+	public void visit(FunctionCallExpn visitable) {		
+		if (visitable.getArguments() != null) {
+			for (Expn arg : visitable.getArguments()) {
+				arg.accept(this);
+			}
+		}		
 	}
 
 	@Override
 	public void visit(IdentExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		// No children.		
 	}
 
 	@Override
 	public void visit(IntConstExpn visitable) {
-		// TODO Auto-generated method stub
+		// No children.
 		
 	}
 
 	@Override
 	public void visit(NotExpn visitable) {
-		// TODO Auto-generated method stub
+		visitable.getOperand().accept(this);
 		
 	}
 
 	@Override
 	public void visit(SkipConstExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		// No children.		
 	}
 
 	@Override
 	public void visit(SubsExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getSubscript1().accept(this);
+		if (visitable.getSubscript2() != null) {
+			visitable.getSubscript2().accept(this);
+		}
 	}
 
 	@Override
 	public void visit(TextConstExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		// No children.
 	}
 
 	@Override
 	public void visit(UnaryMinusExpn visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getOperand().accept(this);		
 	}
 
 	@Override
 	public void visit(AssignStmt visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getLval().accept(this);
+		visitable.getRval().accept(this);		
 	}
 
 	@Override
 	public void visit(ExitStmt visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getExpn().accept(this);		
 	}
 
 	@Override
 	public void visit(GetStmt visitable) {
-		// TODO Auto-generated method stub
-		
+    	for (Expn input : visitable.getInputs()) {
+    		input.accept(this);
+    	}
 	}
 
 	@Override
 	public void visit(IfStmt visitable) {
-		// TODO Auto-generated method stub
-		
+		visitable.getCondition().accept(this);    	
+    	
+    	for (Stmt trueStmt : visitable.getWhenTrue()) {
+    		trueStmt.accept(this);
+    	}
+    	
+    	// If there is no else, then "whenFalse" will be null.
+    	if (visitable.getWhenFalse() != null) {
+	    	for (Stmt falseStmt : visitable.getWhenFalse()) {
+	    		falseStmt.accept(this);
+	    	}
+    	}
 	}
 
 	@Override
 	public void visit(LoopStmt visitable) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override

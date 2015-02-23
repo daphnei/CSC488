@@ -1,5 +1,7 @@
 package compiler488.ast.expn;
 
+import compiler488.utilities.IVisitor;
+
 
 
 /**
@@ -16,4 +18,9 @@ public class EqualsExpn extends BinaryExpn {
         assert ((opSymbol == OP_EQUAL) ||
                 (opSymbol == OP_NOT_EQUAL));
     }
+    
+	@Override
+	public void accept(IVisitor visitor) {		
+		visitor.visit(this);	
+	}
 }
