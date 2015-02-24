@@ -147,6 +147,8 @@ public class Semantics extends NodeVisitor {
 			errorMessage = "Identifier " + exception.symbolName + " is not declared in this scope.";
 		} catch (InvalidArrayBoundsException exception) {
 			errorMessage = "The declared array " + exception.name + " has invalid array bounds.";
+		} catch (NotArrayException exception) {
+			errorMessage = "Trying to index a non-array variable " + exception.name + ".";
 		} catch (SemanticErrorException error) {
 			errorMessage = error.getMessage();
 			if (errorMessage.equals("")) {
@@ -301,8 +303,6 @@ public class Semantics extends NodeVisitor {
 		this.semanticAction(15, visitable);
 	}
 
-
-
 	// --- Expressions ---
 
 	@Override
@@ -392,8 +392,12 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(SubsExpn visitable) {
 		super.visit(visitable);
-		this.semanticAction(38, visitable);
-		this.semanticAction(27, visitable);
+		this.semanticAction(31, visitable.getSubscript1());
+		if (visitable.getSubscript2() != null) {
+			this.semanticAction(31, visitable.getSubscript2());
+		}
+		this.semanticAction(38, visitable); // Check
+		this.semanticAction(27, visitable); // Set next
 	}
 
 	@Override

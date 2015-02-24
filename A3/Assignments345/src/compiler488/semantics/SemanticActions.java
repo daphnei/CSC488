@@ -8,6 +8,7 @@ import compiler488.ast.decl.ScalarDeclPart;
 import compiler488.ast.expn.BinaryExpn;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.IdentExpn;
+import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.ReturnStmt;
 import compiler488.ast.type.Type;
@@ -61,18 +62,19 @@ public class SemanticActions {
 		case 10: // Declare scalar.
 			table.addSymbolToCurScope(((ScalarDeclPart) element).getName(), this.semantics.getCurrentDeclarationType());
 			break;
-			
+
 		case 15: // Declare parameter.
 			ScalarDecl scalarDecl = (ScalarDecl) element;
 			table.addSymbolToCurScope(scalarDecl.getName(), scalarDecl.getType().getSemanticType());
 			break;
-			
+
 		case 19: // Declare array variable with specified lower and upper bounds.
 			ArrayDeclPart arrayPart = (ArrayDeclPart) element;
-			table.addSymbolToCurScope(arrayPart.getName(), new ArraySemType(this.semantics.getCurrentDeclarationType(), arrayPart.getDimensions()));
+			table.addSymbolToCurScope(arrayPart.getName(), new ArraySemType(this.semantics.getCurrentDeclarationType(), arrayPart
+					.getDimensions()));
 			break;
-		
-		case 46: //  Check that lower bound is <= upper bound.
+
+		case 46: // Check that lower bound is <= upper bound.
 			checkArrayBoundsValidity((ArrayDeclPart) element);
 			break;
 
@@ -81,9 +83,9 @@ public class SemanticActions {
 			break;
 
 		case 48: // Declare array variable with specified upper bound.
-			// Do nothing, this happens in S19. 
+			// Do nothing, this happens in S19.
 			break;
-			
+
 		// Expressions
 
 		case 20: // Set result type to boolean.
@@ -108,7 +110,7 @@ public class SemanticActions {
 			break;
 
 		case 27: // Set result type to type of array element.
-			printTodo(); // TODO
+			this.setExpressionResultTypeFromArray((SubsExpn) element);
 			break;
 
 		case 28: // Set result type to result type of function.
@@ -128,18 +130,15 @@ public class SemanticActions {
 			checkBinaryExpnTypesMatch((BinaryExpn) element);
 			break;
 
-		case 34: // Check that variable and expression in assignment are the
-			// same type.
+		case 34: // Check that variable and expression in assignment are the same type.
 			checkAssignmentTypesMatch((AssignStmt) element);
 			break;
 
-		case 35: // Check that expression type matches the return type of
-			// enclosing function.
+		case 35: // Check that expression type matches the return type of enclosing function.
 			checkReturnType((ReturnStmt) element);
 			break;
 
-		case 36: // Check that type of argument expression matches type of
-			// corresponding formal parameter.
+		case 36: // Check that type of argument expression matches type of corresponding formal parameter.
 			checkArgumentTypeMatch(element);
 			break;
 
@@ -150,7 +149,7 @@ public class SemanticActions {
 			break;
 
 		case 38: // Check that identifier has been declared as an array.
-			printTodo(); // TODO
+			checkArrayDeclaration((SubsExpn)element);
 			break;
 
 		default:
@@ -171,6 +170,18 @@ public class SemanticActions {
 		}
 	}
 	
+	private void checkArrayDeclaration(SubsExpn element) throws SemanticErrorException {
+		Symbol symbol = this.table.retrieveSymbol(element.getVariable());
+		if (symbol == null) {
+			throw new UndeclaredSymbolException(element.getVariable());
+		}
+
+		// HACK: Can we avoid instanceof?
+		if (!(symbol.getType() instanceof ArraySemType)) {
+			throw new NotArrayException(element.getVariable());
+		}
+	}
+
 	private void checkArrayBoundsValidity(ArrayDeclPart array) throws SemanticErrorException {
 		if (array.getLowerBoundary1() > array.getUpperBoundary1()) {
 			throw new InvalidArrayBoundsException(array.getName());
@@ -189,19 +200,18 @@ public class SemanticActions {
 	private void checkReturnType(ReturnStmt returnStmt) throws SemanticErrorException {
 		throw new UnsupportedOperationException("TODO.");
 		/*
-		 * if ( != returnStmt.getValue().getResultType()) { throw new
-		 * SemanticErrorException("Function returns a " +
-		 * returnStmt.getValue().getResultType() + " but a " +
-		 * returnStmt.getResultType() + "was expected."); }
+		 * if ( != returnStmt.getValue().getResultType()) { throw new SemanticErrorException("Function returns a " + returnStmt.getValue().getResultType() + " but a " + returnStmt.getResultType() +
+		 * "was expected."); }
 		 */
 	}
 
 	private void checkAssignmentTypesMatch(AssignStmt assignStmt) throws SemanticErrorException {
-		if (assignStmt.getRval() == null || assignStmt.getRval() == null) {
+		if (assignStmt.getRval().getResultType() == null || assignStmt.getLval().getResultType() == null) {
 			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
 		}
 		if (!assignStmt.getLval().getResultType().equals(assignStmt.getRval().getResultType())) {
-			throw new SemanticErrorException("Trying to assign a value of type " + assignStmt.getRval().getResultType() + " to a variable of type " + assignStmt.getLval().getResultType());
+			throw new SemanticErrorException("Trying to assign a value of type " + assignStmt.getRval().getResultType()
+					+ " to a variable of type " + assignStmt.getLval().getResultType());
 		}
 	}
 
@@ -224,7 +234,8 @@ public class SemanticActions {
 
 		boolean resultIsGood = (firstResultType.equals(secondResultType));
 		if (!resultIsGood) {
-			throw new SemanticErrorException("The left side of the expression resolves to a " + firstResultType + "while the right resolves to a " + secondResultType + ".");
+			throw new SemanticErrorException("The left side of the expression resolves to a " + firstResultType
+					+ "while the right resolves to a " + secondResultType + ".");
 		}
 	}
 
@@ -234,12 +245,19 @@ public class SemanticActions {
 			throw new UndeclaredSymbolException(ident.getIdent());
 		}
 
-		// HACK: Is there a better way?
+		// HACK: Can we avoid instanceof?
 		if (!(symbol.getType() instanceof PrimitiveSemType)) {
 			throw new SemanticErrorException("Trying to use non-primitive identifier in an expression.");
 		}
 
 		setExpressionResultType(ident, (PrimitiveSemType) symbol.getType());
+	}
+	
+	private void setExpressionResultTypeFromArray(SubsExpn ident) throws SemanticErrorException {
+		checkArrayDeclaration(ident);
+		Symbol symbol = this.table.retrieveSymbol(ident.getVariable());
+		ArraySemType array = (ArraySemType)symbol.getType();
+		setExpressionResultType(ident, array.getBaseType());
 	}
 
 	private void setExpressionResultType(IVisitableElement element, PrimitiveSemType resultType) {
