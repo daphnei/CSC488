@@ -2,7 +2,7 @@ package compiler488.semantics;
 
 import compiler488.utilities.IVisitableElement;
 
-public class SemanticActionsAlt {
+public class ReflectiveSemanticActionsAlt {
 	public static void check_00(IVisitableElement visitable) {
 
 	}
