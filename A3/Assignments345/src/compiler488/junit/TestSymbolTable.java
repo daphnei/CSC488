@@ -4,14 +4,15 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
-import compiler488.semantics.SemanticErrorException;
+import org.junit.rules.ExpectedException;
+
+import compiler488.exceptions.SemanticErrorException;
 import compiler488.symbol.BooleanSemType;
 import compiler488.symbol.IntegerSemType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
-import compiler488.ast.type.*;;
 
 public class TestSymbolTable {
 	private SymbolTable symbolTable;

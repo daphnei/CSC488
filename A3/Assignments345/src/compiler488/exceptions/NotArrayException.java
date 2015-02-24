@@ -1,8 +1,7 @@
-package compiler488.semantics;
+package compiler488.exceptions;
 
 public class NotArrayException extends SemanticErrorException {
-	public String name;
 	public NotArrayException(String name) {
-		this.name = name;
+		super("Trying to index a non-array variable " + name + ".");
 	}
 }

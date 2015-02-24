@@ -1,4 +1,4 @@
-package compiler488.semantics;
+package compiler488.exceptions;
 
 import compiler488.ast.AST;
 
@@ -15,5 +15,16 @@ public class SemanticErrorException extends Exception {
 	
 	public SemanticErrorException(String message) {
 		super(message);
+	}
+	
+	@Override
+	public String getMessage() {
+		String message = this.getMessage();
+		
+		if (message.isEmpty()) {
+			return "Unknown Error.";
+		} else {
+			return this.getMessage();
+		}
 	}
 }

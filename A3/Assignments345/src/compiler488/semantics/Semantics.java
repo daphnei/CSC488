@@ -45,6 +45,12 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.compiler.Main;
+import compiler488.exceptions.InvalidArrayBoundsException;
+import compiler488.exceptions.InvalidScopeException;
+import compiler488.exceptions.NotArrayException;
+import compiler488.exceptions.SemanticErrorException;
+import compiler488.exceptions.SymbolConflictException;
+import compiler488.exceptions.UndeclaredSymbolException;
 import compiler488.symbol.PrimitiveSemType;
 import compiler488.symbol.SemType;
 import compiler488.symbol.SymbolTable;
@@ -155,21 +161,8 @@ public class Semantics extends NodeVisitor {
 		try {
 			// Perform the action in this helper class.
 			this.actions.checkSemanticRule(actionNumber, visitable);
-		} catch (InvalidScopeException exception) {
-			errorMessage = "Trying to operate on a non-existent scope.";
-		} catch (SymbolConflictException exception) {
-			errorMessage = "Identifier " + exception.symbolName + " has already been declared.";
-		} catch (UndeclaredSymbolException exception) {
-			errorMessage = "Identifier " + exception.symbolName + " is not declared in this scope.";
-		} catch (InvalidArrayBoundsException exception) {
-			errorMessage = "The declared array " + exception.name + " has invalid array bounds.";
-		} catch (NotArrayException exception) {
-			errorMessage = "Trying to index a non-array variable " + exception.name + ".";
 		} catch (SemanticErrorException error) {
 			errorMessage = error.getMessage();
-			if (errorMessage.equals("")) {
-				errorMessage = "Unknown Error.";
-			}
 		}
 		
 		// HACK: Swallow duplicate error messages.
