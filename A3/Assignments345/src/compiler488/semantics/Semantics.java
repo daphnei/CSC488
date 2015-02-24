@@ -291,7 +291,7 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(ScalarDecl visitable) {
 		super.visit(visitable);
-		// TODO: Need to define parameter type.
+		this.semanticAction(15, visitable);
 	}
 
 

@@ -3,6 +3,7 @@ package compiler488.semantics;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.DeclarationPart;
 import compiler488.ast.decl.MultiDeclarations;
+import compiler488.ast.decl.ScalarDecl;
 import compiler488.ast.decl.ScalarDeclPart;
 import compiler488.ast.expn.BinaryExpn;
 import compiler488.ast.expn.Expn;
@@ -59,6 +60,10 @@ public class SemanticActions {
 
 		case 10: // Declare scalar.
 			table.addSymbolToCurScope(((ScalarDeclPart) element).getName(), this.semantics.getCurrentDeclarationType());
+			break;
+		case 15: // Declare parameter.
+			ScalarDecl scalarDecl = (ScalarDecl) element;
+			table.addSymbolToCurScope(scalarDecl.getName(), scalarDecl.getType().getSemanticType());
 			break;
 		case 48: // Declare an array.
 			ArrayDeclPart arrayPart = (ArrayDeclPart) element;
