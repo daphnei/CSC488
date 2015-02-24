@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import compiler488.ast.BaseAST;
+import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.Declaration;
@@ -47,14 +48,13 @@ import compiler488.compiler.Main;
 import compiler488.symbol.PrimitiveSemType;
 import compiler488.symbol.SemType;
 import compiler488.symbol.SymbolTable;
+import compiler488.utilities.IVisitableElement;
 import compiler488.utilities.NodeVisitor;
 
 /**
- * The Semantics class implements IVisitor. It will trace through an AST tree
- * and check each node for the appropriate semantic actions.
+ * The Semantics class implements IVisitor. It will trace through an AST tree and check each node for the appropriate semantic actions.
  * 
- * Please ensure each of the NodeVisitor methods call <i>super</i>! This will
- * ensure the AST is fully traversed.
+ * Please ensure each of the NodeVisitor methods call <i>super</i>! This will ensure the AST is fully traversed.
  * 
  * @author g2robint
  */
@@ -76,8 +76,22 @@ public class Semantics extends NodeVisitor {
 	 * The symbol table we are using for this analysis.
 	 */
 	private SymbolTable symbolTable;
-	private SemanticActions actions;	
+	
+	/**
+	 * An actions class that stores state about the various actions.
+	 */
+	private SemanticActions actions;
+	
+	/**
+	 * The a variable set while traversing the tree that keeps track of the current declartion type.
+	 */
 	private PrimitiveSemType currentDeclarationType;
+
+	/**
+	 * These variables allow the class to swallow duplicate error messages.
+	 */
+	private BaseAST previousVisitable;
+	private String previousError;
 
 	public Semantics() {
 
@@ -90,6 +104,10 @@ public class Semantics extends NodeVisitor {
 		this.symbolTable = new SymbolTable();
 		this.symbolTable.Initialize();
 		this.actions = new SemanticActions(this, this.symbolTable);
+		
+		this.previousVisitable = null;
+		this.previousError = null;
+		this.currentDeclarationType = null;
 	}
 
 	/**
@@ -98,21 +116,19 @@ public class Semantics extends NodeVisitor {
 	public void Finalize() {
 
 	}
-	
+
 	public PrimitiveSemType getCurrentDeclarationType() {
 		return this.currentDeclarationType;
 	}
-	
-	public 
 
-	/**
-	 * Perform one semantic analysis action. It will record the action, perform
-	 * it, catch any semantic errors, and report them to the compiler if they
-	 * are found.
-	 * 
-	 * @param actionNumber
-	 *            Semantic analysis action number.
-	 */
+	public/**
+			 * Perform one semantic analysis action. It will record the action, perform
+			 * it, catch any semantic errors, and report them to the compiler if they
+			 * are found.
+			 * 
+			 * @param actionNumber
+			 *            Semantic analysis action number.
+			 */
 	void semanticAction(int actionNumber, BaseAST visitable) {
 
 		if (traceSemantics) {
@@ -155,13 +171,18 @@ public class Semantics extends NodeVisitor {
 				errorMessage = "Unknown Error.";
 			}
 		}
-		if (errorMessage != null) {
-			// TODO: GET ACTUAL LINE NUMBER.
-			System.out.println("SEMANTIC ERROR (Line " + visitable.getRightColumnNumber() + "): " + errorMessage);
+		
+		// HACK: Swallow duplicate error messages.
+		if (errorMessage != null && !(visitable == previousVisitable && errorMessage.equals(previousError))) {
+			// TODO: GET ACTUAL LINE NUMBER.			
+			System.out.println("S" + actionNumber + " SEMANTIC ERROR (Line ??): " + errorMessage);
 			Main.errorOccurred = true;
 		}
+		
+		this.previousError = errorMessage;
+		this.previousVisitable = visitable;
 
-		System.out.println("Semantic Action: S" + actionNumber);
+		// System.out.println("Semantic Action: S" + actionNumber);
 		return;
 	}
 
@@ -268,7 +289,7 @@ public class Semantics extends NodeVisitor {
 		this.currentDeclarationType = visitable.getType().getSemanticType();
 		super.visit(visitable);
 		this.semanticAction(47, visitable);
-		this.currentDeclarationType = null;		
+		this.currentDeclarationType = null;
 	}
 
 	@Override
@@ -276,7 +297,7 @@ public class Semantics extends NodeVisitor {
 		super.visit(visitable);
 		this.printAbstractWarning();
 	}
-	
+
 	@Override
 	public void visit(ArrayDeclPart visitable) {
 		super.visit(visitable);
@@ -284,7 +305,7 @@ public class Semantics extends NodeVisitor {
 		this.semanticAction(19, visitable);
 		this.semanticAction(48, visitable); // NOTE: This does nothing.
 	}
-	
+
 	@Override
 	public void visit(ScalarDeclPart visitable) {
 		super.visit(visitable);

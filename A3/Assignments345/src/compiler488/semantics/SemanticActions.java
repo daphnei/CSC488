@@ -21,7 +21,7 @@ import compiler488.utilities.IVisitableElement;
 
 public class SemanticActions {
 
-	public static final String NULL_RESULT_TYPE_EXCEPTION = "The result type of the expression has not been set! There is an ordering problem.";
+	public static final String NULL_RESULT_TYPE_EXCEPTION = "Cannot evaluate expression. (COULD INDICATE MISSING RESULT TYPE SET)";
 
 	private Semantics semantics;
 	private SymbolTable table;
@@ -207,7 +207,7 @@ public class SemanticActions {
 
 	private void checkAssignmentTypesMatch(AssignStmt assignStmt) throws SemanticErrorException {
 		if (assignStmt.getRval().getResultType() == null || assignStmt.getLval().getResultType() == null) {
-			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
+			throw new SemanticErrorException(NULL_RESULT_TYPE_EXCEPTION);
 		}
 		if (!assignStmt.getLval().getResultType().equals(assignStmt.getRval().getResultType())) {
 			throw new SemanticErrorException("Trying to assign a value of type " + assignStmt.getRval().getResultType()
@@ -217,7 +217,7 @@ public class SemanticActions {
 
 	private void checkExpnType(Expn expression, SemType resultType) throws SemanticErrorException {
 		if (expression.getResultType() == null) {
-			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
+			throw new SemanticErrorException(NULL_RESULT_TYPE_EXCEPTION);
 		}
 		if (!expression.getResultType().equals(resultType)) {
 			throw new SemanticErrorException("Expected a " + resultType + " and found a " + expression.getResultType() + ".");
@@ -229,7 +229,7 @@ public class SemanticActions {
 		SemType secondResultType = expression.getSecondExpression().getResultType();
 
 		if (firstResultType == null || secondResultType == null) {
-			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
+			throw new SemanticErrorException(NULL_RESULT_TYPE_EXCEPTION);
 		}
 
 		boolean resultIsGood = (firstResultType.equals(secondResultType));
