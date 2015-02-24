@@ -17,9 +17,9 @@ public class Symbol {
 	 * TODO: This is wrong. We should be storing something that allows for procedure.
 	 * function types as well?
 	 */
-	private Type type;
+	private SemType type;
 
-	public Symbol(String identifier, int scopeIndex, Type type) {
+	public Symbol(String identifier, int scopeIndex, SemType type) {
 		this.identifier = identifier;
 		this.scopeIndex = scopeIndex;
 		this.type = type;
@@ -32,7 +32,7 @@ public class Symbol {
 		return this.scopeIndex;
 	}
 	
-	public Type getType() {
+	public SemType getType() {
 		return this.type;
 	}
 }

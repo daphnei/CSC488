@@ -1,19 +1,24 @@
 package compiler488.ast.type;
 
+import compiler488.symbol.SemType;
 import compiler488.utilities.IVisitor;
-
 
 /**
  * Used to declare objects that yield integers.
  */
 public class IntegerType extends Type {
-    @Override
+	@Override
 	public String toString() {
-        return "integer";
-    }
-
-    @Override
-	public void accept(IVisitor visitor) {
-		visitor.visit(this);	
+		return "integer";
 	}
+
+	@Override
+	public void accept(IVisitor visitor) {
+		visitor.visit(this);
+	}
+
+	@Override
+    public SemType getSemanticType() {
+    	return SemType.INTEGER;
+    }
 }

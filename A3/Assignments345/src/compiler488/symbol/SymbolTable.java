@@ -131,7 +131,7 @@ public class SymbolTable {
 	 *         create a symbol.
 	 * @throws SemanticError
 	 */
-	public Symbol addSymbolToCurScope(String identifier, Type type) throws SemanticErrorException {
+	public Symbol addSymbolToCurScope(String identifier, SemType type) throws SemanticErrorException {
 		this.checkIfThereIsAnyScope();
 
 		// Get the list of symbols associated with this identifier.

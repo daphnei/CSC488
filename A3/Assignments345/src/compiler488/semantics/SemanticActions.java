@@ -8,6 +8,7 @@ import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.ReturnStmt;
 import compiler488.ast.type.Type;
+import compiler488.symbol.SemType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 import compiler488.utilities.IVisitableElement;
@@ -56,18 +57,18 @@ public class SemanticActions {
 			// According to our CUP file, all scalar declarations are multi-declarations.
 			MultiDeclarations allDeclarations = (MultiDeclarations) element;
 			for (DeclarationPart part : allDeclarations.getParts()) {
-				table.addSymbolToCurScope(part.getName(), allDeclarations.getType());
+				table.addSymbolToCurScope(part.getName(), allDeclarations.getType().getSemanticType());
 			}
 			break;
 
 		// Expressions
 
 		case 20: // Set result type to boolean.
-			setExpressionResultType(element, Type.BOOLEAN);
+			setExpressionResultType(element, SemType.BOOLEAN);
 			break;
 
 		case 21: // Set result type to integer.
-			setExpressionResultType(element, Type.INTEGER);
+			setExpressionResultType(element, SemType.INTEGER);
 			break;
 			
 		case 23: // Set result type to type of expression
@@ -92,11 +93,11 @@ public class SemanticActions {
 			break;
 
 		case 30: // Check that type of expression is boolean.
-			checkExpnType((Expn) element, Type.BOOLEAN);
+			checkExpnType((Expn) element, SemType.BOOLEAN);
 			break;
 			
 		case 31: // Check that type of expression or variable is integer
-			checkExpnType((Expn) element, Type.INTEGER);
+			checkExpnType((Expn) element, SemType.INTEGER);
 			break;
 			
 		case 32: // Check that left and right operand expressions are the same type
@@ -167,7 +168,7 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkExpnType(Expn expression, Type resultType) throws SemanticErrorException {
+	private void checkExpnType(Expn expression, SemType resultType) throws SemanticErrorException {
 		if (expression.getResultType() == null) {
 			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
 		}
@@ -177,8 +178,8 @@ public class SemanticActions {
 	}
 
 	private void checkBinaryExpnTypesMatch(BinaryExpn expression) throws SemanticErrorException {
-		Type firstResultType = expression.getFirstExpression().getResultType();
-		Type secondResultType = expression.getSecondExpression().getResultType();
+		SemType firstResultType = expression.getFirstExpression().getResultType();
+		SemType secondResultType = expression.getSecondExpression().getResultType();
 		
 		if (firstResultType == null || secondResultType == null) {
 			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
@@ -198,7 +199,7 @@ public class SemanticActions {
 		setExpressionResultType(ident, symbol.getType());
 	}
 
-	private void setExpressionResultType(IVisitableElement element, Type resultType) {
+	private void setExpressionResultType(IVisitableElement element, SemType resultType) {
 		Expn ast = (Expn) element;
 		ast.setResultType(resultType);
 	}
