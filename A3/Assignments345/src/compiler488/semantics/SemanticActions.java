@@ -1,20 +1,31 @@
 package compiler488.semantics;
 
 import compiler488.ast.BaseAST;
-import compiler488.ast.BaseAST.ResultType;
 import compiler488.ast.decl.DeclarationPart;
 import compiler488.ast.decl.MultiDeclarations;
 import compiler488.ast.expn.BinaryExpn;
 import compiler488.ast.expn.Expn;
+import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.ReturnStmt;
 import compiler488.ast.type.Type;
+import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 import compiler488.utilities.IVisitableElement;
 
 public class SemanticActions {
+	
+	public static final String NULL_RESULT_TYPE_EXCEPTION = "The result type of the expression has not been set! There is an ordering problem.";
+	
 
-	public static void checkSemanticRule(SymbolTable table, int action, IVisitableElement element) throws SemanticErrorException {
+	private SymbolTable table;
+	
+	public SemanticActions(SymbolTable table) {
+		this.table = table;
+	}
+	
+	
+	public void checkSemanticRule(int action, IVisitableElement element) throws SemanticErrorException {
 		switch (action) {
 
 		// Scopes and Program
@@ -43,8 +54,7 @@ public class SemanticActions {
 		// Declarations
 
 		case 10: // Declare scalar.
-			// According to our CUP file, all scalar declarations are
-			// multi-declarations.
+			// According to our CUP file, all scalar declarations are multi-declarations.
 			MultiDeclarations allDeclarations = (MultiDeclarations) element;
 			for (DeclarationPart part : allDeclarations.getParts()) {
 				table.addSymbolToCurScope(part.getName(), allDeclarations.getType());
@@ -60,22 +70,24 @@ public class SemanticActions {
 		case 21: // Set result type to integer.
 			setExpressionResultType(element, Type.INTEGER);
 			break;
-
+			
 		case 23: // Set result type to type of expression
 			// This should happen automatically.
 			break;
+			
 		case 24: // Set result type to type of anonymous function
 			printTodo(); // TODO
 			break;
+			
 		case 25: // Set result type to type of parametername.
-			// setExpressionResultType(element, ResultType.PARAMETER_NAME);
-			break;
 		case 26: // Set result type to type of variablename.
-			// setExpressionResultType(element, ResultType.VARIABLE_NAME);
+			this.setExpressionResultTypeFromIdentifier((IdentExpn)element);			
 			break;
+			
 		case 27: // Set result type to type of array element.
-			// setExpressionResultType(element, ResultType.ARRAY_ELEMENT);
+			printTodo();
 			break;
+			
 		case 28: // Set result type to result type of function.
 			printTodo(); // TODO
 			break;
@@ -83,30 +95,37 @@ public class SemanticActions {
 		case 30: // Check that type of expression is boolean.
 			checkExpnType((Expn) element, Type.BOOLEAN);
 			break;
+			
 		case 31: // Check that type of expression or variable is integer
 			checkExpnType((Expn) element, Type.INTEGER);
 			break;
+			
 		case 32: // Check that left and right operand expressions are the same type
 			checkBinaryExpnTypesMatch((BinaryExpn) element);
 			break;
-		case 33: // This one should be missing.
-			break;
+
 		case 34: // Check that variable and expression in assignment are the same type.
 			checkAssignmentTypesMatch((AssignStmt) element);
 			break;
+			
 		case 35: // Check that expression type matches the return type of enclosing function.
 			checkReturnType((ReturnStmt) element);
 			break;
-		case 36: // Check that type of argument expression matches type of
-			// corresponding formal parameter.
+			
+		case 36: // Check that type of argument expression matches type of corresponding formal parameter.
 			checkArgumentTypeMatch(element);
-		case 37: // Check that identifier has been declared as a scalar
-			// variable.
-			checkVariableDeclaration(element);
-		case 38: // Check that identifier has been declared as an array.
+			break;
+			
+		case 37: // Check that identifier has been declared as a scalar variable.
 		case 39: // Check that identifier has been declared as a parameter.
+			checkVariableDeclaration(element);
+			break;
+			
+		case 38: // Check that identifier has been declared as an array.
+			printTodo(); // TODO
+			break;
 
-		case 47: // associate type with variables
+		case 47: // Associate type with variables.
 			// Do nothing, this happens automatically.
 			break;
 
@@ -116,51 +135,71 @@ public class SemanticActions {
 		}
 	}
 
-	private static void printTodo() {
+	private void printTodo() {
 		System.out.println("TODO: Semantic action not implemented!");
 	}
 
-	private static void checkVariableDeclaration(IVisitableElement element) throws SemanticErrorException {
-		throw new UnsupportedOperationException("TODO.");
-	}
-
-	private static void checkArgumentTypeMatch(IVisitableElement element) throws SemanticErrorException {
-		throw new UnsupportedOperationException("TODO.");
-	}
-
-	private static void checkReturnType(ReturnStmt returnStmt) throws SemanticErrorException {
-		if ( != returnStmt.getValue().getResultType()) {
-			throw new SemanticErrorException("Function returns a " + returnStmt.getValue().getResultType() + 
-											  " but a " + returnStmt.getResultType() + "was expected.");
+	private void checkVariableDeclaration(IVisitableElement element) throws SemanticErrorException {
+		IdentExpn ident = (IdentExpn)element;
+		Symbol symbol = this.table.retrieveSymbol(ident.getIdent());
+		if (symbol == null) {
+			throw new UndeclaredSymbolException(ident.getIdent());
 		}
 	}
 
-	private static void checkAssignmentTypesMatch(AssignStmt assignStmt) throws SemanticErrorException {
+	private void checkArgumentTypeMatch(IVisitableElement element) throws SemanticErrorException {
+		throw new UnsupportedOperationException("TODO.");
+	}
+
+	private void checkReturnType(ReturnStmt returnStmt) throws SemanticErrorException {
+		throw new UnsupportedOperationException("TODO.");
+		/* if ( != returnStmt.getValue().getResultType()) {
+			throw new SemanticErrorException("Function returns a " + returnStmt.getValue().getResultType() + 
+											  " but a " + returnStmt.getResultType() + "was expected.");
+		}*/
+	}
+
+	private void checkAssignmentTypesMatch(AssignStmt assignStmt) throws SemanticErrorException {
+		if (assignStmt.getRval() == null || assignStmt.getRval() == null) {
+			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
+		}
 		if (!assignStmt.getLval().getResultType().equals(assignStmt.getRval().getResultType())) {
 			throw new SemanticErrorException("Trying to assign a value of type " + assignStmt.getRval().getResultType() + "to a variable of type " + assignStmt.getLval().getResultType());
 		}
 	}
 
-	private static void checkExpnType(Expn expression, Type resultType) throws SemanticErrorException {
+	private void checkExpnType(Expn expression, Type resultType) throws SemanticErrorException {
 		if (expression.getResultType() == null) {
-			throw new Exception("The result type of the expression has not been set! There is an ordering problem.");
+			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
 		}
 		if (!expression.getResultType().equals(resultType)) {
 			throw new SemanticErrorException("Expected a " + resultType + " and found a " + expression.getResultType());
 		}
 	}
 
-	private static void checkBinaryExpnTypesMatch(BinaryExpn expression) throws SemanticErrorException {
+	private void checkBinaryExpnTypesMatch(BinaryExpn expression) throws SemanticErrorException {
 		Type firstResultType = expression.getFirstExpression().getResultType();
 		Type secondResultType = expression.getSecondExpression().getResultType();
+		
+		if (firstResultType == null || secondResultType == null) {
+			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
+		}
 
 		boolean resultIsGood = (firstResultType.equals(secondResultType));
 		if (!resultIsGood) {
 			throw new SemanticErrorException("The left side of the expression resolves to a " + firstResultType + "while the right resolves to a " + secondResultType + ".");
 		}
 	}
+	
+	private void setExpressionResultTypeFromIdentifier(IdentExpn ident) throws SemanticErrorException {
+		Symbol symbol = this.table.retrieveSymbol(ident.getIdent());
+		if (symbol == null) {
+			throw new UndeclaredSymbolException(ident.getIdent());
+		}
+		setExpressionResultType(ident, symbol.getType());
+	}
 
-	private static void setExpressionResultType(IVisitableElement element, Type resultType) {
+	private void setExpressionResultType(IVisitableElement element, Type resultType) {
 		Expn ast = (Expn) element;
 		ast.setResultType(resultType);
 	}

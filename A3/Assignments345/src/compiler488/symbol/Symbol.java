@@ -31,4 +31,8 @@ public class Symbol {
 	public int getScope() {
 		return this.scopeIndex;
 	}
+	
+	public Type getType() {
+		return this.type;
+	}
 }

@@ -77,6 +77,7 @@ public class Semantics extends NodeVisitor {
 	 * The symbol table we are using for this analysis.
 	 */
 	private SymbolTable symbolTable;
+	private SemanticActions actions;
 
 	public Semantics() {
 
@@ -88,6 +89,7 @@ public class Semantics extends NodeVisitor {
 	public void Initialize() {
 		this.symbolTable = new SymbolTable();
 		this.symbolTable.Initialize();
+		this.actions = new SemanticActions(this.symbolTable);
 	}
 
 	/**
@@ -130,12 +132,14 @@ public class Semantics extends NodeVisitor {
 		String errorMessage = null;
 		try {
 			// Perform the action in this helper class.
-			SemanticActions.checkSemanticRule(this.symbolTable, actionNumber, visitable);
+			this.actions.checkSemanticRule(actionNumber, visitable);
 		} catch (InvalidScopeException exception) {
 			errorMessage = "Trying to operate on a non-existent scope.";
 		} catch (SymbolConflictException exception) {
 			// TODO: How do we get the line number?
-			errorMessage = "Identifier " + exception.symbolName + " on line " + visitable.getLeftColumnNumber() + " has already been declared.";
+			errorMessage = "Identifier " + exception.symbolName + " on line " + visitable.getLeftColumnNumber() + " has already been declared.";			
+		} catch (UndeclaredSymbolException exception) {
+			errorMessage = "Identifier " + exception.symbolName + " is not declared in this scope.";
 		} catch (SemanticErrorException error) {
 			errorMessage = error.getMessage();
 		}
@@ -334,23 +338,19 @@ public class Semantics extends NodeVisitor {
 
 	@Override
 	public void visit(IdentExpn visitable) {
-		super.visit(visitable);
-		this.semanticAction(37, visitable);
-		
+		super.visit(visitable);		
 		this.semanticAction(37, visitable);
 		this.semanticAction(39, visitable);
+		this.semanticAction(26, visitable);
+		this.semanticAction(25, visitable);
 	}
 
 	@Override
 	public void visit(IntConstExpn visitable) {
 		super.visit(visitable);
+		this.semanticAction(21, visitable);
 	}
-
-	@Override
-	public void visit(SkipConstExpn visitable) {
-		super.visit(visitable);
-	}
-
+	
 	@Override
 	public void visit(SubsExpn visitable) {
 		super.visit(visitable);
@@ -358,8 +358,15 @@ public class Semantics extends NodeVisitor {
 	}
 
 	@Override
+	public void visit(SkipConstExpn visitable) {
+		super.visit(visitable);
+		// Do nothing.
+	}
+
+	@Override
 	public void visit(TextConstExpn visitable) {
 		super.visit(visitable);
+		// Do nothing.
 	}
 	
 	// Types
