@@ -1,0 +1,10 @@
+%from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10967
+begin
+if true then
+	integer x
+	x <= 1
+end
+
+integer x
+
+end

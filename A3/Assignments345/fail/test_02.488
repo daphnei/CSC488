@@ -1,0 +1,9 @@
+%From forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10951
+begin
+    integer a
+    
+	loop
+		integer a
+	end
+
+end
