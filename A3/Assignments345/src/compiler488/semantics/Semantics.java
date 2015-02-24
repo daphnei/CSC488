@@ -172,8 +172,9 @@ public class Semantics extends NodeVisitor {
 	}
 
 	@Override
-	public void visit(AssignStmt visitable) {
+	public void visit(AssignStmt visitable) {		
 		super.visit(visitable);
+		this.semanticAction(34, visitable);
 	}
 
 	@Override
@@ -283,9 +284,9 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(ArithExpn visitable) {
 		super.visit(visitable);
-		this.semanticAction(21, visitable.getFirstExpression());
-		this.semanticAction(21, visitable.getSecondExpression());
-		this.semanticAction(31, visitable);
+		this.semanticAction(31, visitable.getFirstExpression());
+		this.semanticAction(31, visitable.getSecondExpression());
+		this.semanticAction(21, visitable);
 	}
 	
 	@Override
@@ -355,6 +356,7 @@ public class Semantics extends NodeVisitor {
 	public void visit(SubsExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(38, visitable);
+		this.semanticAction(27, visitable);
 	}
 
 	@Override

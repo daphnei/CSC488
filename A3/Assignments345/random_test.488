@@ -4,4 +4,6 @@ begin
   cat <= 1
   put cat + cat
   cat <= cat + cat
+  cat <= 1 + true
+  cat <= true
 end

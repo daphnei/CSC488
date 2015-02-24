@@ -164,7 +164,7 @@ public class SemanticActions {
 			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
 		}
 		if (!assignStmt.getLval().getResultType().equals(assignStmt.getRval().getResultType())) {
-			throw new SemanticErrorException("Trying to assign a value of type " + assignStmt.getRval().getResultType() + "to a variable of type " + assignStmt.getLval().getResultType());
+			throw new SemanticErrorException("Trying to assign a value of type " + assignStmt.getRval().getResultType() + " to a variable of type " + assignStmt.getLval().getResultType());
 		}
 	}
 
@@ -173,7 +173,7 @@ public class SemanticActions {
 			throw new RuntimeException(NULL_RESULT_TYPE_EXCEPTION);
 		}
 		if (!expression.getResultType().equals(resultType)) {
-			throw new SemanticErrorException("Expected a " + resultType + " and found a " + expression.getResultType());
+			throw new SemanticErrorException("Expected a " + resultType + " and found a " + expression.getResultType() + ".");
 		}
 	}
 
