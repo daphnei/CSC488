@@ -1,0 +1,4 @@
+begin
+	boolean b
+	b <= (true | (false & (true + 2)))
+end
