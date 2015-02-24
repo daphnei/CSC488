@@ -9,6 +9,10 @@ public class ArraySemType extends SemType {
 		this.dimensions = dimensions;
 		this.baseType = baseType;
 	}
+	
+	public PrimitiveSemType getBaseType() {
+		return this.baseType;
+	}
 
 	@Override
 	public boolean equals(Object obj) {
