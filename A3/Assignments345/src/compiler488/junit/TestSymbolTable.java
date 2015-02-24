@@ -5,10 +5,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
-
 import compiler488.semantics.SemanticErrorException;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;

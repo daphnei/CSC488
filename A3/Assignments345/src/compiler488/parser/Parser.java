@@ -6,7 +6,6 @@
 
 package compiler488.parser;
 
-import java_cup.runtime.*;
 import compiler488.ast.ASTList;
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;

@@ -1,9 +1,5 @@
 package compiler488.semantics;
 
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

@@ -22,7 +22,8 @@ public class MultiDeclarations extends Declaration {
         return elements;
     }
 
-    public void prettyPrint(PrettyPrinter p) {
+    @Override
+	public void prettyPrint(PrettyPrinter p) {
         p.print(type + " ");
         elements.prettyPrintCommas(p);
     }

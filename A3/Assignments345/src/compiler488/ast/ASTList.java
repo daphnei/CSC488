@@ -110,6 +110,7 @@ public class ASTList<E extends AST> extends LinkedList<E> implements AST {
 	 *
 	 * @return a string of comma-separated list elements
 	 */
+	@Override
 	public String toString() {
 		if (size() == 0) {
 			return "";

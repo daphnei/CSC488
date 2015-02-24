@@ -1,6 +1,5 @@
 package compiler488.ast.expn;
 
-import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.PrettyPrinter;
 import compiler488.utilities.IVisitor;
 

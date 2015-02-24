@@ -1,6 +1,5 @@
 package compiler488.semantics;
 
-import compiler488.ast.BaseAST;
 import compiler488.ast.decl.DeclarationPart;
 import compiler488.ast.decl.MultiDeclarations;
 import compiler488.ast.expn.BinaryExpn;

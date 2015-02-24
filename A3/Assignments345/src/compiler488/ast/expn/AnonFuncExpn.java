@@ -33,7 +33,8 @@ public class AnonFuncExpn extends Expn {
         return expn;
     }
     
-    public void prettyPrint(PrettyPrinter p) {
+    @Override
+	public void prettyPrint(PrettyPrinter p) {
         p.println("{");
         p.enterBlock();
 

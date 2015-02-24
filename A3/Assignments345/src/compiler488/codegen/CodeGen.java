@@ -1,7 +1,5 @@
 package compiler488.codegen;
 
-import java.io.*;
-import java.util.*;
 import compiler488.compiler.Main;
 import compiler488.runtime.Machine;
 import compiler488.runtime.MemoryAddressException;

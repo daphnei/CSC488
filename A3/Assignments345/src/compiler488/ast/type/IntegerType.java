@@ -7,7 +7,8 @@ import compiler488.utilities.IVisitor;
  * Used to declare objects that yield integers.
  */
 public class IntegerType extends Type {
-    public String toString() {
+    @Override
+	public String toString() {
         return "integer";
     }
 

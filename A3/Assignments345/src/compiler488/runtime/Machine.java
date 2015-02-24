@@ -701,7 +701,7 @@ public final class Machine
 				//     "BF argument is not a Boolean value" );
 				spop();
 				if(v == MACHINE_FALSE)
-					pc = (short)adr;
+					pc = adr;
 				else  //BF sets pc directly
 					pc++;
 			}
@@ -772,7 +772,7 @@ public final class Machine
 			case EQ:
 				spop();
 				memory[msp-1]
-				    = (short)(memory[msp-1] == topp1()
+				    = (memory[msp-1] == topp1()
 				              ? MACHINE_TRUE : MACHINE_FALSE);
 				break;
 

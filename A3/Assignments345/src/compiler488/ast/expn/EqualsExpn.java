@@ -1,6 +1,5 @@
 package compiler488.ast.expn;
 
-import compiler488.semantics.SemanticErrorException;
 import compiler488.utilities.IVisitor;
 
 

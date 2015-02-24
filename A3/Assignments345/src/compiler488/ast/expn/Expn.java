@@ -3,7 +3,6 @@ package compiler488.ast.expn;
 import compiler488.ast.BaseAST;
 import compiler488.ast.Printable;
 import compiler488.ast.type.Type;
-import compiler488.semantics.SemanticErrorException;
 
 /**
  * A placeholder for all expressions.

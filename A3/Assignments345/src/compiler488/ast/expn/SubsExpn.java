@@ -47,7 +47,8 @@ public class SubsExpn extends Expn implements Readable {
         return 1 + (subscript2 != null ? 1 : 0);
     }
 
-    public void prettyPrint(PrettyPrinter p) {
+    @Override
+	public void prettyPrint(PrettyPrinter p) {
         p.print(variable + "[");
 
         subscript1.prettyPrint(p);

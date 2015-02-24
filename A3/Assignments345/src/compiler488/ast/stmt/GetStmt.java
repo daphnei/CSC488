@@ -24,7 +24,8 @@ public class GetStmt extends Stmt {
         return inputs;
     }
 
-    public void prettyPrint(PrettyPrinter p) {
+    @Override
+	public void prettyPrint(PrettyPrinter p) {
         p.print("get ");
         inputs.prettyPrintCommas(p);
     }
