@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import compiler488.ast.BaseAST;
+import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.Declaration;
 import compiler488.ast.decl.DeclarationPart;
@@ -43,6 +44,8 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.compiler.Main;
+import compiler488.symbol.PrimitiveSemType;
+import compiler488.symbol.SemType;
 import compiler488.symbol.SymbolTable;
 import compiler488.utilities.NodeVisitor;
 
@@ -73,7 +76,8 @@ public class Semantics extends NodeVisitor {
 	 * The symbol table we are using for this analysis.
 	 */
 	private SymbolTable symbolTable;
-	private SemanticActions actions;
+	private SemanticActions actions;	
+	private PrimitiveSemType currentDeclarationType;
 
 	public Semantics() {
 
@@ -85,7 +89,7 @@ public class Semantics extends NodeVisitor {
 	public void Initialize() {
 		this.symbolTable = new SymbolTable();
 		this.symbolTable.Initialize();
-		this.actions = new SemanticActions(this.symbolTable);
+		this.actions = new SemanticActions(this, this.symbolTable);
 	}
 
 	/**
@@ -94,6 +98,12 @@ public class Semantics extends NodeVisitor {
 	public void Finalize() {
 
 	}
+	
+	public PrimitiveSemType getCurrentDeclarationType() {
+		return this.currentDeclarationType;
+	}
+	
+	public 
 
 	/**
 	 * Perform one semantic analysis action. It will record the action, perform
@@ -132,15 +142,15 @@ public class Semantics extends NodeVisitor {
 		} catch (InvalidScopeException exception) {
 			errorMessage = "Trying to operate on a non-existent scope.";
 		} catch (SymbolConflictException exception) {
-			// TODO: How do we get the line number?
-			errorMessage = "Identifier " + exception.symbolName + " on line " + visitable.getLeftColumnNumber() + " has already been declared.";			
+			errorMessage = "Identifier " + exception.symbolName + " has already been declared.";
 		} catch (UndeclaredSymbolException exception) {
 			errorMessage = "Identifier " + exception.symbolName + " is not declared in this scope.";
 		} catch (SemanticErrorException error) {
 			errorMessage = error.getMessage();
 		}
 		if (errorMessage != null) {
-			System.out.println("SEMANTIC ERROR: " + errorMessage);
+			// TODO: GET ACTUAL LINE NUMBER.
+			System.out.println("SEMANTIC ERROR (Line " + visitable.getRightColumnNumber() + "): " + errorMessage);
 			Main.errorOccurred = true;
 		}
 
@@ -148,8 +158,7 @@ public class Semantics extends NodeVisitor {
 		return;
 	}
 
-	
-	// Program
+	// --- Program ---
 
 	@Override
 	public void visit(Program visitable) {
@@ -157,8 +166,8 @@ public class Semantics extends NodeVisitor {
 		super.visit(visitable);
 		this.semanticAction(01, visitable);
 	}
-	
-	// Statement
+
+	// --- Statement ---
 
 	@Override
 	public void visit(Stmt visitable) {
@@ -168,23 +177,23 @@ public class Semantics extends NodeVisitor {
 	}
 
 	@Override
-	public void visit(AssignStmt visitable) {		
+	public void visit(AssignStmt visitable) {
 		super.visit(visitable);
 		this.semanticAction(34, visitable);
 	}
-	
+
 	@Override
 	public void visit(IfStmt visitable) {
 		super.visit(visitable);
 		this.semanticAction(30, visitable.getCondition());
 	}
-	
+
 	@Override
 	public void visit(WhileDoStmt visitable) {
 		super.visit(visitable);
 		this.semanticAction(30, visitable.getExpn());
 	}
-	
+
 	@Override
 	public void visit(LoopStmt visitable) {
 		super.visit(visitable);
@@ -194,93 +203,114 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(ExitStmt visitable) {
 		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(GetStmt visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(ProcedureCallStmt visitable) {
-		super.visit(visitable);
+		// TODO: Needs scope refactor
 	}
 
 	@Override
 	public void visit(PutStmt visitable) {
 		super.visit(visitable);
-		visitable.getOutputs();
+
+		for (Printable p : visitable.getOutputs()) {
+			Expn expression = (Expn) p;
+
+			// HACK: SkipConst and TextConst are considered integers so that
+			// this passes.
+			this.semanticAction(31, expression);
+		}
+	}
+
+	@Override
+	public void visit(GetStmt visitable) {
+		super.visit(visitable);
+		for (Expn e : visitable.getInputs()) {
+			this.semanticAction(31, e);
+		}
+	}
+
+	@Override
+	public void visit(ProcedureCallStmt visitable) {
+		super.visit(visitable);
+		// TODO: Needs scope refactor
 	}
 
 	@Override
 	public void visit(ReturnStmt visitable) {
 		super.visit(visitable);
+		// TODO: Needs scope refactor
 	}
 
 	@Override
 	public void visit(Scope visitable) {
+		this.semanticAction(06, visitable);
 		super.visit(visitable);
+		this.semanticAction(07, visitable);
 	}
-	
-	// Declarations
-	
+
+	// --- Declarations ---
+
 	@Override
 	public void visit(Declaration visitable) {
 		// This is an abstract class, do nothing.
 		super.visit(visitable);
 		this.printAbstractWarning();
 	}
-	
+
 	@Override
 	public void visit(MultiDeclarations visitable) {
-		// This is used for normal variable declaration.
+		// HACK: Keep track of the declaration state and use it later.
+		this.currentDeclarationType = visitable.getType().getSemanticType();
 		super.visit(visitable);
-		this.semanticAction(10, visitable);
 		this.semanticAction(47, visitable);
+		this.currentDeclarationType = null;		
 	}
-
-	@Override
-	public void visit(ArrayDeclPart visitable) {
-		super.visit(visitable);
-	}
-
-
 
 	@Override
 	public void visit(DeclarationPart visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(RoutineDecl visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(ScalarDecl visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(ScalarDeclPart visitable) {
-		super.visit(visitable);
-	}
-	
-	// Expressions
-	
-	@Override
-	public void visit(Expn visitable) {
 		super.visit(visitable);
 		this.printAbstractWarning();
 	}
 	
 	@Override
+	public void visit(ArrayDeclPart visitable) {
+		super.visit(visitable);
+		this.semanticAction(48, visitable);
+	}
+	
+	@Override
+	public void visit(ScalarDeclPart visitable) {
+		super.visit(visitable);
+		this.semanticAction(10, visitable);
+	}
+
+	@Override
+	public void visit(RoutineDecl visitable) {
+		super.visit(visitable);
+		// TODO: Need to define function type.
+	}
+
+	@Override
+	public void visit(ScalarDecl visitable) {
+		super.visit(visitable);
+		// TODO: Need to define parameter type.
+	}
+
+
+
+	// --- Expressions ---
+
+	@Override
+	public void visit(Expn visitable) {
+		super.visit(visitable);
+		this.printAbstractWarning();
+	}
+
+	@Override
 	public void visit(UnaryMinusExpn visitable) {
-		super.visit(visitable);		
+		super.visit(visitable);
 		this.semanticAction(21, visitable.getOperand());
 		this.semanticAction(31, visitable);
 	}
-	
+
 	@Override
 	public void visit(ArithExpn visitable) {
 		super.visit(visitable);
@@ -288,20 +318,20 @@ public class Semantics extends NodeVisitor {
 		this.semanticAction(31, visitable.getSecondExpression());
 		this.semanticAction(21, visitable);
 	}
-	
+
 	@Override
 	public void visit(BoolConstExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(20, visitable);
 	}
-	
+
 	@Override
 	public void visit(NotExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(30, visitable);
 		this.semanticAction(20, visitable);
 	}
-	
+
 	@Override
 	public void visit(BoolExpn visitable) {
 		super.visit(visitable);
@@ -309,14 +339,14 @@ public class Semantics extends NodeVisitor {
 		this.semanticAction(30, visitable.getSecondExpression());
 		this.semanticAction(20, visitable);
 	}
-	
+
 	@Override
 	public void visit(EqualsExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(32, visitable);
 		this.semanticAction(20, visitable);
 	}
-	
+
 	@Override
 	public void visit(CompareExpn visitable) {
 		super.visit(visitable);
@@ -332,14 +362,14 @@ public class Semantics extends NodeVisitor {
 	}
 
 	@Override
-	public void visit(FunctionCallExpn visitable) {		
+	public void visit(FunctionCallExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(28, visitable);
 	}
 
 	@Override
 	public void visit(IdentExpn visitable) {
-		super.visit(visitable);		
+		super.visit(visitable);
 		this.semanticAction(37, visitable);
 		this.semanticAction(39, visitable);
 		this.semanticAction(26, visitable);
@@ -351,7 +381,7 @@ public class Semantics extends NodeVisitor {
 		super.visit(visitable);
 		this.semanticAction(21, visitable);
 	}
-	
+
 	@Override
 	public void visit(SubsExpn visitable) {
 		super.visit(visitable);
@@ -370,8 +400,8 @@ public class Semantics extends NodeVisitor {
 		super.visit(visitable);
 		// Do nothing.
 	}
-	
-	// Types
+
+	// --- Types ---
 
 	@Override
 	public void visit(BooleanType visitable) {
@@ -388,10 +418,11 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(Type visitable) {
 		super.visit(visitable);
+		this.printAbstractWarning();
 	}
-	
+
 	// Private Helper Methods
-	
+
 	private void printAbstractWarning() {
 		System.out.println("WARNING: This code should not be run! This is an abstract class!!!");
 	}

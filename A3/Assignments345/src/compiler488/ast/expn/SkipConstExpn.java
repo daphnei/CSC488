@@ -1,6 +1,7 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Printable;
+import compiler488.symbol.SemType;
 import compiler488.utilities.IVisitor;
 
 /**
@@ -10,6 +11,7 @@ import compiler488.utilities.IVisitor;
 public class SkipConstExpn extends ConstExpn implements Printable {
     public SkipConstExpn() {
         super();
+        this.setResultType(SemType.INTEGER);
     }
 
     @Override

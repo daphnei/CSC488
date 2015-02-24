@@ -1,6 +1,7 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Printable;
+import compiler488.symbol.SemType;
 import compiler488.utilities.IVisitor;
 
 /**
@@ -16,6 +17,8 @@ public class TextConstExpn extends ConstExpn implements Printable {
         this.value = value;
         this.left = left;
         this.right = right;
+        
+        this.setResultType(SemType.INTEGER);
     }
 
     public String getValue() {

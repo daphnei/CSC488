@@ -70,6 +70,10 @@ public class ArrayDeclPart extends DeclarationPart {
         // FIXME: This is broken.
         throw new UnsupportedOperationException();
     }
+    
+    public int getDimensions() {
+    	return this.isTwoDimensional ? 2 : 1;
+    }
 
     public Integer getLowerBoundary1() {
         return lb1;

@@ -1,5 +1,6 @@
 package compiler488.ast.type;
 
+import compiler488.symbol.PrimitiveSemType;
 import compiler488.symbol.SemType;
 import compiler488.utilities.IVisitor;
 
@@ -19,7 +20,7 @@ public class BooleanType extends Type {
 	}
     
 	@Override
-    public SemType getSemanticType() {
+    public PrimitiveSemType getSemanticType() {
     	return SemType.BOOLEAN;
     }
 }
