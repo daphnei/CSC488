@@ -61,15 +61,29 @@ public class SemanticActions {
 		case 10: // Declare scalar.
 			table.addSymbolToCurScope(((ScalarDeclPart) element).getName(), this.semantics.getCurrentDeclarationType());
 			break;
+			
 		case 15: // Declare parameter.
 			ScalarDecl scalarDecl = (ScalarDecl) element;
 			table.addSymbolToCurScope(scalarDecl.getName(), scalarDecl.getType().getSemanticType());
 			break;
-		case 48: // Declare an array.
+			
+		case 19: // Declare array variable with specified lower and upper bounds.
 			ArrayDeclPart arrayPart = (ArrayDeclPart) element;
 			table.addSymbolToCurScope(arrayPart.getName(), new ArraySemType(this.semantics.getCurrentDeclarationType(), arrayPart.getDimensions()));
 			break;
+		
+		case 46: //  Check that lower bound is <= upper bound.
+			checkArrayBoundsValidity((ArrayDeclPart) element);
+			break;
 
+		case 47: // Associate type with variables.
+			// Do nothing, this happens automatically.
+			break;
+
+		case 48: // Declare array variable with specified upper bound.
+			// Do nothing, this happens in S19. 
+			break;
+			
 		// Expressions
 
 		case 20: // Set result type to boolean.
@@ -139,10 +153,6 @@ public class SemanticActions {
 			printTodo(); // TODO
 			break;
 
-		case 47: // Associate type with variables.
-			// Do nothing, this happens automatically.
-			break;
-
 		default:
 			printTodo();
 			break;
@@ -158,6 +168,17 @@ public class SemanticActions {
 		Symbol symbol = this.table.retrieveSymbol(ident.getIdent());
 		if (symbol == null) {
 			throw new UndeclaredSymbolException(ident.getIdent());
+		}
+	}
+	
+	private void checkArrayBoundsValidity(ArrayDeclPart array) throws SemanticErrorException {
+		if (array.getLowerBoundary1() > array.getUpperBoundary1()) {
+			throw new InvalidArrayBoundsException(array.getName());
+		}
+		if (array.getDimensions() == 2) {
+			if (array.getLowerBoundary2() > array.getUpperBoundary2()) {
+				throw new InvalidArrayBoundsException(array.getName());
+			}
 		}
 	}
 

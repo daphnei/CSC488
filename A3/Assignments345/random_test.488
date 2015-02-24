@@ -6,4 +6,8 @@ begin
   cat <= cat + cat
   cat <= 1 + true
   cat <= true
+  integer cheese[10]
+  integer fruit[-1..3]
+  integer sad[1..100,5..4]
+  boolean double[1..3,4..7]
 end

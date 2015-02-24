@@ -145,8 +145,13 @@ public class Semantics extends NodeVisitor {
 			errorMessage = "Identifier " + exception.symbolName + " has already been declared.";
 		} catch (UndeclaredSymbolException exception) {
 			errorMessage = "Identifier " + exception.symbolName + " is not declared in this scope.";
+		} catch (InvalidArrayBoundsException exception) {
+			errorMessage = "The declared array " + exception.name + " has invalid array bounds.";
 		} catch (SemanticErrorException error) {
 			errorMessage = error.getMessage();
+			if (errorMessage.equals("")) {
+				errorMessage = "Unknown Error.";
+			}
 		}
 		if (errorMessage != null) {
 			// TODO: GET ACTUAL LINE NUMBER.
@@ -273,7 +278,9 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(ArrayDeclPart visitable) {
 		super.visit(visitable);
-		this.semanticAction(48, visitable);
+		this.semanticAction(46, visitable);
+		this.semanticAction(19, visitable);
+		this.semanticAction(48, visitable); // NOTE: This does nothing.
 	}
 	
 	@Override
