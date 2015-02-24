@@ -176,6 +176,24 @@ public class Semantics extends NodeVisitor {
 		super.visit(visitable);
 		this.semanticAction(34, visitable);
 	}
+	
+	@Override
+	public void visit(IfStmt visitable) {
+		super.visit(visitable);
+		this.semanticAction(30, visitable.getCondition());
+	}
+	
+	@Override
+	public void visit(WhileDoStmt visitable) {
+		super.visit(visitable);
+		this.semanticAction(30, visitable.getExpn());
+	}
+	
+	@Override
+	public void visit(LoopStmt visitable) {
+		super.visit(visitable);
+		// Do nothing.
+	}
 
 	@Override
 	public void visit(ExitStmt visitable) {
@@ -188,16 +206,6 @@ public class Semantics extends NodeVisitor {
 	}
 
 	@Override
-	public void visit(IfStmt visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
-	public void visit(LoopStmt visitable) {
-		super.visit(visitable);
-	}
-
-	@Override
 	public void visit(ProcedureCallStmt visitable) {
 		super.visit(visitable);
 	}
@@ -205,6 +213,7 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(PutStmt visitable) {
 		super.visit(visitable);
+		visitable.getOutputs();
 	}
 
 	@Override
@@ -216,11 +225,6 @@ public class Semantics extends NodeVisitor {
 	public void visit(Scope visitable) {
 		super.visit(visitable);
 	}
-
-	@Override
-	public void visit(WhileDoStmt visitable) {
-		super.visit(visitable);
-	} 
 	
 	// Declarations
 	

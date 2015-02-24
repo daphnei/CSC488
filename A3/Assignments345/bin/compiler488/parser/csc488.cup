@@ -307,7 +307,7 @@ generalBound                ::= INTCONST:val        // positive array bound
 
 type                        ::= INTEGER:in          // integer type
                                 {:  RESULT = new IntegerType(); :}
-                            |   BOOLEAN :bool       // boolean type
+                            |   BOOLEAN:bool       // boolean type
                                 {:  RESULT = new BooleanType(); :}
                             ;
 
