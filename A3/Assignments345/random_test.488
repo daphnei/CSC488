@@ -37,6 +37,11 @@ begin
     return (4)
   end
 
+  boolean function boolbod(integer cookie)
+  begin
+    return (true)
+  end
+
   integer function notnifty
   begin
     put "sad"
@@ -44,6 +49,6 @@ begin
   
   dog <= 100
 
-  cat <= nifty
-
+  cat <= boolbod(2)
+  
 end

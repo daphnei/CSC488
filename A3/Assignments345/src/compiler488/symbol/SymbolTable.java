@@ -77,7 +77,7 @@ public class SymbolTable {
 		this.checkIfThereIsAnyScope();
 
 		// If the current scope is major, destroy all the symbols that were declared in it.
-		if (this.scopeTypes.peek() == ScopeType.MAJOR) {
+		if (this.scopeTypes.peek() == ScopeType.MAJOR) {			
 			for (String identifier : this.table.keySet()) {
 				Stack<Symbol> symbols = this.table.get(identifier);
 	
@@ -85,7 +85,7 @@ public class SymbolTable {
 				if (symbols != null && !symbols.isEmpty()) {
 					// If symbols do exist, check if the first one is in the current
 					// scope.
-					if (symbols.peek().getScope() == this.curScopeIndex) {
+					if (symbols.peek().getScope() >= this.curScopeIndex) {
 						symbols.pop();
 					}
 				}

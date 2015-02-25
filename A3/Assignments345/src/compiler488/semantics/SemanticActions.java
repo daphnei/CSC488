@@ -94,7 +94,7 @@ public class SemanticActions {
 			break;
 
 		case 13: // Associate scope with function/procedure.
-			// TODO: I don't think this is necessary?
+			// I don't think this is necessary?
 			break;
 
 		case 14: // Set parameter count to zero.
@@ -281,7 +281,7 @@ public class SemanticActions {
 			PrimitiveSemType argType = args.get(i).getResultType();
 			if (!argType.equals(params.get(i))) {
 				throw new SemanticErrorException("In '" + routineCall.getIdentifier() + "', parameter " + i + " is expected to be a "
-						+ params.get(i) + " but a " + argType + "was provided instead");
+						+ params.get(i) + " but a " + argType + " was provided instead");
 			}
 		}
 	}
@@ -378,7 +378,7 @@ public class SemanticActions {
 		checkReturnIsInRoutine();
 		if (!this.openRoutines.peek().getReturnType().equals(returnStmt.getValue().getResultType())) {
 			throw new SemanticErrorException("Trying to return value of type " + returnStmt.getValue().getResultType() + " when type "
-					+ this.openRoutines.peek().getReturnType() + "is required.");
+					+ this.openRoutines.peek().getReturnType() + " is required.");
 		}
 	}
 
