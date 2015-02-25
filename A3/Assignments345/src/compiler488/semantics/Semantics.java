@@ -157,7 +157,6 @@ public class Semantics extends NodeVisitor {
 			this.actions.checkSemanticRule(actionNumber, visitable);
 		} catch (SemanticErrorException error) {
 			errorMessage = error.getMessage();
-			error.printStackTrace();
 		}
 		
 		// HACK: Swallow duplicate error messages.
@@ -170,7 +169,7 @@ public class Semantics extends NodeVisitor {
 		this.previousError = errorMessage;
 		this.previousVisitable = visitable;
 
-		System.out.println("Semantic Action: S" + actionNumber);
+		// System.out.println("Semantic Action: S" + actionNumber);
 		return;
 	}
 
