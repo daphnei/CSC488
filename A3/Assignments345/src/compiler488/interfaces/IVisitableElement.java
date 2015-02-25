@@ -1,4 +1,4 @@
-package compiler488.utilities;
+package compiler488.interfaces;
 
 import compiler488.ast.AST;
 

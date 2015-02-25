@@ -2,7 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.expn.Expn;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IVisitor;
 
 /**
  * The command to return from a function.

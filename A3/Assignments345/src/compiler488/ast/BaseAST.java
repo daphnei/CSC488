@@ -1,6 +1,6 @@
 package compiler488.ast;
 
-import compiler488.utilities.IVisitableElement;
+import compiler488.interfaces.IVisitableElement;
 
 /**
  * Base class implementation for the AST hierarchy.

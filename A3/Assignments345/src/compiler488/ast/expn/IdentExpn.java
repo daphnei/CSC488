@@ -1,8 +1,8 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Readable;
-import compiler488.utilities.IIdentifier;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IIdentifier;
+import compiler488.interfaces.IVisitor;
 
 /**
  *  References to a scalar variable or function call without parameters.

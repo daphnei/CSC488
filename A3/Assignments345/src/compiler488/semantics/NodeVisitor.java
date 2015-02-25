@@ -1,4 +1,4 @@
-package compiler488.utilities;
+package compiler488.semantics;
 
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
@@ -38,6 +38,7 @@ import compiler488.ast.stmt.WhileDoStmt;
 import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
+import compiler488.interfaces.IVisitor;
 
 /**
  * The NodeVisitor class traverses an AST and calls accept on each node. This

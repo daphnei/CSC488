@@ -2,7 +2,7 @@ package compiler488.ast.stmt;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.expn.Expn;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IVisitor;
 
 /**
  * Represents the common parts of loops.This is abstract, ie, it is never

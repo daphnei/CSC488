@@ -1,6 +1,6 @@
 package compiler488.ast;
 
-import compiler488.utilities.IVisitableElement;
+import compiler488.interfaces.IVisitableElement;
 
 /**
  * Any AST node that can be an argument in a PUT statement.

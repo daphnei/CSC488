@@ -2,7 +2,7 @@ package compiler488.ast.expn;
 
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.Readable;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IVisitor;
 
 /**
  * References to an array element variable

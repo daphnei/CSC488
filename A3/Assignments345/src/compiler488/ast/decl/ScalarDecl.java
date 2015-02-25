@@ -2,7 +2,7 @@ package compiler488.ast.decl;
 
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.type.Type;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IVisitor;
 
 /**
  * Represents the declaration of a simple variable.

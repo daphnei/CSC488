@@ -1,6 +1,6 @@
 package compiler488.ast.decl;
 
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IVisitor;
 
 /**
  * Represents the declaration of a simple variable.

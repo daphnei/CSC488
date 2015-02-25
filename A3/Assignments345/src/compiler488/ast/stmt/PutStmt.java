@@ -3,7 +3,7 @@ package compiler488.ast.stmt;
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.Printable;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IVisitor;
 
 /**
  * The command to write data on the output device.
