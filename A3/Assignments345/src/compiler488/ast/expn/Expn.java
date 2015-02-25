@@ -10,18 +10,22 @@ import compiler488.symbol.SemType;
  * A placeholder for all expressions.
  */
 public abstract class Expn extends BaseAST implements Printable {
+	private PrimitiveSemType resultType;
 	
 	public Expn(int left, int right) {
 		super(left, right);
+		
+		this.resultType = null;
 	}
-
-	private PrimitiveSemType resultType;
 	
 	public PrimitiveSemType getResultType() {
 		return this.resultType;
 	}
 	
 	public void setResultType(PrimitiveSemType type) {
+		if (type == null) {
+			System.out.println("POOOOOP");
+		}
 		this.resultType = type;
 	}
 	

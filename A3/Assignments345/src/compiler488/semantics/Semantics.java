@@ -379,7 +379,7 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(NotExpn visitable) {
 		super.visit(visitable);
-		this.semanticAction(30, visitable);
+		this.semanticAction(30, visitable.getOperand());
 		this.semanticAction(20, visitable);
 	}
 
@@ -440,7 +440,6 @@ public class Semantics extends NodeVisitor {
 		this.semanticAction(37, visitable);
 		this.semanticAction(39, visitable);
 		this.semanticAction(26, visitable);
-		this.semanticAction(25, visitable);
 	}
 
 	@Override
