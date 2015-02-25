@@ -2,7 +2,7 @@ package compiler488.ast.expn;
 
 import compiler488.ast.Printable;
 import compiler488.interfaces.IVisitor;
-import compiler488.symbol.SemType;
+import compiler488.semantics.types.IntegerSemType;
 
 /**
  * Represents a literal text constant.
@@ -16,7 +16,7 @@ public class TextConstExpn extends ConstExpn implements Printable {
 
         this.value = value;
         
-        this.setResultType(SemType.INTEGER);
+        this.setResultType(IntegerSemType.INTEGER);
     }
 
     public String getValue() {

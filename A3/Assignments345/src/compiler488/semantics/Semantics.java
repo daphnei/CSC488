@@ -49,9 +49,10 @@ import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.compiler.Main;
 import compiler488.exceptions.SemanticErrorException;
-import compiler488.symbol.PrimitiveSemType;
-import compiler488.symbol.RoutineSemType;
-import compiler488.symbol.SemType;
+import compiler488.semantics.types.ErrorSemType;
+import compiler488.semantics.types.PrimitiveSemType;
+import compiler488.semantics.types.RoutineSemType;
+import compiler488.semantics.types.SemType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 
@@ -185,10 +186,10 @@ public class Semantics extends NodeVisitor {
 			if (symbol != null) {
 				return symbol.getType();
 			} else {
-				return SemType.ERROR;
+				return ErrorSemType.ERROR;
 			}
 		} catch (SemanticErrorException e) {
-			return SemType.ERROR;
+			return ErrorSemType.ERROR;
 		}
 	}
 
@@ -379,7 +380,7 @@ public class Semantics extends NodeVisitor {
 		this.semanticAction(31, visitable.getFirstExpression());
 		this.semanticAction(31, visitable.getSecondExpression());
 		if (visitable.getFirstExpression().hasError() || visitable.getFirstExpression().hasError()) {
-			visitable.setResultType(SemType.ERROR);
+			visitable.setResultType(ErrorSemType.ERROR);
 		} else {
 			this.semanticAction(21, visitable);
 		}
@@ -404,7 +405,7 @@ public class Semantics extends NodeVisitor {
 		this.semanticAction(30, visitable.getFirstExpression());
 		this.semanticAction(30, visitable.getSecondExpression());
 		if (visitable.getFirstExpression().hasError() || visitable.getFirstExpression().hasError()) {
-			visitable.setResultType(SemType.ERROR);
+			visitable.setResultType(ErrorSemType.ERROR);
 		} else {
 			this.semanticAction(20, visitable);
 		}
@@ -424,7 +425,7 @@ public class Semantics extends NodeVisitor {
 		this.semanticAction(31, visitable.getFirstExpression());
 		this.semanticAction(31, visitable.getSecondExpression());
 		if (visitable.getFirstExpression().hasError() || visitable.getFirstExpression().hasError()) {
-			visitable.setResultType(SemType.ERROR);
+			visitable.setResultType(ErrorSemType.ERROR);
 		} else {
 			this.semanticAction(20, visitable);
 		}

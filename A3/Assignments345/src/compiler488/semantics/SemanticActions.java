@@ -27,10 +27,13 @@ import compiler488.exceptions.UndeclaredSymbolException;
 import compiler488.interfaces.IIdentifier;
 import compiler488.interfaces.IRoutineCall;
 import compiler488.interfaces.IVisitableElement;
-import compiler488.symbol.ArraySemType;
-import compiler488.symbol.PrimitiveSemType;
-import compiler488.symbol.RoutineSemType;
-import compiler488.symbol.SemType;
+import compiler488.semantics.types.ArraySemType;
+import compiler488.semantics.types.BooleanSemType;
+import compiler488.semantics.types.ErrorSemType;
+import compiler488.semantics.types.IntegerSemType;
+import compiler488.semantics.types.PrimitiveSemType;
+import compiler488.semantics.types.RoutineSemType;
+import compiler488.semantics.types.SemType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 
@@ -155,11 +158,11 @@ public class SemanticActions {
 		// Expressions
 
 		case 20: // Set result type to boolean.
-			setExpressionResultType(element, SemType.BOOLEAN);
+			setExpressionResultType(element, BooleanSemType.BOOLEAN);
 			break;
 
 		case 21: // Set result type to integer.
-			setExpressionResultType(element, SemType.INTEGER);
+			setExpressionResultType(element, IntegerSemType.INTEGER);
 			break;
 
 		case 23: // Set result type to type of expression
@@ -184,11 +187,11 @@ public class SemanticActions {
 			break;
 
 		case 30: // Check that type of expression is boolean.
-			checkExpnType((Expn) element, SemType.BOOLEAN);
+			checkExpnType((Expn) element, BooleanSemType.BOOLEAN);
 			break;
 
 		case 31: // Check that type of expression or variable is integer
-			checkExpnType((Expn) element, SemType.INTEGER);
+			checkExpnType((Expn) element, IntegerSemType.INTEGER);
 			break;
 
 		case 32: // Check that left and right operand expressions are the same
@@ -401,7 +404,7 @@ public class SemanticActions {
 			//Don't do anything. The user should already have seen a message about this error.
 		}
 		else if ( !expResultType.equals(resultType) ) {
-			expression.setResultType(PrimitiveSemType.ERROR);
+			expression.setResultType(ErrorSemType.ERROR);
 			throw new SemanticErrorException("Expected a " + resultType + " and found a " + expResultType + ".");
 		}
 	}

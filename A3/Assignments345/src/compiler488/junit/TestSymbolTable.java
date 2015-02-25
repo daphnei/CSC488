@@ -9,8 +9,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import compiler488.exceptions.SemanticErrorException;
-import compiler488.symbol.BooleanSemType;
-import compiler488.symbol.IntegerSemType;
+import compiler488.semantics.types.BooleanSemType;
+import compiler488.semantics.types.IntegerSemType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 

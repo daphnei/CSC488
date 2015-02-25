@@ -1,6 +1,7 @@
 package compiler488.symbol;
 
 import compiler488.ast.type.Type;
+import compiler488.semantics.types.SemType;
 
 public class Symbol {
 	/**

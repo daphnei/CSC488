@@ -7,6 +7,7 @@ import compiler488.ast.type.Type;
 import compiler488.exceptions.InvalidScopeException;
 import compiler488.exceptions.SemanticErrorException;
 import compiler488.exceptions.SymbolConflictException;
+import compiler488.semantics.types.SemType;
 
 public class SymbolTable {
 	protected static enum ScopeType {

@@ -3,8 +3,9 @@ package compiler488.ast.expn;
 import compiler488.ast.BaseAST;
 import compiler488.ast.Printable;
 import compiler488.ast.type.Type;
-import compiler488.symbol.PrimitiveSemType;
-import compiler488.symbol.SemType;
+import compiler488.semantics.types.ErrorSemType;
+import compiler488.semantics.types.PrimitiveSemType;
+import compiler488.semantics.types.SemType;
 
 /**
  * A placeholder for all expressions.
@@ -30,6 +31,6 @@ public abstract class Expn extends BaseAST implements Printable {
 	}
 	
 	public boolean hasError() {
-		return this.resultType.equals(PrimitiveSemType.ERROR);
+		return this.resultType.equals(ErrorSemType.ERROR);
 	}
 }

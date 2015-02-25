@@ -1,9 +1,21 @@
-package compiler488.symbol;
+package compiler488.semantics.types;
 
 import java.util.ArrayList;
 
+/**
+ * The semantic type for a function or procedure.
+ * @author daphne
+ *
+ */
 public class RoutineSemType extends SemType {
+	/**
+	 * The types of the routines parameters. Empty if there are no parameters.
+	 */
 	private ArrayList<PrimitiveSemType> parameters;
+	
+	/**
+	 * The return type. Null if this is a procedure.
+	 */
 	private PrimitiveSemType returnType;
 
 	/**
@@ -36,11 +48,17 @@ public class RoutineSemType extends SemType {
 	public PrimitiveSemType getReturnType() {
 		return this.returnType;
 	}
-	
+
+	/**
+	 * Indicate that a return statement has been seen for this routine.
+	 */
 	public void markReturnStatement() {
 		this.seenReturnStatement = true;
 	}
 	
+	/**
+	 * Check whether a return statement has been seen for this routine.
+	 */
 	public boolean seenReturnStatement() {
 		return this.seenReturnStatement;
 	}

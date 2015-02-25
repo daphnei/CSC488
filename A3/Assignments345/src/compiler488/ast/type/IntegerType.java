@@ -1,8 +1,8 @@
 package compiler488.ast.type;
 
 import compiler488.interfaces.IVisitor;
-import compiler488.symbol.PrimitiveSemType;
-import compiler488.symbol.SemType;
+import compiler488.semantics.types.IntegerSemType;
+import compiler488.semantics.types.PrimitiveSemType;
 
 /**
  * Used to declare objects that yield integers.
@@ -24,6 +24,6 @@ public class IntegerType extends Type {
 
 	@Override
     public PrimitiveSemType getSemanticType() {
-    	return SemType.INTEGER;
+    	return IntegerSemType.INTEGER;
     }
 }

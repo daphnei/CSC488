@@ -1,4 +1,4 @@
-package compiler488.symbol;
+package compiler488.semantics.types;
 
 public class ArraySemType extends SemType {
 

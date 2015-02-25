@@ -2,7 +2,7 @@ package compiler488.ast.expn;
 
 import compiler488.ast.Printable;
 import compiler488.interfaces.IVisitor;
-import compiler488.symbol.SemType;
+import compiler488.semantics.types.IntegerSemType;
 
 /**
  * Represents the special literal constant associated with writing a new-line
@@ -11,7 +11,7 @@ import compiler488.symbol.SemType;
 public class SkipConstExpn extends ConstExpn implements Printable {
     public SkipConstExpn(int left, int right) {
     	super(left, right);
-        this.setResultType(SemType.INTEGER);
+        this.setResultType(IntegerSemType.INTEGER);
     }
 
     @Override
