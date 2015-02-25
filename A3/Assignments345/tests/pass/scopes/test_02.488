@@ -1,0 +1,21 @@
+% Redeclaring (and reassigning) identifier inside new major scope
+
+begin
+	integer x
+	x < = 3
+	
+	procedure p
+	begin
+		integer x 
+		x < = 1000
+	end
+	
+	boolean function f
+	begin
+		boolean x
+		x < = true
+		return x
+	end
+	
+	put "x is ", x, skip
+end

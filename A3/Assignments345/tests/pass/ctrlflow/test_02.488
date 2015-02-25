@@ -1,0 +1,8 @@
+% Regular procedure with return stmt.
+% from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10845
+begin
+	procedure p (integer a) begin
+		put a, skip
+		return
+	end
+end
