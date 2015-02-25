@@ -315,15 +315,32 @@ public class Semantics extends NodeVisitor {
 
 	@Override
 	public void visit(RoutineDecl visitable) {
-		super.visit(visitable);
-		// TODO: Need to define function type.
+		boolean isProcedure = visitable.getType() == null;
+		boolean hasParameters = !visitable.getParameters().isEmpty();
+		int openAction = isProcedure ? 8 : 4;
+		int closeAction = isProcedure ? 9 : 5;
+		int declareAction = isProcedure ? (hasParameters ? 18 : 17) : (hasParameters ? 12 : 11);
 		
+		semanticAction(declareAction, visitable);
+		if (hasParameters) {
+			semanticAction(14, visitable);
+		}
+		
+		semanticAction(openAction, visitable);
+		super.visit(visitable);
+		semanticAction(closeAction, visitable);
+	
+		if (!isProcedure) {
+			semanticAction(53, visitable);
+		}		
+		semanticAction(13, visitable);
 	}
 
 	@Override
 	public void visit(ScalarDecl visitable) {
 		super.visit(visitable);
 		this.semanticAction(15, visitable);
+		this.semanticAction(16, visitable);
 	}
 
 	// --- Expressions ---
