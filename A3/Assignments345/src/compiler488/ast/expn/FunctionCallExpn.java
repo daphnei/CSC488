@@ -2,8 +2,8 @@ package compiler488.ast.expn;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
-import compiler488.utilities.IRoutineCall;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IRoutineCall;
+import compiler488.interfaces.IVisitor;
 
 /**
  * Represents a function call with arguments.

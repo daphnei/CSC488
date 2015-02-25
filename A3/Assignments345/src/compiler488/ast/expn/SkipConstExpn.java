@@ -1,8 +1,8 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Printable;
+import compiler488.interfaces.IVisitor;
 import compiler488.symbol.SemType;
-import compiler488.utilities.IVisitor;
 
 /**
  * Represents the special literal constant associated with writing a new-line

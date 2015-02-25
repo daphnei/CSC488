@@ -1,7 +1,7 @@
 package compiler488.ast.stmt;
 
 import compiler488.ast.ASTList;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IVisitor;
 
 /**
  * Placeholder for the scope that is the entire program

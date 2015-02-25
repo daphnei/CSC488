@@ -1,7 +1,7 @@
 package compiler488.ast.decl;
 
 import compiler488.ast.BaseAST;
-import compiler488.utilities.IVisitor;
+import compiler488.interfaces.IVisitor;
 
 /**
  * The common features of declarations' parts.

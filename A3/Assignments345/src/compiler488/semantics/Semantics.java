@@ -54,7 +54,6 @@ import compiler488.symbol.RoutineSemType;
 import compiler488.symbol.SemType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
-import compiler488.utilities.NodeVisitor;
 
 /**
  * The Semantics class implements IVisitor. It will trace through an AST tree and check each node for the appropriate semantic actions.

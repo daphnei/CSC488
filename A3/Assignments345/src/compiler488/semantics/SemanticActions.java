@@ -25,15 +25,15 @@ import compiler488.exceptions.InvalidNumberOfArgumentsException;
 import compiler488.exceptions.NotArrayException;
 import compiler488.exceptions.SemanticErrorException;
 import compiler488.exceptions.UndeclaredSymbolException;
+import compiler488.interfaces.IIdentifier;
+import compiler488.interfaces.IRoutineCall;
+import compiler488.interfaces.IVisitableElement;
 import compiler488.symbol.ArraySemType;
 import compiler488.symbol.PrimitiveSemType;
 import compiler488.symbol.RoutineSemType;
 import compiler488.symbol.SemType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
-import compiler488.utilities.IIdentifier;
-import compiler488.utilities.IRoutineCall;
-import compiler488.utilities.IVisitableElement;
 
 public class SemanticActions {
 

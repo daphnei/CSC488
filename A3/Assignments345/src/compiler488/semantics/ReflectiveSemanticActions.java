@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import compiler488.exceptions.SemanticErrorException;
-import compiler488.utilities.IVisitableElement;
+import compiler488.interfaces.IVisitableElement;
 
 public class ReflectiveSemanticActions {
 	

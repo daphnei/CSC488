@@ -1,4 +1,4 @@
-package compiler488.utilities;
+package compiler488.interfaces;
 
 public interface IIdentifier extends IVisitableElement {
 	/**

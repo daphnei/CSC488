@@ -583,7 +583,8 @@ public class Main {
 		for (; sourceFileIndex < argv.length; sourceFileIndex++) {
 
 			// Compile the source program
-			compileOneProgram(new String(argv[sourceFileIndex]));
+			compileOneProgram(//"/Users/daphne/Documents/School/CSC488/A2/tests/passing/test_expressions/exp_01.488");
+							new String(argv[sourceFileIndex]));
 
 			if (!errorOccurred) {
 				// Execute the compiled program
