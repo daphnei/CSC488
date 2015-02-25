@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Stack;
 
 import compiler488.ast.BaseAST;
+import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.Declaration;
@@ -162,7 +163,7 @@ public class Semantics extends NodeVisitor {
 		// HACK: Swallow duplicate error messages.
 		if (errorMessage != null && !(visitable == previousVisitable && errorMessage.equals(previousError))) {
 			// TODO: GET ACTUAL LINE NUMBER.			
-			System.out.println("S" + actionNumber + " SEMANTIC ERROR (Line ??): " + errorMessage);
+			System.out.println("S" + actionNumber + " SEMANTIC ERROR (Line " + visitable.getLeftColumnNumber() + "): " + errorMessage);
 			Main.errorOccurred = true;
 		}
 		

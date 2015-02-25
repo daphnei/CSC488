@@ -12,7 +12,7 @@ public class Scope extends Stmt {
     protected ASTList<Stmt> body;
 
     public Scope(int left, int right) {
-        super();
+    	super(left, right);
 
         this.body = null;
     }

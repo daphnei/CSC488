@@ -19,13 +19,11 @@ public class IfStmt extends Stmt {
     private ASTList<Stmt> whenFalse = null;
 
     public IfStmt(Expn condition, ASTList<Stmt> whenTrue, ASTList<Stmt> whenFalse, int left, int right) {
-        super();
+    	super(left, right);
 
         this.condition = condition;
         this.whenTrue = whenTrue;
         this.whenFalse = whenFalse;
-        this.left = left;
-        this.right = right;
     }
 
     public IfStmt(Expn condition, ASTList<Stmt> whenTrue, int left, int right) {

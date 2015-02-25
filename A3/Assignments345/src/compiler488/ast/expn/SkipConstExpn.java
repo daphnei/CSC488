@@ -9,8 +9,8 @@ import compiler488.utilities.IVisitor;
  * character on the output device.
  */
 public class SkipConstExpn extends ConstExpn implements Printable {
-    public SkipConstExpn() {
-        super();
+    public SkipConstExpn(int left, int right) {
+    	super(left, right);
         this.setResultType(SemType.INTEGER);
     }
 

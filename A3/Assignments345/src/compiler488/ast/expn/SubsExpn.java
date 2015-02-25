@@ -18,13 +18,11 @@ public class SubsExpn extends Expn implements Readable {
     private Expn subscript2 = null;
 
     public SubsExpn(String variable, Expn subscript1, Expn subscript2,int left, int right) {
-        super();
+        super(left, right);
 
         this.variable = variable;
         this.subscript1 = subscript1;
         this.subscript2 = subscript2;
-        this.left = left;
-        this.right = right;
     }
 
     public SubsExpn(String variable, Expn subscript1,int left, int right) {
@@ -45,6 +43,10 @@ public class SubsExpn extends Expn implements Readable {
 
     public int numSubscripts() {
         return 1 + (subscript2 != null ? 1 : 0);
+    }
+    
+    public int getDimensions() {
+    	return this.subscript2 == null ? 1 : 2;
     }
 
     @Override

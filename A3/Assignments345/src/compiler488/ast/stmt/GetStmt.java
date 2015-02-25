@@ -13,11 +13,9 @@ public class GetStmt extends Stmt {
     private ASTList<Expn> inputs;
     
     public GetStmt (ASTList<Expn> inputs, int left, int right) {
-        super();
+    	super(left, right);
 
         this.inputs = inputs;
-        this.left = left;
-        this.right = right;
     }
 
     public ASTList<Expn> getInputs() {

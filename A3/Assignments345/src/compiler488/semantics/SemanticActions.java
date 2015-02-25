@@ -113,7 +113,8 @@ public class SemanticActions {
 
 		case 19: // Declare array variable with specified lower and upper bounds.
 			ArrayDeclPart arrayPart = (ArrayDeclPart) element;
-			table.addSymbolToCurScope(arrayPart.getName(), new ArraySemType(this.semantics.getCurrentDeclarationType(), arrayPart.getDimensions()));
+			table.addSymbolToCurScope(arrayPart.getName(), new ArraySemType(this.semantics.getCurrentDeclarationType(), arrayPart
+					.getDimensions()));
 			break;
 
 		case 46: // Check that lower bound is <= upper bound.
@@ -137,7 +138,7 @@ public class SemanticActions {
 		case 51: // Check that return is inside a function
 		case 52: // Check that return statement is inside a procedure.
 			checkReturnIsInRoutine();
-			
+
 			// HACK: This will work here, but does it belong here?
 			this.openRoutines.peek().markReturnStatement();
 			break;
@@ -202,14 +203,13 @@ public class SemanticActions {
 			checkArgumentTypeMatch((IRoutineCall) element, table);
 			break;
 
-		case 37: // Check that identifier has been declared as a scalar
-			// variable.
+		case 37: // Check that identifier has been declared as a scalar variable.
 		case 39: // Check that identifier has been declared as a parameter.
-			checkVariableDeclaration(element);
+			checkIdentifierIsScalar(element);
 			break;
 
 		case 38: // Check that identifier has been declared as an array.
-			checkArrayDeclaration((SubsExpn) element);
+			checkIdentiferIsArray((SubsExpn) element);
 			break;
 
 		// Functions, procedures and arguments
@@ -224,12 +224,15 @@ public class SemanticActions {
 		case 42: // Check that the function or procedure has no parameters.
 			checkForNoParameters((IRoutineCall) element, table);
 			break;
+
 		case 43: // Check that the number of arguments is equal to the number of formal parameters.
 			checkArgumentCount((IRoutineCall) element, table);
+			break;
 
 		case 44: // Set the argument count to zero.
 			// This is not needed since the arguments are stored as a list.
 			break;
+
 		case 45: // Increment the argument count by one.
 			// This is not needed since the arguments are stored as a list.
 			break;
@@ -333,7 +336,7 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkVariableDeclaration(IVisitableElement element) throws SemanticErrorException {
+	private void checkIdentifierIsScalar(IVisitableElement element) throws SemanticErrorException {
 		IdentExpn ident = (IdentExpn) element;
 		Symbol symbol = this.table.retrieveSymbol(ident.getIdent());
 		if (symbol == null) {
@@ -341,7 +344,7 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkArrayDeclaration(SubsExpn element) throws SemanticErrorException {
+	private void checkIdentiferIsArray(SubsExpn element) throws SemanticErrorException {
 		Symbol symbol = this.table.retrieveSymbol(element.getVariable());
 		if (symbol == null) {
 			throw new UndeclaredSymbolException(element.getVariable());
@@ -350,6 +353,11 @@ public class SemanticActions {
 		// HACK: Can we avoid instanceof?
 		if (!(symbol.getType() instanceof ArraySemType)) {
 			throw new NotArrayException(element.getVariable());
+		}
+		
+		ArraySemType array = (ArraySemType)symbol.getType();
+		if (array.getDimensions() != element.getDimensions()) {
+			throw new SemanticErrorException("Array expects " + array.getDimensions() + " dimensions but is indexed by " + element.getDimensions() + " dimensions.");
 		}
 	}
 
@@ -367,7 +375,8 @@ public class SemanticActions {
 	private void checkReturnType(ReturnStmt returnStmt) throws SemanticErrorException {
 		checkReturnIsInRoutine();
 		if (!this.openRoutines.peek().getReturnType().equals(returnStmt.getValue().getResultType())) {
-			throw new SemanticErrorException("Trying to return value of type " + returnStmt.getValue().getResultType() + " when type " + this.openRoutines.peek().getReturnType() + "is required.");
+			throw new SemanticErrorException("Trying to return value of type " + returnStmt.getValue().getResultType() + " when type "
+					+ this.openRoutines.peek().getReturnType() + "is required.");
 		}
 	}
 
@@ -420,7 +429,7 @@ public class SemanticActions {
 	}
 
 	private void setExpressionResultTypeFromArray(SubsExpn ident) throws SemanticErrorException {
-		checkArrayDeclaration(ident);
+		checkIdentiferIsArray(ident);
 		Symbol symbol = this.table.retrieveSymbol(ident.getVariable());
 		ArraySemType array = (ArraySemType) symbol.getType();
 		setExpressionResultType(ident, array.getBaseType());

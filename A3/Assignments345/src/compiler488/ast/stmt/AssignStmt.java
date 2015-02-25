@@ -15,12 +15,10 @@ public class AssignStmt extends Stmt {
     private Expn rval;
 
     public AssignStmt(Expn lval, Expn rval, int left, int right) {
-        super();
+    	super(left, right);
 
         this.lval = lval;
         this.rval = rval;
-        this.left = left;
-        this.right = right;
     }
 
     public Expn getLval() {

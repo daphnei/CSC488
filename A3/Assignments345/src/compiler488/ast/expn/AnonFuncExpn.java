@@ -17,12 +17,10 @@ public class AnonFuncExpn extends Expn {
     private Expn expn;
     
     public AnonFuncExpn(ASTList<Stmt> body, Expn expn, int left, int right) {
-        super();
+        super(left, right);
 
         this.body = body;
         this.expn = expn;
-        this.left = left;
-        this.right = right;
     }
 
     public ASTList<Stmt> getBody() {

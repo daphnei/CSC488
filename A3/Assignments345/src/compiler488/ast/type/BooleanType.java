@@ -9,7 +9,12 @@ import compiler488.utilities.IVisitor;
  * The type of things that may be true or false.
  */
 public class BooleanType extends Type {	
-    @Override
+	
+    public BooleanType(int left, int right) {
+		super(left, right);
+	}
+
+	@Override
     public String toString() {
         return "boolean";
     }

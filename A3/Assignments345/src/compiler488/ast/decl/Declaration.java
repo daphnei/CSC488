@@ -15,12 +15,10 @@ public abstract class Declaration extends Stmt {
     protected Type type = null;
 
     public Declaration(String name, Type type, int left, int right) {
-        super();
+        super(left, right);
 
         this.name = name;
         this.type = type;
-        this.left = left;
-        this.right = right;
     }
 
     public String getName() {

@@ -10,6 +10,10 @@ public class ArraySemType extends SemType {
 		this.baseType = baseType;
 	}
 	
+	public int getDimensions() {
+		return this.dimensions;
+	}
+	
 	public PrimitiveSemType getBaseType() {
 		return this.baseType;
 	}

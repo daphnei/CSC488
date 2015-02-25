@@ -16,12 +16,10 @@ public class FunctionCallExpn extends Expn implements IRoutineCall {
     private ASTList<Expn> arguments;
 
     public FunctionCallExpn(String ident, ASTList<Expn> arguments, int left, int right) {
-        super();
+    	super(left, right);
 
         this.ident = ident;
         this.arguments = arguments;
-        this.left = left;
-        this.right = right;
     }
 
     @Override
