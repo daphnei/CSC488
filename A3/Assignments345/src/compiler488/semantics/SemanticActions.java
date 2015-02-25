@@ -10,6 +10,7 @@ import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.RoutineDecl;
 import compiler488.ast.decl.ScalarDecl;
 import compiler488.ast.decl.ScalarDeclPart;
+import compiler488.ast.expn.AnonFuncExpn;
 import compiler488.ast.expn.BinaryExpn;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.FunctionCallExpn;
@@ -170,7 +171,7 @@ public class SemanticActions {
 			break;
 
 		case 24: // Set result type to type of anonymous function
-			printTodo(); // TODO
+			setExpressionResultType(element, ((AnonFuncExpn)element).getExpn().getResultType());
 			break;
 
 		case 25: // Set result type to type of parametername.
