@@ -163,7 +163,7 @@ public class Semantics extends NodeVisitor {
 		// HACK: Swallow duplicate error messages.
 		if (errorMessage != null && !(visitable == previousVisitable && errorMessage.equals(previousError))) {
 			// TODO: GET ACTUAL LINE NUMBER.			
-			System.out.println("S" + actionNumber + " SEMANTIC ERROR (Line " + visitable.getLeftColumnNumber() + "): " + errorMessage);
+			System.out.println("S" + actionNumber + " SEMANTIC ERROR (Line " + visitable.getLeftColumnNumber() + "): " + errorMessage);			
 			Main.errorOccurred = true;
 		}
 		
@@ -320,18 +320,17 @@ public class Semantics extends NodeVisitor {
 		int declareAction = isProcedure ? (hasParameters ? 18 : 17) : (hasParameters ? 12 : 11);
 		
 		semanticAction(declareAction, visitable);
+		
+		semanticAction(openAction, visitable);
 		if (hasParameters) {
 			semanticAction(14, visitable);
 		}
-		
-		semanticAction(openAction, visitable);
-		super.visit(visitable);
-		semanticAction(closeAction, visitable);
-	
+		super.visit(visitable);		
 		if (!isProcedure) {
 			semanticAction(53, visitable);
 		}		
-		semanticAction(13, visitable);
+		semanticAction(13, visitable);		
+		semanticAction(closeAction, visitable);
 	}
 
 	@Override

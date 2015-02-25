@@ -9,10 +9,7 @@ import compiler488.ast.AST;
  * @author daphne
  */
 public class SemanticErrorException extends Exception {
-	
-	public SemanticErrorException() {
-	}
-	
+		
 	public SemanticErrorException(String message) {
 		super(message);
 	}
@@ -21,7 +18,7 @@ public class SemanticErrorException extends Exception {
 	public String getMessage() {
 		String message = super.getMessage();
 		
-		if (message.isEmpty()) {
+		if (message == null || message.isEmpty()) {
 			return "Unknown Error.";
 		} else {
 			return super.getMessage();

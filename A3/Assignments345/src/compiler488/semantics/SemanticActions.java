@@ -16,7 +16,9 @@ import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.ProcedureCallStmt;
 import compiler488.ast.stmt.ReturnStmt;
+import compiler488.ast.type.Type;
 import compiler488.exceptions.InvalidArrayBoundsException;
+import compiler488.exceptions.InvalidNumberOfArgumentsException;
 import compiler488.exceptions.NotArrayException;
 import compiler488.exceptions.SemanticErrorException;
 import compiler488.exceptions.UndeclaredSymbolException;
@@ -248,7 +250,8 @@ public class SemanticActions {
 	}
 
 	private void openNewRoutine(RoutineDecl routineDecl, SymbolTable table) throws SemanticErrorException {
-		this.openRoutines.push(new RoutineSemType());
+		Type returnType = routineDecl.getType();
+		this.openRoutines.push(new RoutineSemType(returnType == null ? null : returnType.getSemanticType()));
 		table.addSymbolToCurScope(routineDecl.getName(), this.openRoutines.peek());
 	}
 
@@ -270,16 +273,13 @@ public class SemanticActions {
 		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(symbolTable, routineCall.getIdentifier());
 		ArrayList<PrimitiveSemType> params = routineSemType.getParameters();
 
-		if (args.size() == params.size()) {
-			for (int i = 0; i < args.size(); i++) {
-				PrimitiveSemType argType = args.get(i).getResultType();
-				if (!argType.equals(params.get(i))) {
-					throw new SemanticErrorException("In '" + routineCall.getIdentifier() + "', parameter " + i + " is expected to be a "
-							+ params.get(i) + " but a " + argType + "was provided instead");
-				}
+		checkArgumentCount(routineCall, symbolTable);
+		for (int i = 0; i < args.size(); i++) {
+			PrimitiveSemType argType = args.get(i).getResultType();
+			if (!argType.equals(params.get(i))) {
+				throw new SemanticErrorException("In '" + routineCall.getIdentifier() + "', parameter " + i + " is expected to be a "
+						+ params.get(i) + " but a " + argType + "was provided instead");
 			}
-		} else {
-			throw new SemanticErrorException("'" + routineCall.getIdentifier() + "' expects " + params.size() + "arguments.");
 		}
 	}
 
@@ -290,7 +290,7 @@ public class SemanticActions {
 		int numParamsInDec = routine.getNumParameters();
 
 		if (numArgsInCall != numParamsInDec) {
-			throw new SemanticErrorException("'" + routineCall.getIdentifier() + "' expects " + numParamsInDec + "arguments.");
+			throw new InvalidNumberOfArgumentsException(routineCall.getIdentifier(), numParamsInDec, numArgsInCall);
 		}
 	}
 
@@ -299,8 +299,7 @@ public class SemanticActions {
 
 		int numParams = routineSemType.getNumParameters();
 		if (numParams != 0) {
-			throw new SemanticErrorException("Expected '" + routineCall.getIdentifier() + "' to have 0 paramters, but it instead had "
-					+ numParams + ".");
+			throw new InvalidNumberOfArgumentsException(routineCall.getIdentifier(), numParams, 0);
 		}
 	}
 

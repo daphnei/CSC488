@@ -20,4 +20,30 @@ begin
   cheese[4] <= 765
   cat <= fruit[2, 3]
   cat <= sad[2]
+
+  procedure cool(integer neato)
+  begin
+    put "dogs don't have feelings"
+    put neato
+  end
+
+  cool
+
+  integer function nifty
+  begin
+    cat <= 5
+    integer dog
+    dog <= 5
+    return (4)
+  end
+
+  integer function notnifty
+  begin
+    put "sad"
+  end
+  
+  dog <= 100
+
+  cat <= nifty
+
 end
