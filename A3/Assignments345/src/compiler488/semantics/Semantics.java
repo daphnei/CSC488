@@ -245,13 +245,24 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(ProcedureCallStmt visitable) {
 		super.visit(visitable);
-		// TODO: Needs scope refactor
+		this.semanticAction(43, visitable); // Check parameter count.
+		if (visitable.getArguments().isEmpty()) {
+			this.semanticAction(42, visitable); // Special case parameter count.
+		}
+		this.semanticAction(36, visitable); // Check parameter types.
+		this.semanticAction(44, visitable); // Set parameter count to zero.
+		this.semanticAction(45, visitable); // Increment parameter count.
 	}
 
 	@Override
 	public void visit(ReturnStmt visitable) {
 		super.visit(visitable);
-		// TODO: Needs scope refactor
+		if (visitable.getValue() == null) {
+			this.semanticAction(52, visitable);
+		} else {
+			this.semanticAction(51, visitable);
+			this.semanticAction(35, visitable);
+		}
 	}
 
 	@Override

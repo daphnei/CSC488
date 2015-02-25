@@ -137,6 +137,8 @@ public class SemanticActions {
 		case 51: // Check that return is inside a function
 		case 52: // Check that return statement is inside a procedure.
 			checkReturnIsInRoutine();
+			
+			// HACK: This will work here, but does it belong here?
 			this.openRoutines.peek().markReturnStatement();
 			break;
 
