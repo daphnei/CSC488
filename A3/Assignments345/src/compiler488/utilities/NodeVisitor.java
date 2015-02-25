@@ -219,9 +219,10 @@ public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(LoopStmt visitable) {
-		// TODO: I am not sure I have this one right.
-		visitable.getExpn().accept(this);
-
+		if (visitable.getExpn() != null) {
+			visitable.getExpn().accept(this);
+		}
+		
 		for (Stmt bodyStmt : visitable.getBody()) {
 			bodyStmt.accept(this);
 		}
