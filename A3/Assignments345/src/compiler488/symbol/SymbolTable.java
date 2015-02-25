@@ -2,28 +2,16 @@ package compiler488.symbol;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
-import compiler488.ast.type.Type;
 import compiler488.exceptions.InvalidScopeException;
 import compiler488.exceptions.SemanticErrorException;
 import compiler488.exceptions.SymbolConflictException;
 import compiler488.semantics.types.SemType;
 
 public class SymbolTable {
-	public static enum ScopeType {
-		YIELD, PROGRAM, FUNCTION, LOOP, NORMAL;
-		
-		public boolean isMajor() {
-			return this.equals(YIELD) || this.equals(PROGRAM) || this.equals(FUNCTION);
-		}
-		
-		public boolean isMinor() {
-			return this.equals(LOOP) || this.equals(NORMAL);
-		}
-	};
-
 	/**
 	 * The table maps from the identifier name (such as foo) to a list of
 	 * symbols using that identifier name. In each list, the first item should
@@ -38,7 +26,8 @@ public class SymbolTable {
 	private int curScopeIndex;
 
 	/**
-	 * Keeps track of whether each scope is major or minor.
+	 * Keeps track of the type of each open scope.
+	 * The most recently opened scope will be at the end.
 	 */
 	private LinkedList<ScopeType> scopeTypes;
 	
@@ -52,7 +41,7 @@ public class SymbolTable {
 	 */
 	public void Initialize() {
 		this.table = new HashMap<String, Stack<Symbol>>();
-		this.scopeTypes = new LinkedList<SymbolTable.ScopeType>();
+		this.scopeTypes = new LinkedList<ScopeType>();
 
 		this.curScopeIndex = -1; // Set this to -1 so that the first scope
 									// created will have index 0.
@@ -74,7 +63,7 @@ public class SymbolTable {
 	 */
 	public void openScope(ScopeType type) {
 		this.curScopeIndex++;
-		this.scopeTypes.add(type);
+		this.scopeTypes.push(type);
 	}
 
 	/**
@@ -88,7 +77,7 @@ public class SymbolTable {
 		this.checkIfThereIsAnyScope();
 
 		// If the current scope is major, destroy all the symbols that were declared in it.
-		if (this.scopeTypes.getLast().isMajor()) {			
+		if (this.scopeTypes.peek().isMajor()) {			
 			for (String identifier : this.table.keySet()) {
 				Stack<Symbol> symbols = this.table.get(identifier);
 	
@@ -191,8 +180,19 @@ public class SymbolTable {
 		}
 	}
 	
-	public boolean searchScopeStack(ScopeType searchingFor, LinkedList<ScopeType> cancelSearchOn) {
-		ListIterator<ScopeType> iterator = this.scopeTypes.listIterator(this.scopeTypes.size() - 1);
+	/**
+	 * Checks the types of all open scopes, looking for a scope of the specified type..
+	 * @param searchTarget 
+	 * @return True if a scope of the input type is open, false otherwise
+	 */
+	public boolean checkIfScopeTypeIsOpen(ScopeType searchTarget) {
+		for (ScopeType scopeType : this.scopeTypes) {
+			if (scopeType.equals(searchTarget)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 
 	/**

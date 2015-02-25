@@ -33,6 +33,7 @@ import compiler488.semantics.types.IntegerSemType;
 import compiler488.semantics.types.PrimitiveSemType;
 import compiler488.semantics.types.RoutineSemType;
 import compiler488.semantics.types.SemType;
+import compiler488.symbol.ScopeType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 
@@ -58,12 +59,12 @@ public class SemanticActions {
 		// Scopes and Program
 
 		case 0: // Open program scope.
-			table.openMajorScope();
+			table.openScope(ScopeType.PROGRAM);
 			break;
 
 		case 4: // Open function scope.
 		case 8: // Open procedure scope.
-			table.openMajorScope();
+			table.openScope(ScopeType.ROUTINE);
 			break;
 
 		case 1: // End all scopes.
@@ -81,9 +82,13 @@ public class SemanticActions {
 			break;
 
 		case 6: // Open ordinary scope.
-			table.openMinorScope();
+			table.openScope(ScopeType.GENERIC);
 			break;
 
+		case 99: // Open up a new loop scope. This one was not on the sheet. We made it up.
+			table.openScope(ScopeType.LOOP);
+			break;
+			
 		// Declarations
 
 		case 10: // Declare scalar.
