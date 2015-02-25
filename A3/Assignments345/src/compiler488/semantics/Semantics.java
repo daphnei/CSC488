@@ -121,15 +121,15 @@ public class Semantics extends NodeVisitor {
 		return this.currentDeclarationType;
 	}
 	
-	public/**
-			 * Perform one semantic analysis action. It will record the action, perform
-			 * it, catch any semantic errors, and report them to the compiler if they
-			 * are found.
-			 * 
-			 * @param actionNumber
-			 *            Semantic analysis action number.
-			 */
-	void semanticAction(int actionNumber, BaseAST visitable) {
+	/**
+	 * Perform one semantic analysis action. It will record the action, perform
+	 * it, catch any semantic errors, and report them to the compiler if they
+	 * are found.
+	 * 
+	 * @param actionNumber
+	 *            Semantic analysis action number.
+	 */
+	public void semanticAction(int actionNumber, BaseAST visitable) {
 
 		if (traceSemantics) {
 			if (traceFile.length() > 0) {
@@ -157,6 +157,7 @@ public class Semantics extends NodeVisitor {
 			this.actions.checkSemanticRule(actionNumber, visitable);
 		} catch (SemanticErrorException error) {
 			errorMessage = error.getMessage();
+			error.printStackTrace();
 		}
 		
 		// HACK: Swallow duplicate error messages.
@@ -169,7 +170,7 @@ public class Semantics extends NodeVisitor {
 		this.previousError = errorMessage;
 		this.previousVisitable = visitable;
 
-		// System.out.println("Semantic Action: S" + actionNumber);
+		System.out.println("Semantic Action: S" + actionNumber);
 		return;
 	}
 
