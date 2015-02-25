@@ -5,6 +5,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Stack;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+
 import compiler488.ast.BaseAST;
 import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.Printable;
@@ -50,6 +52,7 @@ import compiler488.exceptions.SemanticErrorException;
 import compiler488.symbol.PrimitiveSemType;
 import compiler488.symbol.RoutineSemType;
 import compiler488.symbol.SemType;
+import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 import compiler488.utilities.NodeVisitor;
 
@@ -163,9 +166,10 @@ public class Semantics extends NodeVisitor {
 		
 		// HACK: Swallow duplicate error messages.
 		if (errorMessage != null && !(visitable == previousVisitable && errorMessage.equals(previousError))) {
-			// TODO: GET ACTUAL LINE NUMBER.			
-			System.out.println("S" + actionNumber + " SEMANTIC ERROR (Line " + visitable.getLineNumber() + ", Column " + 
-															visitable.getColumnNumber() + "): " + errorMessage);
+			System.out.println("S" + actionNumber
+					+ " SEMANTIC ERROR (Line " + visitable.getLineNumber()
+					+ ", Column "
+					+ visitable.getColumnNumber() + "): " + errorMessage);
 			Main.errorOccurred = true;
 		}
 		
@@ -174,6 +178,19 @@ public class Semantics extends NodeVisitor {
 
 		// System.out.println("Semantic Action: S" + actionNumber);
 		return;
+	}
+	
+	public SemType findIndentifierType(String identifier) {
+		try {
+			Symbol symbol = symbolTable.retrieveSymbol(identifier);
+			if (symbol != null) {
+				return symbol.getType();
+			} else {
+				return SemType.ERROR;
+			}
+		} catch (SemanticErrorException e) {
+			return SemType.ERROR;
+		}
 	}
 
 	// --- Program ---
@@ -322,18 +339,17 @@ public class Semantics extends NodeVisitor {
 		int declareAction = isProcedure ? (hasParameters ? 18 : 17) : (hasParameters ? 12 : 11);
 		
 		semanticAction(declareAction, visitable);
+		
+		semanticAction(openAction, visitable);
 		if (hasParameters) {
 			semanticAction(14, visitable);
 		}
-		
-		semanticAction(openAction, visitable);
-		super.visit(visitable);
-		semanticAction(closeAction, visitable);
-	
+		super.visit(visitable);		
 		if (!isProcedure) {
 			semanticAction(53, visitable);
 		}		
-		semanticAction(13, visitable);
+		semanticAction(13, visitable);		
+		semanticAction(closeAction, visitable);
 	}
 
 	@Override
@@ -435,11 +451,17 @@ public class Semantics extends NodeVisitor {
 	}
 
 	@Override
-	public void visit(IdentExpn visitable) {
+	public void visit(IdentExpn visitable) {		
 		super.visit(visitable);
-		this.semanticAction(37, visitable);
-		this.semanticAction(39, visitable);
-		this.semanticAction(26, visitable);
+
+		if (findIndentifierType(visitable.getIdent()) instanceof RoutineSemType) {
+			this.semanticAction(42, visitable); // Check for no parameters.
+			this.semanticAction(28, visitable); // Set the result type to the type of the function.
+		} else {
+			this.semanticAction(37, visitable);
+			this.semanticAction(39, visitable);
+			this.semanticAction(26, visitable);
+		}
 	}
 
 	@Override

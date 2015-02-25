@@ -12,20 +12,13 @@ public class RoutineSemType extends SemType {
 	private boolean seenReturnStatement;
 	
 	/**
-	 * Create a routine with no return value.
-	 * (ie a procedure) 
-	 */
-	public RoutineSemType() {
-		this(null);
-	}
-	
-	/**
 	 * Create a function with parameters and a return value.
 	 * @param parameters The parameters to the function.
 	 * @param returnType The return type of the function.
 	 */
 	public RoutineSemType(PrimitiveSemType returnType) {
 		this.returnType = returnType;
+		this.parameters = new ArrayList<PrimitiveSemType>();
 	}
 
 	public ArrayList<PrimitiveSemType> getParameters() {
