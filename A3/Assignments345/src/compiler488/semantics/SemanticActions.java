@@ -365,11 +365,10 @@ public class SemanticActions {
 	}
 
 	private void checkReturnType(ReturnStmt returnStmt) throws SemanticErrorException {
-		throw new UnsupportedOperationException("TODO.");
-		/*
-		 * if ( != returnStmt.getValue().getResultType()) { throw new SemanticErrorException("Function returns a " + returnStmt.getValue().getResultType() + " but a " + returnStmt.getResultType() +
-		 * "was expected."); }
-		 */
+		checkReturnIsInRoutine();
+		if (!this.openRoutines.peek().getReturnType().equals(returnStmt.getValue().getResultType())) {
+			throw new SemanticErrorException("Trying to return value of type " + returnStmt.getValue().getResultType() + " when type " + this.openRoutines.peek().getReturnType() + "is required.");
+		}
 	}
 
 	private void checkAssignmentTypesMatch(AssignStmt assignStmt) throws SemanticErrorException {
