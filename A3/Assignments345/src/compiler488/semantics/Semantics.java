@@ -417,8 +417,8 @@ public class Semantics extends NodeVisitor {
 		if (visitable.getSubscript2() != null) {
 			this.semanticAction(31, visitable.getSubscript2());
 		}
-		this.semanticAction(38, visitable); // Check
-		this.semanticAction(27, visitable); // Set next
+		this.semanticAction(38, visitable); // Check if array exists.
+		this.semanticAction(27, visitable); // Set result type.
 	}
 
 	@Override
