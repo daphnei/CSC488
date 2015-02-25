@@ -1,6 +1,8 @@
 package compiler488.symbol;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.ListIterator;
 import java.util.Stack;
 
 import compiler488.ast.type.Type;
@@ -10,8 +12,16 @@ import compiler488.exceptions.SymbolConflictException;
 import compiler488.semantics.types.SemType;
 
 public class SymbolTable {
-	protected static enum ScopeType {
-		MAJOR, MINOR
+	public static enum ScopeType {
+		YIELD, PROGRAM, FUNCTION, LOOP, NORMAL;
+		
+		public boolean isMajor() {
+			return this.equals(YIELD) || this.equals(PROGRAM) || this.equals(FUNCTION);
+		}
+		
+		public boolean isMinor() {
+			return this.equals(LOOP) || this.equals(NORMAL);
+		}
 	};
 
 	/**
@@ -30,7 +40,7 @@ public class SymbolTable {
 	/**
 	 * Keeps track of whether each scope is major or minor.
 	 */
-	private Stack<ScopeType> scopeTypes;
+	private LinkedList<ScopeType> scopeTypes;
 	
 	public SymbolTable() {
 		// Don't use this. Instead use Initialize. This allows us to recycle one
@@ -42,7 +52,7 @@ public class SymbolTable {
 	 */
 	public void Initialize() {
 		this.table = new HashMap<String, Stack<Symbol>>();
-		this.scopeTypes = new Stack<SymbolTable.ScopeType>();
+		this.scopeTypes = new LinkedList<SymbolTable.ScopeType>();
 
 		this.curScopeIndex = -1; // Set this to -1 so that the first scope
 									// created will have index 0.
@@ -57,14 +67,14 @@ public class SymbolTable {
 		this.scopeTypes.clear();
 	}
 
-	public void openMajorScope() {
+	/**
+	 * Opens a scope of the given type.
+	 * @param type
+	 * 			The type of the scope determines if it is major or minor.
+	 */
+	public void openScope(ScopeType type) {
 		this.curScopeIndex++;
-		this.scopeTypes.push(ScopeType.MAJOR);
-	}
-
-	public void openMinorScope() {
-		this.curScopeIndex++;
-		this.scopeTypes.push(ScopeType.MINOR);
+		this.scopeTypes.add(type);
 	}
 
 	/**
@@ -78,7 +88,7 @@ public class SymbolTable {
 		this.checkIfThereIsAnyScope();
 
 		// If the current scope is major, destroy all the symbols that were declared in it.
-		if (this.scopeTypes.peek() == ScopeType.MAJOR) {			
+		if (this.scopeTypes.getLast().isMajor()) {			
 			for (String identifier : this.table.keySet()) {
 				Stack<Symbol> symbols = this.table.get(identifier);
 	
@@ -167,7 +177,7 @@ public class SymbolTable {
 			// scope.
 
 			// This is unacceptable if the current scope is minor.
-			if (this.scopeTypes.peek() == ScopeType.MINOR) {
+			if (this.scopeTypes.peek().isMinor()) {
 				throw new SymbolConflictException(identifier);
 			}
 
@@ -179,6 +189,10 @@ public class SymbolTable {
 
 			return newSymbol;
 		}
+	}
+	
+	public boolean searchScopeStack(ScopeType searchingFor, LinkedList<ScopeType> cancelSearchOn) {
+		ListIterator<ScopeType> iterator = this.scopeTypes.listIterator(this.scopeTypes.size() - 1);
 	}
 
 	/**
