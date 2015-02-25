@@ -1,0 +1,4 @@
+begin
+	integer f
+	f <= ! 5
+end

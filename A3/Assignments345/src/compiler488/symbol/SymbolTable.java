@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.Stack;
 
 import compiler488.ast.type.Type;
-import compiler488.semantics.InvalidScopeException;
-import compiler488.semantics.SemanticErrorException;
-import compiler488.semantics.SymbolConflictException;
+import compiler488.exceptions.InvalidScopeException;
+import compiler488.exceptions.SemanticErrorException;
+import compiler488.exceptions.SymbolConflictException;
 
 public class SymbolTable {
 	protected static enum ScopeType {
@@ -76,16 +76,18 @@ public class SymbolTable {
 	public void closeCurrentScope() throws SemanticErrorException {
 		this.checkIfThereIsAnyScope();
 
-		// Destroy all the variables that are in the current scope.
-		for (String identifier : this.table.keySet()) {
-			Stack<Symbol> symbols = this.table.get(identifier);
-
-			// Check if any symbols exist for this identifier.
-			if (symbols != null && !symbols.isEmpty()) {
-				// If symbols do exist, check if the first one is in the current
-				// scope.
-				if (symbols.peek().getScope() == this.curScopeIndex) {
-					symbols.pop();
+		// If the current scope is major, destroy all the symbols that were declared in it.
+		if (this.scopeTypes.peek() == ScopeType.MAJOR) {
+			for (String identifier : this.table.keySet()) {
+				Stack<Symbol> symbols = this.table.get(identifier);
+	
+				// Check if any symbols exist for this identifier.
+				if (symbols != null && !symbols.isEmpty()) {
+					// If symbols do exist, check if the first one is in the current
+					// scope.
+					if (symbols.peek().getScope() == this.curScopeIndex) {
+						symbols.pop();
+					}
 				}
 			}
 		}
@@ -135,6 +137,7 @@ public class SymbolTable {
 		if (type == null) {
 			throw new SemanticErrorException("The type passed to the declaration is null!");
 		}
+		
 		this.checkIfThereIsAnyScope();
 
 		// Get the list of symbols associated with this identifier.

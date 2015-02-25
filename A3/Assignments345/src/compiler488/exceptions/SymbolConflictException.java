@@ -1,12 +1,10 @@
-package compiler488.semantics;
+package compiler488.exceptions;
 
 import compiler488.ast.AST;
 
 public class SymbolConflictException extends SemanticErrorException {
-	
-	public String symbolName;
-	
+		
 	public SymbolConflictException(String symbolName) {
-		this.symbolName = symbolName;
+		super("The identifier '" + symbolName + "' has already been declared.");
 	}
 }

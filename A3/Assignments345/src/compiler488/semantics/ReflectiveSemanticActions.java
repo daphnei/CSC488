@@ -3,6 +3,7 @@ package compiler488.semantics;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import compiler488.exceptions.SemanticErrorException;
 import compiler488.utilities.IVisitableElement;
 
 public class ReflectiveSemanticActions {
