@@ -144,7 +144,7 @@ public class SemanticActions {
 
 		case 51: // Check that return is inside a function
 		case 52: // Check that return statement is inside a procedure.
-			checkForOpenRoutine();
+			checkReturnIsInRoutine((ReturnStmt)element);
 
 			// HACK: This will work here, but does it belong here?
 			this.openRoutines.peek().markReturnStatement();
@@ -357,12 +357,21 @@ public class SemanticActions {
 	}
 
 	/**
-	 * Checks that we are currently inside a procedure or function.
+	 * Checks that the return statement is inside a procedure or function.
 	 * @throws SemanticErrorException if the check encounters a semantic error.
 	 */
-	private void checkForOpenRoutine() throws SemanticErrorException {
+	private void checkReturnIsInRoutine(ReturnStmt stmt) throws SemanticErrorException {
 		if (this.openRoutines.isEmpty()) {
 			throw new SemanticErrorException("Call to return outside of a procedure or function.");
+		} else {
+			SemType seen = stmt.getValue().getResultType();
+			SemType actual = this.openRoutines.peek().getReturnType();
+			if (seen == null && actual != null) {
+				throw new SemanticErrorException("A return must have a parameter inside a function.");
+			}
+			if (seen != null && actual == null) {
+				throw new SemanticErrorException("A return must have no parameter inside a procedure.");
+			}
 		}
 	}
 
@@ -423,7 +432,8 @@ public class SemanticActions {
 	 * @throws SemanticErrorException if the check encounters a semantic error.
 	 */
 	private void checkReturnType(ReturnStmt returnStmt) throws SemanticErrorException {
-		checkForOpenRoutine();
+		checkReturnIsInRoutine(returnStmt);
+
 		if (!this.openRoutines.peek().getReturnType().equals(returnStmt.getValue().getResultType())) {
 			throw new SemanticErrorException("Trying to return value of type " + returnStmt.getValue().getResultType() + " when type "
 					+ this.openRoutines.peek().getReturnType() + " is required.");
