@@ -3,7 +3,7 @@ package compiler488.exceptions;
 import compiler488.ast.AST;
 
 /**
- * This error should be thrown when a method wants to report a found semantic error.
+ * This exception should be thrown when a semantic error occurs.
  * The message encoded should be user friendly.
  * 
  * @author daphne
