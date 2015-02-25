@@ -191,7 +191,9 @@ public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(ExitStmt visitable) {
-		visitable.getExpn().accept(this);
+		if (visitable.getExpn() != null) {
+			visitable.getExpn().accept(this);
+		}
 	}
 
 	@Override
