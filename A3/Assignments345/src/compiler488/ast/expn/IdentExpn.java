@@ -1,12 +1,13 @@
 package compiler488.ast.expn;
 
 import compiler488.ast.Readable;
+import compiler488.utilities.IIdentifier;
 import compiler488.utilities.IVisitor;
 
 /**
  *  References to a scalar variable or function call without parameters.
  */
-public class IdentExpn extends Expn implements Readable {
+public class IdentExpn extends Expn implements Readable, IIdentifier {
     /** Name of the identifier. */
     private String ident;
 
@@ -15,7 +16,7 @@ public class IdentExpn extends Expn implements Readable {
         this.ident = ident;
     }
 
-    public String getIdent() {
+    public String getIdentifier() {
         return ident;
     }
     

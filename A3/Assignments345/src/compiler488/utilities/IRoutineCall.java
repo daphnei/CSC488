@@ -8,14 +8,9 @@ import compiler488.ast.expn.Expn;
  * 
  * @author daphne
  */
-public interface IRoutineCall {
+public interface IRoutineCall extends IIdentifier {
 	/**
 	 * @return the arguments to the routine
 	 */
 	public ASTList<Expn> getArguments();
-	
-	/**
-	 * @return the name of the routine
-	 */
-	public String getIdentifier();
 }

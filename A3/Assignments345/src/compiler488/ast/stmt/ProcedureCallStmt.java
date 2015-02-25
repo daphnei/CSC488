@@ -32,10 +32,6 @@ public class ProcedureCallStmt extends Stmt implements IRoutineCall {
         this(name, new ASTList<Expn>(), left, right);
     }
 
-    public String getName() {
-        return name;
-    }
-
     @Override
     public ASTList<Expn> getArguments() {
         return arguments;
@@ -59,6 +55,6 @@ public class ProcedureCallStmt extends Stmt implements IRoutineCall {
 
 	@Override
 	public String getIdentifier() {
-		return this.getName();
+		return this.name;
 	}
 }

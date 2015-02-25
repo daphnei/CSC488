@@ -453,7 +453,7 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(IdentExpn visitable) {		
 		super.visit(visitable);
-		if (findIndentifierType(visitable.getIdent()) instanceof RoutineSemType) {
+		if (findIndentifierType(visitable.getIdentifier()) instanceof RoutineSemType) {
 			this.semanticAction(42, visitable); // Check for no parameters.
 			this.semanticAction(28, visitable); // Set the result type to the type of the function.
 		} else {

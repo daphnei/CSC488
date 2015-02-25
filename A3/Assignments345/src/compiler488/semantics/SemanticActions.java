@@ -3,6 +3,8 @@ package compiler488.semantics;
 import java.util.ArrayList;
 import java.util.Stack;
 
+import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
+
 import compiler488.ast.ASTList;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.RoutineDecl;
@@ -28,6 +30,7 @@ import compiler488.symbol.RoutineSemType;
 import compiler488.symbol.SemType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
+import compiler488.utilities.IIdentifier;
 import compiler488.utilities.IRoutineCall;
 import compiler488.utilities.IVisitableElement;
 
@@ -177,7 +180,7 @@ public class SemanticActions {
 			break;
 
 		case 28: // Set result type to result type of function.
-			printTodo(); // TODO
+			this.setExpressionResultTypeFromFunction((IIdentifier) element);
 			break;
 
 		case 30: // Check that type of expression is boolean.
@@ -224,7 +227,7 @@ public class SemanticActions {
 			break;
 
 		case 42: // Check that the function or procedure has no parameters.
-			checkForNoParameters((IRoutineCall) element, table);
+			checkForNoParameters((IIdentifier) element, table);
 			break;
 
 		case 43: // Check that the number of arguments is equal to the number of formal parameters.
@@ -294,7 +297,7 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkForNoParameters(IRoutineCall routineCall, SymbolTable symbolTable) throws SemanticErrorException {
+	private void checkForNoParameters(IIdentifier routineCall, SymbolTable symbolTable) throws SemanticErrorException {
 		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(symbolTable, routineCall.getIdentifier());
 
 		int numParams = routineSemType.getNumParameters();
@@ -303,8 +306,8 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkIdentifierIsFunction(FunctionCallExpn funCallExpn, SymbolTable symbolTable) throws SemanticErrorException {
-		String ident = funCallExpn.getIdent();
+	private void checkIdentifierIsFunction(IIdentifier funCallExpn, SymbolTable symbolTable) throws SemanticErrorException {
+		String ident = funCallExpn.getIdentifier();
 		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(symbolTable, ident);
 
 		// Make sure it is a function and not a procedure. Functions should have a return type.
@@ -314,7 +317,7 @@ public class SemanticActions {
 	}
 
 	private void checkIdentifierIsProcedure(ProcedureCallStmt procCallStmt, SymbolTable symbolTable) throws SemanticErrorException {
-		String ident = procCallStmt.getName();
+		String ident = procCallStmt.getIdentifier();
 		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(symbolTable, ident);
 
 		// Make sure it is a procedure and not a function. Procedures should NOT have a return type.
@@ -337,9 +340,9 @@ public class SemanticActions {
 
 	private void checkIdentifierIsScalar(IVisitableElement element) throws SemanticErrorException {
 		IdentExpn ident = (IdentExpn) element;
-		Symbol symbol = this.table.retrieveSymbol(ident.getIdent());
+		Symbol symbol = this.table.retrieveSymbol(ident.getIdentifier());
 		if (symbol == null) {
-			throw new UndeclaredSymbolException(ident.getIdent());
+			throw new UndeclaredSymbolException(ident.getIdentifier());
 		}
 	}
 
@@ -420,9 +423,9 @@ public class SemanticActions {
 	}
 
 	private void setExpressionResultTypeFromIdentifier(IdentExpn ident) throws SemanticErrorException {
-		Symbol symbol = this.table.retrieveSymbol(ident.getIdent());
+		Symbol symbol = this.table.retrieveSymbol(ident.getIdentifier());
 		if (symbol == null) {
-			throw new UndeclaredSymbolException(ident.getIdent());
+			throw new UndeclaredSymbolException(ident.getIdentifier());
 		}
 
 		// HACK: Can we avoid instanceof?
@@ -438,6 +441,13 @@ public class SemanticActions {
 		Symbol symbol = this.table.retrieveSymbol(ident.getVariable());
 		ArraySemType array = (ArraySemType) symbol.getType();
 		setExpressionResultType(ident, array.getBaseType());
+	}
+	
+	private void setExpressionResultTypeFromFunction(IIdentifier identifier) throws SemanticErrorException {
+		checkIdentifierIsFunction(identifier, table);
+		Symbol symbol = this.table.retrieveSymbol(identifier.getIdentifier());
+		RoutineSemType routine = (RoutineSemType)symbol.getType();
+		setExpressionResultType(identifier, routine.getReturnType());
 	}
 
 	private void setExpressionResultType(IVisitableElement element, PrimitiveSemType resultType) {

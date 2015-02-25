@@ -27,9 +27,10 @@ public class FunctionCallExpn extends Expn implements IRoutineCall {
         return arguments;
     }
 
-    public String getIdent() {
-        return ident;
-    }
+	@Override
+	public String getIdentifier() {
+		return this.ident;
+	}
     
     @Override
 	public void prettyPrint(PrettyPrinter p) {
@@ -45,10 +46,5 @@ public class FunctionCallExpn extends Expn implements IRoutineCall {
 	@Override
 	public void accept(IVisitor visitor) {
 		visitor.visit(this);	
-	}
-
-	@Override
-	public String getIdentifier() {
-		return this.getIdent();
 	}
 }
