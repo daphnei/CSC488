@@ -3,12 +3,14 @@ package compiler488.ast.stmt;
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
 import compiler488.ast.expn.Expn;
+import compiler488.utilities.IRoutineCall;
+import compiler488.utilities.IVisitor;
 import compiler488.utilities.IVisitor;
 
 /**
  * Represents calling a procedure.
  */
-public class ProcedureCallStmt extends Stmt {
+public class ProcedureCallStmt extends Stmt implements IRoutineCall {
     /** The name of the procedure being called. */
     private String name;
 
@@ -36,6 +38,7 @@ public class ProcedureCallStmt extends Stmt {
         return name;
     }
 
+    @Override
     public ASTList<Expn> getArguments() {
         return arguments;
     }
@@ -54,5 +57,10 @@ public class ProcedureCallStmt extends Stmt {
     @Override
 	public void accept(IVisitor visitor) {
 		visitor.visit(this);	
+	}
+
+	@Override
+	public String getIdentifier() {
+		return this.getName();
 	}
 }

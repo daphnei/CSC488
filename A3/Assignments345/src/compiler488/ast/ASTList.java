@@ -104,7 +104,7 @@ public class ASTList<E extends AST> extends LinkedList<E> implements AST {
 		prettyPrintNewlines(p);
 		p.exitBlock();
 	}
-
+	
 	/**
 	 * Return a comma separated list of the stringified list elements.
 	 *
@@ -131,5 +131,5 @@ public class ASTList<E extends AST> extends LinkedList<E> implements AST {
 
 		return buf.toString();
 	}
-
+	
 }

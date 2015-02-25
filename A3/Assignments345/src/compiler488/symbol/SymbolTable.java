@@ -30,7 +30,7 @@ public class SymbolTable {
 	 * Keeps track of whether each scope is major or minor.
 	 */
 	private Stack<ScopeType> scopeTypes;
-
+	
 	public SymbolTable() {
 		// Don't use this. Instead use Initialize. This allows us to recycle one
 		// SymbolTable object.

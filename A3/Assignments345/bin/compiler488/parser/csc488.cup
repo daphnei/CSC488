@@ -340,10 +340,10 @@ inputs                      ::= variable:var        // list of variables being r
 arguments                   ::= expression:exp          // list of function/procedure arguments
                                 {:  ASTList<Expn> element = new ASTList<Expn>();
                                     element.add(exp);
-                                    RESULT = element;           :}
+                                    RESULT = element; :}
                             |   arguments:many COMMA:mid expression:more
                                 {: many.add(more); 
-                                    RESULT = many;          :} 
+                                    RESULT = many; :} 
                             ;
 
 parameters                  ::= parameter:par           // list of function/procedure formal parameters

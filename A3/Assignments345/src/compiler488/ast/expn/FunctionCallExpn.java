@@ -2,12 +2,13 @@ package compiler488.ast.expn;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.PrettyPrinter;
+import compiler488.utilities.IRoutineCall;
 import compiler488.utilities.IVisitor;
 
 /**
  * Represents a function call with arguments.
  */
-public class FunctionCallExpn extends Expn {
+public class FunctionCallExpn extends Expn implements IRoutineCall {
     /** The name of the function. */
     private String ident;
     
@@ -23,6 +24,7 @@ public class FunctionCallExpn extends Expn {
         this.right = right;
     }
 
+    @Override
     public ASTList<Expn> getArguments() {
         return arguments;
     }
@@ -47,4 +49,8 @@ public class FunctionCallExpn extends Expn {
 		visitor.visit(this);	
 	}
 
+	@Override
+	public String getIdentifier() {
+		return this.getIdent();
+	}
 }

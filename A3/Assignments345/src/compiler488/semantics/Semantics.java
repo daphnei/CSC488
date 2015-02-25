@@ -3,9 +3,9 @@ package compiler488.semantics;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Stack;
 
 import compiler488.ast.BaseAST;
-import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.Declaration;
@@ -45,16 +45,10 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.compiler.Main;
-import compiler488.exceptions.InvalidArrayBoundsException;
-import compiler488.exceptions.InvalidScopeException;
-import compiler488.exceptions.NotArrayException;
 import compiler488.exceptions.SemanticErrorException;
-import compiler488.exceptions.SymbolConflictException;
-import compiler488.exceptions.UndeclaredSymbolException;
 import compiler488.symbol.PrimitiveSemType;
-import compiler488.symbol.SemType;
+import compiler488.symbol.RoutineSemType;
 import compiler488.symbol.SymbolTable;
-import compiler488.utilities.IVisitableElement;
 import compiler488.utilities.NodeVisitor;
 
 /**
@@ -89,10 +83,10 @@ public class Semantics extends NodeVisitor {
 	private SemanticActions actions;
 	
 	/**
-	 * The a variable set while traversing the tree that keeps track of the current declartion type.
+	 * The a variable set while traversing the tree that keeps track of the current declaration type.
 	 */
 	private PrimitiveSemType currentDeclarationType;
-
+	
 	/**
 	 * These variables allow the class to swallow duplicate error messages.
 	 */
@@ -126,7 +120,7 @@ public class Semantics extends NodeVisitor {
 	public PrimitiveSemType getCurrentDeclarationType() {
 		return this.currentDeclarationType;
 	}
-
+	
 	public/**
 			 * Perform one semantic analysis action. It will record the action, perform
 			 * it, catch any semantic errors, and report them to the compiler if they
