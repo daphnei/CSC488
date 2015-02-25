@@ -1,0 +1,9 @@
+% Multiple declarations in one statement
+
+begin
+
+	integer x, y, zeta[3], iota[2,4]
+	
+	boolean alpha, beta, gamma
+
+end

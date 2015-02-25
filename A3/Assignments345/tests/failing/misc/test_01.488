@@ -1,0 +1,12 @@
+% Illegal use of exit statement in anonymous function
+
+begin
+
+	boolean result
+	
+	result <= { exit yields true }
+	
+	result <= { exit when true yields false } 
+
+end
+

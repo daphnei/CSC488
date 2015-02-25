@@ -1,0 +1,7 @@
+% Illegal use of exit in main scope
+
+begin
+
+	exit
+
+end
