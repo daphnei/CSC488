@@ -19,12 +19,12 @@ public class SemanticErrorException extends Exception {
 	
 	@Override
 	public String getMessage() {
-		String message = this.getMessage();
+		String message = super.getMessage();
 		
 		if (message.isEmpty()) {
 			return "Unknown Error.";
 		} else {
-			return this.getMessage();
+			return super.getMessage();
 		}
 	}
 }
