@@ -2,6 +2,7 @@ package compiler488.symbol;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.ListIterator;
 import java.util.Stack;
 
@@ -191,8 +192,9 @@ public class SymbolTable {
 		}
 	}
 	
-	public boolean searchScopeStack(ScopeType searchingFor, LinkedList<ScopeType> cancelSearchOn) {
+	public boolean searchScopeStack(ScopeType searchingFor, List<ScopeType> cancelSearchOn) {
 		ListIterator<ScopeType> iterator = this.scopeTypes.listIterator(this.scopeTypes.size() - 1);
+		// TODO: finish me; this
 	}
 
 	/**
