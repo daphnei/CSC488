@@ -435,6 +435,7 @@ public class Semantics extends NodeVisitor {
 	public void visit(AnonFuncExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(24, visitable);
+		// TODO: more
 	}
 
 	@Override
