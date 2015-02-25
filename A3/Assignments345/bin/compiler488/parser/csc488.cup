@@ -306,9 +306,9 @@ generalBound                ::= INTCONST:val        // positive array bound
                             ;
 
 type                        ::= INTEGER:in          // integer type
-                                {:  RESULT = new IntegerType(); :}
+                                {:  RESULT = new IntegerType(inleft, inright); :}
                             |   BOOLEAN:bool       // boolean type
-                                {:  RESULT = new BooleanType(); :}
+                                {:  RESULT = new BooleanType(boolleft, boolright); :}
                             ;
 
 outputs                     ::= output:var          // list of output expressions
@@ -325,7 +325,7 @@ output                      ::= expression:exp      // integer expression
                             |   TEXTCONST:txt       // text constant
                                 {:  RESULT = new TextConstExpn(txt, txtleft, txtright); :}
                             |   SKIP:mid            // skip pseudo constant
-                                {:  RESULT = new SkipConstExpn(); :}
+                                {:  RESULT = new SkipConstExpn(midleft, midright); :}
                             ;
 
 inputs                      ::= variable:var        // list of variables being read into
@@ -428,11 +428,11 @@ primary                     ::= constant:con                // integer or boolea
                             ;
 
 constant                    ::= INTCONST:in // integer constant
-                                {:  RESULT = new IntConstExpn(((Integer)in)); :} 
+                                {:  RESULT = new IntConstExpn(((Integer)in), inleft, inright); :} 
                             |   TRUE:t      // constant true
-                                {:  RESULT = new BoolConstExpn(true); :} 
+                                {:  RESULT = new BoolConstExpn(true, tleft, tright); :} 
                             |   FALSE:f     // constant false
-                                {:  RESULT = new BoolConstExpn(false); :} 
+                                {:  RESULT = new BoolConstExpn(false, fleft, fright); :} 
                             ;
 
 variable                    ::= IDENT:id                    // scalar variable or function call

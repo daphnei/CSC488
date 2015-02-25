@@ -8,6 +8,10 @@ import compiler488.utilities.IVisitor;
  * Used to declare objects that yield integers.
  */
 public class IntegerType extends Type {
+	
+	public IntegerType(int left, int right) {
+		super(left, right);
+	}
 	@Override
 	public String toString() {
 		return "integer";

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.Stack;
 
 import compiler488.ast.BaseAST;
+import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.Declaration;

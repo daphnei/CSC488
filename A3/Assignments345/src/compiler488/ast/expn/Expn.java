@@ -10,6 +10,11 @@ import compiler488.symbol.SemType;
  * A placeholder for all expressions.
  */
 public abstract class Expn extends BaseAST implements Printable {
+	
+	public Expn(int left, int right) {
+		super(left, right);
+	}
+
 	private PrimitiveSemType resultType;
 	
 	public PrimitiveSemType getResultType() {

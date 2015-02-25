@@ -18,4 +18,6 @@ begin
   cat <= carrot[4]
   cat[5 + 2] <= 5
   cheese[4] <= 765
+  cat <= fruit[2, 3]
+  cat <= sad[2]
 end

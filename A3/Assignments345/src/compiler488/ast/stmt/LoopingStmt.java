@@ -16,12 +16,10 @@ public abstract class LoopingStmt extends Stmt {
     protected ASTList<Stmt> body;
 
     public LoopingStmt(Expn expn, ASTList<Stmt> body, int left, int right) {
-        super();
+    	super(left, right);
 
         this.expn = expn;
         this.body = body;
-        this.left = left;
-        this.right = right;
     }
 
     public LoopingStmt(ASTList<Stmt> body, int left, int right) {

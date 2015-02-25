@@ -13,8 +13,8 @@ public class IntConstExpn extends ConstExpn {
      */
     private Integer value;
 
-    public IntConstExpn(Integer value) {
-        super();
+    public IntConstExpn(Integer value, int left, int right) {
+        super(left, right);
 
         this.value = value;
     }

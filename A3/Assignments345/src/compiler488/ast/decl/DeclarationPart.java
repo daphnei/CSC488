@@ -11,7 +11,7 @@ public abstract class DeclarationPart extends BaseAST {
     protected String name;
     
     public DeclarationPart(String name, int left, int right) {
-        super();
+        super(left, right);
 
         this.name = name;
         this.left = left;

@@ -21,13 +21,11 @@ public abstract class BinaryExpn extends Expn {
     protected String opSymbol;
 
     protected BinaryExpn(String opSymbol, Expn first, Expn second, int left, int right) {
-        super();
+        super(left, right);
         
         this.opSymbol = opSymbol;
         this.first = first;
         this.second = second;
-        this.left = left;
-        this.right = right;
     }
 
     public String getOpSymbol() {

@@ -12,11 +12,9 @@ public class ExitStmt extends Stmt {
     private Expn expn = null;
 
     public ExitStmt(Expn expn, int left, int right) {
-        super();
+    	super(left, right);
 
         this.expn = expn;
-        this.left = left;
-        this.right = right;
     }
 
     public ExitStmt(int left, int right) {

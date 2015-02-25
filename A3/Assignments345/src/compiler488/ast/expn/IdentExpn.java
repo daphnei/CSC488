@@ -11,10 +11,8 @@ public class IdentExpn extends Expn implements Readable {
     private String ident;
 
     public IdentExpn(String ident, int left, int right) {
-        super();
+    	super(left, right);
         this.ident = ident;
-        this.left = left;
-        this.right = right;
     }
 
     public String getIdent() {

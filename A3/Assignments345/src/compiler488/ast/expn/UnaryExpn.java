@@ -22,12 +22,10 @@ public abstract class UnaryExpn extends Expn {
     private String opSymbol;
 
     public UnaryExpn(String opSymbol, Expn operand, int left, int right) {
-        super();
+    	super(left, right);
 
         this.opSymbol = opSymbol;
         this.operand = operand;
-        this.left = left;
-        this.right = right;
 
         assert ((opSymbol == OP_NOT) ||
                 (opSymbol == OP_MINUS));

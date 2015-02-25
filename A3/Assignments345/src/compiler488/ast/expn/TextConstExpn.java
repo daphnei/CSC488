@@ -12,11 +12,9 @@ public class TextConstExpn extends ConstExpn implements Printable {
     private String value;
     
     public TextConstExpn(String value, int left, int right) {
-        super();
+    	super(left, right);
 
         this.value = value;
-        this.left = left;
-        this.right = right;
         
         this.setResultType(SemType.INTEGER);
     }

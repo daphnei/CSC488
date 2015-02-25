@@ -7,7 +7,7 @@ import compiler488.utilities.IVisitor;
  */
 public class NotExpn extends UnaryExpn {
     public NotExpn(Expn operand,int left, int right) {
-        super(UnaryExpn.OP_NOT, operand,left,right);
+        super(UnaryExpn.OP_NOT, operand, left,right);
     }
     
 	@Override

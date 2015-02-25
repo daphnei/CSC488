@@ -19,11 +19,9 @@ public class ReturnStmt extends Stmt {
 	 *            AST for the return expression
 	 */
 	public ReturnStmt(Expn value, int left, int right) {
-		super();
+		super(left, right);
 
 		this.value = value;
-		this.left = left;
-		this.right = right;
 	}
 
 	/**

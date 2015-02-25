@@ -8,8 +8,13 @@ import compiler488.symbol.SemType;
  * A placeholder for types.
  */
 public abstract class Type extends BaseAST {
-	public static final BooleanType BOOLEAN = new BooleanType();
-	public static final IntegerType INTEGER = new IntegerType();
+	
+	public Type(int left, int right) {
+		super(left, right);
+	}
+
+	//public static final BooleanType BOOLEAN = new BooleanType();
+	//public static final IntegerType INTEGER = new IntegerType();
 	
 	public abstract PrimitiveSemType getSemanticType();
 }

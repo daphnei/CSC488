@@ -13,11 +13,9 @@ public class PutStmt extends Stmt {
     private ASTList<Printable> outputs;
 
     public PutStmt(ASTList<Printable> outputs, int left, int right) {
-        super();
+    	super(left, right);
 
         this.outputs = outputs;
-        this.left = left;
-        this.right = right;
     }
 
     public ASTList<Printable> getOutputs() {

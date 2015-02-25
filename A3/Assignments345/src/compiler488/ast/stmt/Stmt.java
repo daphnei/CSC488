@@ -7,4 +7,8 @@ import compiler488.ast.BaseAST;
  */
 public abstract class Stmt extends BaseAST {
 
+	public Stmt(int left, int right) {
+		super(left, right);
+	}
+
 }

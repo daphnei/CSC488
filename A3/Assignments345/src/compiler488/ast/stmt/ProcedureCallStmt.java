@@ -22,12 +22,10 @@ public class ProcedureCallStmt extends Stmt implements IRoutineCall {
     private ASTList<Expn> arguments;
 
     public ProcedureCallStmt(String name, ASTList<Expn> arguments,int left, int right) {
-        super();
+    	super(left, right);
 
         this.name = name;
         this.arguments = arguments;
-        this.left = left;
-        this.right = right;
     }
 
     public ProcedureCallStmt(String name, int left, int right) {

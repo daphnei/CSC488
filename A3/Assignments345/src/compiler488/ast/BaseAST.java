@@ -24,7 +24,9 @@ public abstract class BaseAST implements AST, IVisitableElement {
 	 *
 	 * <p>Add additional information to your AST tree nodes here.</p>
 	 */
-	public BaseAST() {
+	public BaseAST(int left, int right) {
+		this.left = left;
+		this.right = right;
 	}
 
 	/**
