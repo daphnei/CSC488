@@ -49,6 +49,7 @@ import compiler488.compiler.Main;
 import compiler488.exceptions.SemanticErrorException;
 import compiler488.symbol.PrimitiveSemType;
 import compiler488.symbol.RoutineSemType;
+import compiler488.symbol.SemType;
 import compiler488.symbol.SymbolTable;
 import compiler488.utilities.NodeVisitor;
 
@@ -163,7 +164,8 @@ public class Semantics extends NodeVisitor {
 		// HACK: Swallow duplicate error messages.
 		if (errorMessage != null && !(visitable == previousVisitable && errorMessage.equals(previousError))) {
 			// TODO: GET ACTUAL LINE NUMBER.			
-			System.out.println("S" + actionNumber + " SEMANTIC ERROR (Line " + visitable.getLeftColumnNumber() + "): " + errorMessage);
+			System.out.println("S" + actionNumber + " SEMANTIC ERROR (Line " + visitable.getLineNumber() + ", Column " + 
+															visitable.getColumnNumber() + "): " + errorMessage);
 			Main.errorOccurred = true;
 		}
 		
@@ -344,7 +346,11 @@ public class Semantics extends NodeVisitor {
 		super.visit(visitable);
 		this.semanticAction(31, visitable.getFirstExpression());
 		this.semanticAction(31, visitable.getSecondExpression());
-		this.semanticAction(21, visitable);
+		if (visitable.getFirstExpression().hasError() || visitable.getFirstExpression().hasError()) {
+			visitable.setResultType(SemType.ERROR);
+		} else {
+			this.semanticAction(21, visitable);
+		}
 	}
 
 	@Override
@@ -365,13 +371,18 @@ public class Semantics extends NodeVisitor {
 		super.visit(visitable);
 		this.semanticAction(30, visitable.getFirstExpression());
 		this.semanticAction(30, visitable.getSecondExpression());
-		this.semanticAction(20, visitable);
+		if (visitable.getFirstExpression().hasError() || visitable.getFirstExpression().hasError()) {
+			visitable.setResultType(SemType.ERROR);
+		} else {
+			this.semanticAction(20, visitable);
+		}
 	}
 
 	@Override
 	public void visit(EqualsExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(32, visitable);
+		
 		this.semanticAction(20, visitable);
 	}
 
@@ -380,7 +391,11 @@ public class Semantics extends NodeVisitor {
 		super.visit(visitable);
 		this.semanticAction(31, visitable.getFirstExpression());
 		this.semanticAction(31, visitable.getSecondExpression());
-		this.semanticAction(20, visitable);
+		if (visitable.getFirstExpression().hasError() || visitable.getFirstExpression().hasError()) {
+			visitable.setResultType(SemType.ERROR);
+		} else {
+			this.semanticAction(20, visitable);
+		}
 	}
 
 	@Override
