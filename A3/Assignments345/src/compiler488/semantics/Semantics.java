@@ -314,6 +314,7 @@ public class Semantics extends NodeVisitor {
 	public void visit(RoutineDecl visitable) {
 		super.visit(visitable);
 		// TODO: Need to define function type.
+		
 	}
 
 	@Override
@@ -390,7 +391,14 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(FunctionCallExpn visitable) {
 		super.visit(visitable);
-		this.semanticAction(28, visitable);
+		this.semanticAction(43, visitable); // Check parameter count.
+		if (visitable.getArguments().isEmpty()) {
+			this.semanticAction(42, visitable); // Special case parameter count.
+		}
+		this.semanticAction(36, visitable); // Check parameter types.
+		this.semanticAction(44, visitable); // Set parameter count to zero.
+		this.semanticAction(45, visitable); // Increment parameter count.
+		this.semanticAction(28, visitable); // Set result type.		
 	}
 
 	@Override
