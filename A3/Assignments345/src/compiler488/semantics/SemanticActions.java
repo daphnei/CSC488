@@ -331,7 +331,7 @@ public class SemanticActions {
 
 	private void checkReturnIsInRoutine() throws SemanticErrorException {
 		if (this.openRoutines.isEmpty()) {
-			throw new SemanticErrorException("Attempting to return outside of a procedure or function.");
+			throw new SemanticErrorException("Call to return outside of a procedure or function.");
 		}
 	}
 
@@ -390,16 +390,21 @@ public class SemanticActions {
 	}
 
 	private void checkExpnType(Expn expression, SemType resultType) throws SemanticErrorException {
-		if (expression.getResultType() == null) {
+		PrimitiveSemType expResultType = expression.getResultType();
+		if (expResultType == null) {
 			throw new SemanticErrorException(NULL_RESULT_TYPE_EXCEPTION);
 		}
-		if (!expression.getResultType().equals(resultType)) {
-			throw new SemanticErrorException("Expected a " + resultType + " and found a " + expression.getResultType() + ".");
+		else if (expression.hasError()) {
+			//Don't do anything. The user should already have seen a message about this error.
+		}
+		else if ( !expResultType.equals(resultType) ) {
+			expression.setResultType(PrimitiveSemType.ERROR);
+			throw new SemanticErrorException("Expected a " + resultType + " and found a " + expResultType + ".");
 		}
 	}
 
 	private void checkBinaryExpnTypesMatch(BinaryExpn expression) throws SemanticErrorException {
-		SemType firstResultType = expression.getFirstExpression().getResultType();
+		SemType firstResultType  = expression.getFirstExpression().getResultType();
 		SemType secondResultType = expression.getSecondExpression().getResultType();
 
 		if (firstResultType == null || secondResultType == null) {
@@ -407,6 +412,7 @@ public class SemanticActions {
 		}
 
 		boolean resultIsGood = (firstResultType.equals(secondResultType));
+		System.out.println("The first has a" + firstResultType + " while the second has a " + secondResultType);
 		if (!resultIsGood) {
 			throw new SemanticErrorException("The left side of the expression resolves to a " + firstResultType
 					+ "while the right resolves to a " + secondResultType + ".");

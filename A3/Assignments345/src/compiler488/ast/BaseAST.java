@@ -42,14 +42,14 @@ public abstract class BaseAST implements AST, IVisitableElement {
 	/**
 	 * @return the column number of the beginning of this statement.
 	 */
-	public int getLeftColumnNumber() {
+	public int getLineNumber() {
 		return left;
 	}
 
 	/**
 	 * @return the column number of the right of this statement.
 	 */
-	public int getRightColumnNumber() {
+	public int getColumnNumber() {
 		return right;
 	}
 
