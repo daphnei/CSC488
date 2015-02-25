@@ -3,8 +3,6 @@ package compiler488.semantics;
 import java.util.ArrayList;
 import java.util.Stack;
 
-import com.sun.org.apache.xalan.internal.xsltc.compiler.sym;
-
 import compiler488.ast.ASTList;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.RoutineDecl;
@@ -94,7 +92,7 @@ public class SemanticActions {
 
 		case 11: // Declare function with no parameters and specified type.
 		case 12: // Declare function with parameters and specified type.
-			this.openNewRoutine((RoutineDecl) element, this.table);
+			this.openNewRoutine((RoutineDecl) element);
 			break;
 
 		case 13: // Associate scope with function/procedure.
@@ -117,7 +115,7 @@ public class SemanticActions {
 
 		case 17: // Declare procedure with no parameters.
 		case 18: // Declare procedure with parameters.
-			this.openNewRoutine((RoutineDecl) element, this.table);
+			this.openNewRoutine((RoutineDecl) element);
 			break;
 
 		case 19: // Declare array variable with specified lower and upper bounds.
@@ -146,7 +144,7 @@ public class SemanticActions {
 
 		case 51: // Check that return is inside a function
 		case 52: // Check that return statement is inside a procedure.
-			checkReturnIsInRoutine();
+			checkForOpenRoutine();
 
 			// HACK: This will work here, but does it belong here?
 			this.openRoutines.peek().markReturnStatement();
@@ -209,7 +207,7 @@ public class SemanticActions {
 			break;
 
 		case 36: // Check that type of argument expression matches type of corresponding formal parameter.
-			checkArgumentTypeMatch((IRoutineCall) element, table);
+			checkArgumentTypeMatch((IRoutineCall) element);
 			break;
 
 		case 37: // Check that identifier has been declared as a scalar variable.
@@ -223,19 +221,19 @@ public class SemanticActions {
 
 		// Functions, procedures and arguments
 		case 40: // Check that identifier has been declared as a function.
-			checkIdentifierIsFunction((FunctionCallExpn) element, table);
+			checkIdentifierIsFunction((FunctionCallExpn) element);
 			break;
 
 		case 41: // Check that identifier has been declared as a procedure.
-			checkIdentifierIsProcedure((ProcedureCallStmt) element, table);
+			checkIdentifierIsProcedure((ProcedureCallStmt) element);
 			break;
 
 		case 42: // Check that the function or procedure has no parameters.
-			checkForNoParameters((IIdentifier) element, table);
+			checkForNoParameters((IIdentifier) element);
 			break;
 
 		case 43: // Check that the number of arguments is equal to the number of formal parameters.
-			checkArgumentCount((IRoutineCall) element, table);
+			checkArgumentCount((IRoutineCall) element);
 			break;
 
 		case 44: // Set the argument count to zero.
@@ -256,31 +254,29 @@ public class SemanticActions {
 		System.out.println("TODO: Semantic action not implemented!");
 	}
 
-	private void openNewRoutine(RoutineDecl routineDecl, SymbolTable table) throws SemanticErrorException {
+	/**
+	 * Mark that we have entered into a new routine.
+	 * @param routineDecl
+	 * @throws SemanticErrorException
+	 */
+	private void openNewRoutine(RoutineDecl routineDecl) throws SemanticErrorException {
 		Type returnType = routineDecl.getType();
 		this.openRoutines.push(new RoutineSemType(returnType == null ? null : returnType.getSemanticType()));
-		table.addSymbolToCurScope(routineDecl.getName(), this.openRoutines.peek());
+		this.table.addSymbolToCurScope(routineDecl.getName(), this.openRoutines.peek());
 	}
 
-	private RoutineSemType getRoutineSemTypeFromSymbolTable(SymbolTable symbolTable, String ident) throws SemanticErrorException {
-		Symbol symbol = symbolTable.retrieveSymbol(ident);
-
-		if (symbol == null) {
-			throw new UndeclaredSymbolException(ident);
-		} else if (!(symbol.getType() instanceof RoutineSemType)) {
-			throw new SemanticErrorException("'" + ident + "' is not a function or procedure.");
-		} else {
-			return (RoutineSemType) symbol.getType();
-		}
-	}
-
-	private void checkArgumentTypeMatch(IRoutineCall routineCall, SymbolTable symbolTable) throws SemanticErrorException {
+	/**
+	 * Checks that the input routine call is being done with the proper paramter types.
+	 * @param routineCall
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
+	private void checkArgumentTypeMatch(IRoutineCall routineCall) throws SemanticErrorException {
 		ASTList<Expn> args = routineCall.getArguments();
 
-		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(symbolTable, routineCall.getIdentifier());
+		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(this.table, routineCall.getIdentifier());
 		ArrayList<PrimitiveSemType> params = routineSemType.getParameters();
 
-		checkArgumentCount(routineCall, symbolTable);
+		checkArgumentCount(routineCall);
 		for (int i = 0; i < args.size(); i++) {
 			PrimitiveSemType argType = args.get(i).getResultType();
 			if (!argType.equals(params.get(i))) {
@@ -290,8 +286,13 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkArgumentCount(IRoutineCall routineCall, SymbolTable symbolTable) throws SemanticErrorException {
-		RoutineSemType routine = getRoutineSemTypeFromSymbolTable(symbolTable, routineCall.getIdentifier());
+	/**
+	 * Checks that the routine being called is being called with the right number of parameters.
+	 * @param routineCall the routine being called
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
+	private void checkArgumentCount(IRoutineCall routineCall) throws SemanticErrorException {
+		RoutineSemType routine = getRoutineSemTypeFromSymbolTable(this.table, routineCall.getIdentifier());
 
 		int numArgsInCall = routineCall.getArguments().size();
 		int numParamsInDec = routine.getNumParameters();
@@ -301,8 +302,13 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkForNoParameters(IIdentifier routineCall, SymbolTable symbolTable) throws SemanticErrorException {
-		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(symbolTable, routineCall.getIdentifier());
+	/**
+	 * Checks that the routine being called is supposed to have no parameters.
+	 * @param routineCall the routine being called
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
+	private void checkForNoParameters(IIdentifier routineCall) throws SemanticErrorException {
+		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(this.table, routineCall.getIdentifier());
 
 		int numParams = routineSemType.getNumParameters();
 		if (numParams != 0) {
@@ -310,9 +316,14 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkIdentifierIsFunction(IIdentifier funCallExpn, SymbolTable symbolTable) throws SemanticErrorException {
+	/**
+	 * Checks that the input identifier maps to a function in the symbol table.
+	 * @param funCallExpn
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
+	private void checkIdentifierIsFunction(IIdentifier funCallExpn) throws SemanticErrorException {
 		String ident = funCallExpn.getIdentifier();
-		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(symbolTable, ident);
+		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(this.table, ident);
 
 		// Make sure it is a function and not a procedure. Functions should have a return type.
 		if (routineSemType.getReturnType() == null) {
@@ -320,9 +331,14 @@ public class SemanticActions {
 		}
 	}
 
-	private void checkIdentifierIsProcedure(ProcedureCallStmt procCallStmt, SymbolTable symbolTable) throws SemanticErrorException {
+	/**
+	 * Checks that the input identifier maps to a procedure in the symbol table.
+	 * @param procCallStmt
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
+	private void checkIdentifierIsProcedure(ProcedureCallStmt procCallStmt) throws SemanticErrorException {
 		String ident = procCallStmt.getIdentifier();
-		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(symbolTable, ident);
+		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(this.table, ident);
 
 		// Make sure it is a procedure and not a function. Procedures should NOT have a return type.
 		if (routineSemType.getReturnType() != null) {
@@ -330,18 +346,31 @@ public class SemanticActions {
 		}
 	}
 
+	/**
+	 * Checks that the currently open routine has at least one return statement.
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
 	private void checkRoutineHasReturnStatement() throws SemanticErrorException {
 		if (!this.openRoutines.peek().seenReturnStatement()) {
 			throw new SemanticErrorException("Function or procedure is missing a return statement.");
 		}
 	}
 
-	private void checkReturnIsInRoutine() throws SemanticErrorException {
+	/**
+	 * Checks that we are currently inside a procedure or function.
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
+	private void checkForOpenRoutine() throws SemanticErrorException {
 		if (this.openRoutines.isEmpty()) {
 			throw new SemanticErrorException("Call to return outside of a procedure or function.");
 		}
 	}
 
+	/**
+	 * Checks that the input identifier maps to a scalar type (integer or boolean).
+	 * @param element
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
 	private void checkIdentifierIsScalar(IVisitableElement element) throws SemanticErrorException {
 		IdentExpn ident = (IdentExpn) element;
 		Symbol symbol = this.table.retrieveSymbol(ident.getIdentifier());
@@ -350,6 +379,11 @@ public class SemanticActions {
 		}
 	}
 
+	/**
+	 * Checks to make sure the variable being indexed into is an array.
+	 * @param element
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
 	private void checkIdentiferIsArray(SubsExpn element) throws SemanticErrorException {
 		Symbol symbol = this.table.retrieveSymbol(element.getVariable());
 		if (symbol == null) {
@@ -367,6 +401,11 @@ public class SemanticActions {
 		}
 	}
 
+	/**
+	 * Checks if the input array's bounds are in the proper range.
+	 * @param array
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
 	private void checkArrayBoundsValidity(ArrayDeclPart array) throws SemanticErrorException {
 		if (array.getLowerBoundary1() > array.getUpperBoundary1()) {
 			throw new InvalidArrayBoundsException(array.getName());
@@ -378,14 +417,24 @@ public class SemanticActions {
 		}
 	}
 
+	/**
+	 * Checks if the correct type is being returned in the return statement.
+	 * @param returnStmt
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
 	private void checkReturnType(ReturnStmt returnStmt) throws SemanticErrorException {
-		checkReturnIsInRoutine();
+		checkForOpenRoutine();
 		if (!this.openRoutines.peek().getReturnType().equals(returnStmt.getValue().getResultType())) {
 			throw new SemanticErrorException("Trying to return value of type " + returnStmt.getValue().getResultType() + " when type "
 					+ this.openRoutines.peek().getReturnType() + " is required.");
 		}
 	}
 
+	/**
+	 * 
+	 * @param assignStmt
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
 	private void checkAssignmentTypesMatch(AssignStmt assignStmt) throws SemanticErrorException {
 		if (assignStmt.getRval().getResultType() == null || assignStmt.getLval().getResultType() == null) {
 			throw new SemanticErrorException(NULL_RESULT_TYPE_EXCEPTION);
@@ -396,6 +445,13 @@ public class SemanticActions {
 		}
 	}
 
+	/**
+	 * Check that the specified expression has the specified result type.
+	 * 
+	 * @param expression
+	 * @param resultType
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
 	private void checkExpnType(Expn expression, SemType resultType) throws SemanticErrorException {
 		PrimitiveSemType expResultType = expression.getResultType();
 		if (expResultType == null) {
@@ -410,6 +466,13 @@ public class SemanticActions {
 		}
 	}
 
+	/**
+	 * Given a binary expressions check that the sub-expressions on the left and the right are
+	 * of the same type.
+	 * 
+	 * @param expression
+	 * @throws SemanticErrorException if the check encounters a semantic error.
+	 */
 	private void checkBinaryExpnTypesMatch(BinaryExpn expression) throws SemanticErrorException {
 		SemType firstResultType  = expression.getFirstExpression().getResultType();
 		SemType secondResultType = expression.getSecondExpression().getResultType();
@@ -426,6 +489,24 @@ public class SemanticActions {
 		}
 	}
 
+	private RoutineSemType getRoutineSemTypeFromSymbolTable(SymbolTable symbolTable, String ident) throws SemanticErrorException {
+		Symbol symbol = symbolTable.retrieveSymbol(ident);
+	
+		if (symbol == null) {
+			throw new UndeclaredSymbolException(ident);
+		} else if (!(symbol.getType() instanceof RoutineSemType)) {
+			throw new SemanticErrorException("'" + ident + "' is not a function or procedure.");
+		} else {
+			return (RoutineSemType) symbol.getType();
+		}
+	}
+
+	/**
+	 * Check if the input identifier corresponds to an integer or a boolean in the symbol table.
+	 * If it does, set the result type of the identifier to the one found in the symbol table.
+	 * @param ident
+	 * @throws SemanticErrorException if the check encountered a semantic error.
+	 */
 	private void setExpressionResultTypeFromIdentifier(IdentExpn ident) throws SemanticErrorException {
 		Symbol symbol = this.table.retrieveSymbol(ident.getIdentifier());
 		if (symbol == null) {
@@ -440,20 +521,37 @@ public class SemanticActions {
 		setExpressionResultType(ident, (PrimitiveSemType) symbol.getType());
 	}
 
-	private void setExpressionResultTypeFromArray(SubsExpn ident) throws SemanticErrorException {
-		checkIdentiferIsArray(ident);
-		Symbol symbol = this.table.retrieveSymbol(ident.getVariable());
+	/**
+	 * Check if the input identifier corresponds to an array type, and if it does, 
+	 * set the result type of that array.
+	 * @param identifier The identifier that should corrspond to an array. 
+	 * @throws SemanticErrorException
+	 */
+	private void setExpressionResultTypeFromArray(SubsExpn identifier) throws SemanticErrorException {
+		checkIdentiferIsArray(identifier);
+		Symbol symbol = this.table.retrieveSymbol(identifier.getVariable());
 		ArraySemType array = (ArraySemType) symbol.getType();
-		setExpressionResultType(ident, array.getBaseType());
+		setExpressionResultType(identifier, array.getBaseType());
 	}
 	
+	/**
+	 * Check if the input identifier maps to a function type in the symbol table,
+	 *  and it it does, set the return type of the function type to the correct value.
+	 * @param identifier The identifier that should correspond to a function.
+	 * @throws SemanticErrorException
+	 */
 	private void setExpressionResultTypeFromFunction(IIdentifier identifier) throws SemanticErrorException {
-		checkIdentifierIsFunction(identifier, table);
+		checkIdentifierIsFunction(identifier);
 		Symbol symbol = this.table.retrieveSymbol(identifier.getIdentifier());
 		RoutineSemType routine = (RoutineSemType)symbol.getType();
 		setExpressionResultType(identifier, routine.getReturnType());
 	}
 
+	/**
+	 * Case the input element to an expression, and set its result type.
+	 * @param element
+	 * @param resultType
+	 */
 	private void setExpressionResultType(IVisitableElement element, PrimitiveSemType resultType) {
 		Expn ast = (Expn) element;
 		ast.setResultType(resultType);
