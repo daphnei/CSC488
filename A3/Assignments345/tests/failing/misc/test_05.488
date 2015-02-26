@@ -1,6 +1,6 @@
-% Anon function with "return" as stmt ("weird but legal")
+% NO return should be allowed inside yield 
 %from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10927
-% S00, S01, S03, S41, S17, S08, S09, S13, S21, S10, S47, S37, S24, S52, S34
+% S52
 begin
 	procedure foo begin
 		integer x
