@@ -1,14 +1,14 @@
 AST DESIGN 
 
 As much as possible, we wanted to treat the AST as simply organized text. We
-attempted to store at list semantic-analysis information in it as possible. We therefore
+attempted to store as little semantic-analysis information in it as we could. We therefore
 made very few additions to the provided AST node classes.
 
 We chose to use the Visitor pattern discussed in class. Our Visitor classes ended up
 handling the the bulk of the semantic analysis, which meant that additions to the AST were
 few and sparse. Each AST node was made to implement the IVisitableElement, which allowed
 it to be "visited" but have its own "accept" method so that visiting could be handled in a
-polymorphic manner (more on this in the semantic design document).
+polymorphic manner (for more on Visitor, see semantic design document).
 
 "Left" and "right" fields were added to the BaseAST to keep track of line and column
 numbers from the source file.

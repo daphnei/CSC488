@@ -1,23 +1,49 @@
 Semantic Design
 
+We chose the Visitor Pattern for its clean design structure and ease of adaptability.
+Looking ahead to the next assignment, we reasoned that we could use a similar visitation
+strategy for code generation. Moreover, we liked how this design pattern would allow us to
+store all semantic processing information in one consolidated place (SemanticActions.java)
+rather than disperse them across various AST subclasses.
 
-Problems
+Here is a list of the major interfaces and classes involved in our implementation of the
+Visitor Pattern, along with a brief description of each:
 
-- semantic actions don't map to implementation one-to-one
-	- certain actions already covered by existing cases
-- semantics marks down things to do, but does them later
-	- (open routine, currdeclaration type)
-	- ex. multi declarations, have no info about type of declaration
-		- keep type 
-		- lookahead not used b/c too complicated, defeats purpose of Visitor
-	
-- certain semantic actions not mapped to b/c covered by existing semantic action (collapsing/reusing)	
-	
-- type system - primitive
-	- error type (for result types) - > propogates error w/o duplicate reporting (isolates problem)	
-	
-- Visitor pattern - > thinking longterm for code generation
+(!!SOMEONE HELP FILL THESE IN!!)
 
-- interfaces: (list of class names)
+IVisitor: Interface for classes that will be doing the visiting. Contains polymorphic
+definitions for visit method to handle different AST subclasses.
 
-- scope types
+IVisitableElement: Interface for (AST) elements/nodes that will be visited. Implemented by
+BaseAST.
+
+NodeVisitor: Base class that implements the ordering of visiting. Effectively this
+determines the processing/traversal of the AST on a semi-abstract level In other words,
+though it is not an abstract class, no specific implementation for what to do in a "visit"
+is defined here, merely the ordering of visits for ASTs with parent/child nodes.
+
+Semantics:
+
+SemanticActions:
+
+ReflectiveSemanticActions:
+
+
+An issue we struggled with was mapping the semantic action codes to our implementation in
+a one-to-one manner. As you'll notice, some of the semantic actions in our implementation
+don't explicitly have corresponding code to execute, as they are done implicitly or too
+closely tied to another semantic action that we had to process such actions as part of
+dealing with another semantic operator. For example, S47 for associating a type with a
+variable is not explicitly dealt with, as we bind types to variables as part of the
+declaration of that variable.
+
+
+Another problem that arose was dealing with type tracking. Since we wanted to keep the AST
+very light, we were not sure where to store type information to handle features like
+multiple variable declarations. After exploring some other options, we decided on the
+following. We always store a current type for declarations that we can refer to for
+processing multiple declarations. (TODO: expand on type tracking) We struggled with how to
+handle type tracking
+
+We added a special error type to keep track of and propogates semantic issues but without
+generating duplicate errors related to the same issue.
