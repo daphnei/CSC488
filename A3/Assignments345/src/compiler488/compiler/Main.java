@@ -367,10 +367,6 @@ public class Main {
 	 */
 	private static void semanticAnalysis( Program  programAST ) {
 		try {
-			BasePrettyPrinter printer = new BasePrettyPrinter();
-			programAST.prettyPrint(printer);
-			System.out.println();
-			
 			Semantics visitor = new Semantics();
 			visitor.Initialize();			
 			programAST.accept(visitor);
@@ -509,9 +505,6 @@ public class Main {
 			System.out.println("Processing Terminated due to errors during semantic analysis");
 			return;
 		}
-
-		System.out.println("TODO: Finished the semantic analysis. GET OUTTA HERE!");
-		System.exit(0);
 
 		// Dump AST after semantic analysis if requested
 		if (dumpAST2)
