@@ -24,6 +24,16 @@ For each node in the AST, the proper semantic actions are applied according to t
 numbering provided to us in the Source Language specification. Semantics only checks the
 semantic rules. The implementation of the semantic rules is stored elsewhere.
 
+Semantics: A class that extends NodeVisitor, and keeps track of scope and state as it
+iterates over the AST and verifies that the semantics of the program are correct.
+For each node in the AST, it will call the appropriate semantic actions for each node
+through a common "semanticActions" method. The method takes the node to analyaze and the
+number of the semantic action to check. The numbers are the same as those from the 
+Semantics handout, so that it is easy for use to ensure all cases have been covered.
+While the semantics are running, they can throw a SemanticsErrorException, which is
+caught by this class, and used to show an error message to the user. This
+SemanticsErrorException has several child types with unique error messages.
+
 SemanticActions: This class stored the implemenation of the semantic rules described in the
 Source Language specification. The main logic occurs in the checkSemanticRule method, which
 takes in a semantic action index and the current AST node. It then performs the specified
@@ -49,10 +59,12 @@ dealing with another semantic operator. For example, S47 for associating a type 
 variable is not explicitly dealt with, as we bind types to variables as part of the
 declaration of that variable.
 
-Another problem that arose was dealing with type tracking. Since we wanted to keep the AST
-very light, we were not sure where to store type information to handle features like
+Another problem that arose was dealing with declaration type tracking. Since we wanted to keep the AST
+very seperated from the analysis, we were not sure where to store type information to handle features like
 multiple variable declarations. After exploring some other options, we decided on the
 following. We always store a current type for declarations that we can refer to for
-processing multiple declarations. (TODO: expand on type tracking) We struggled with how to
-handle type tracking
+processing multiple declarations.
+
+We added our own SemType system to represent types in the Symbol table. This includes
+PrimitiveTypes like Boolean and Integer, and generic types like Array and Routine.
 
