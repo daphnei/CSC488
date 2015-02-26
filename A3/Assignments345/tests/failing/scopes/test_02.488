@@ -1,5 +1,7 @@
 % Redeclaring identifier in minor scope.
 % From forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10951
+% S37
+
 begin
 	integer a, b
 

@@ -1,0 +1,24 @@
+List of semantic rules being tested in which file.
+
+Failing tests:
+
+Tests inside ctrlflow folder:
+test_01 >>> S50
+test_02 >>> S51
+test_03 >>> S50
+
+Test inside misc folder:
+test_01 >>> S50
+
+Test inside scopes folder:
+test_02 >>> S37
+test_03 >>> S37
+test_04 >>> S37
+
+Test inside types folder:
+test_01 >>> S34, S30 , S31
+test_02 >>> S31, S30
+test_03 >>> S35, S52
+test_04 >>> S31, S36
+test_05 >>> 
+test_06 >>> S34

@@ -1,4 +1,5 @@
 % Function return type must match declaration
+% S35, S52
 
 begin
 

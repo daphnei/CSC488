@@ -1,4 +1,5 @@
 % Illegal use of exit statement in anonymous function
+% S50
 
 begin
 

@@ -1,4 +1,5 @@
 % Function/procedure parameter types must match declaration
+% S31, S36
 
 begin
 	

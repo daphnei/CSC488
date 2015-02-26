@@ -1,4 +1,5 @@
 % Illegal usage of function (function call must be RHS of statement)
+% S41
 
 begin
 
