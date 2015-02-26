@@ -1,4 +1,5 @@
 SYMBOL TABLE
+
 The symbol table is implemented using a hash table, which maps from a string identifier
 to a list of all the symbols using that identifier, one for each scope in which the identifier was
 declared. Because the semantic checker only ever cares about accessing the symbol in the most inner

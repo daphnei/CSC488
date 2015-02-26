@@ -1,20 +1,46 @@
-Testing Documentation
+Testing Design
 
 Overall, we tried to approach our testing with the end-to-end philosophy in mind. While we
 initially made an attempt to use JUnit testing (as you'll notice, from our source), we
-quickly found this to be inefficient and difficult to manage. We then adopted an ad hoc
-strategy of identifying complex semantic situations and corner cases first, and then going
-back to write comprehensive tests that would cover all of the semantic actions listed in
-the specifications. We felt that a "brute force" testing approach like the one we used for
-testing parsing would be less helpful in the context of semantic analysis, as semantic
-errors are quite nuanced compared to syntactic errors and thus it is more useful to
+quickly found this to be difficult to manage in terms of coverage and inefficient in terms
+of targeting specific areas of test. We then adopted an ad hoc strategy of trying to
+identify complex semantic situations and corner cases first, and then going back to write
+comprehensive tests that would cover all of the semantic actions listed in the
+specifications. We felt that a "brute force" testing approach like the one we used for
+testing syntax processing would be less helpful in the context of semantic analysis, as
+semantic errors are much more nuanced compared to syntactic errors. Since it is unlikely
+that a large volume of basic "vanilla" tests  would reveal semantic issues, we felt it was
+much more useful to design a smaller set of well-thought-out test cases for this
+assignment.
 
 Thus, rather than write extremely short, innocuous test cases as we had for previous
 assignments, our goal this time was to produce longer, more programmatically interesting
 tests to run semantic analysis on. This is also partly due to the nature of semantic
-operators, some of which are not easily separable for testing in isolation, due to
-dependence on previous events in the program. For instance, a successful check that an
-identifier has been declared as a function depends on such a function having been
+operators, some of which are not easily separable for testing in isolation due to
+dependence on pre-existing conditions in the program. For instance, a successful check
+that an identifier has been declared as a function depends on such a function having been
 previously defined in the same scope. Moreover, we wanted to ensure that our compiler
-would be capable of catching multiple semantic errors within the same program.
+could catch multiple semantic errors within the same program without exhibiting strange
+behaviour.
 
+As you'll see, we have grouped our tests according to what we felt were the the main areas
+of semantic concern: type checking, scopes, control flow, and miscellaneous.
+
+Note that by adopting the end-to-end argument, we did not write test cases that
+specifically targeted the symbol table, the semantic analysis or the AST as distinct
+components. Rather than composing tests that would examine these parts of the compiler in
+isolation, we wrote programs that would require all three components to work together
+correctly to "pass."
+
+In our attempt to write comprehensive tests (denoted "basic") to cover all the semantic
+operators, we realized too late that it was not enough to ensure that all semantic actions
+were called in testing. In writing these tests, we did not carefully consider special
+cases where certain combinations of semantic operators or semantic actions employed in
+specific contexts could cause deviations in behaviour. Due to lack of time, we were not
+able to comprehensively go through all the cases where this might occur. Although some of
+our test cases may account for this obliquely, we would like to acknowledge this as a
+"blind-spot" in our testing.
+
+Many of our tests were inspired by or based on examples that came up in questions our
+classmates asked on the discussion board. We have acknowledged our use of them wherever
+applicable, and would like to thank our peers for sharing their insights.

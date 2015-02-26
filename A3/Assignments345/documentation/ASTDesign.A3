@@ -1,26 +1,27 @@
-AST DESIGN
-As much as possible, we wanted to treat the AST as simply organized text. We attempted to
-store at list semantic-analysis information in it as possible. We therefore made very few additions
-to the provided AST node classes.
+AST DESIGN 
 
-We chose to use the Visitor pattern discussed in class. Our Visitor classes ended up handling the
-the bulk of the semantic analysis, which meant that additions to the AST were few and sparse. Each
-AST node was made to implement the IVisitableElement, which allowed it to be "visited" but have its
-own "accept" method so that visiting could be handled in a polymorphic manner (more on this in the
-semantic design document). 
+As much as possible, we wanted to treat the AST as simply organized text. We
+attempted to store at list semantic-analysis information in it as possible. We therefore
+made very few additions to the provided AST node classes.
 
-"Left" and "right" fields were added to the BaseAST to keep track of line and column numbers from
-the source file. 
+We chose to use the Visitor pattern discussed in class. Our Visitor classes ended up
+handling the the bulk of the semantic analysis, which meant that additions to the AST were
+few and sparse. Each AST node was made to implement the IVisitableElement, which allowed
+it to be "visited" but have its own "accept" method so that visiting could be handled in a
+polymorphic manner (more on this in the semantic design document).
 
-To track the expected result types of expressions, we added a resultType field to the Expn class. As
-an expression is evaluated, the resultType is set to “integer”, “boolean”, or “error”. A parent
-expression checks the result types of its children to make sure that they are correct for the
-operation being performed.  If there is a problem with them, the parent expression’s result type is
-set to “error.”
+"Left" and "right" fields were added to the BaseAST to keep track of line and column
+numbers from the source file.
 
-In the starter code, the ProcedureCallStmt and the FunctionCallExpn both had a getArguments method
-as well as a method returning the name of the routine to be called. However, ProcedureCallStmt
-extends Stmt while FunctionCallExpn extends Expn. We wanted to be able to treat these nodes
-similarly since in the symbol table there is no distinction made between procedures and functions.
-We therefore had them both implement an IRoutineCall interface, which ensures that the common
-methods are present in both.
+To track the expected result types of expressions, we added a resultType field to the Expn
+class. As an expression is evaluated, the resultType is set to “integer”, “boolean”, or
+“error”. A parent expression checks the result types of its children to make sure that
+they are correct for the operation being performed.  If there is a problem with them, the
+parent expression’s result type is set to “error.”
+
+In the starter code, the ProcedureCallStmt and the FunctionCallExpn both had a
+getArguments method as well as a method returning the name of the routine to be called.
+However, ProcedureCallStmt extends Stmt while FunctionCallExpn extends Expn. We wanted to
+be able to treat these nodes similarly since in the symbol table there is no distinction
+made between procedures and functions. We therefore had them both implement an
+IRoutineCall interface, which ensures that the common methods are present in both.

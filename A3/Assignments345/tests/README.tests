@@ -1,8 +1,11 @@
-List of semantic rules being tested in which file.
+Test Index
 
-Passing tests(all rules used in the files are mentioned):
+Here you will find an index of all tests in all folders, each accompanied by a brief description of what the test targets as well as the specific semantic rule(s) being examined. 
 
-Tests inside ctrlflow folder:
+Passing :
+(all rules used in the test are mentioned)
+
+Inside ctrlflow folder:
 test_01 >>>
 % Procedure without explicit return ("running off the end")
 % S00, S01, S03, S41, S08, S14, S21, S16, S15, S18, S31
@@ -16,13 +19,13 @@ test_04 >>>
 % Loop using "exit when expression"
 % S00, S01, S03, S21, S37, S47, S10, S34, S06, S07, S26, S31, S20, S30, S50
 
-Tests inside misc folder:
+Inside misc folder:
 test_basic >>>
 % Declarations & creating entries in the symbol table as well as check the declarations via access
 % S10-19, S46-48 , S51-53
 % S25, S27-28, S34-39, S40-45
 
-Tests inside scopes folder:
+Inside scopes folder:
 test_01 >>>
 % Identifier declared in if-block (still counts as part of main scope)
 % S00, S01, S03, S30, S20, S47, S10, S21, S37, S34, S26, S31
@@ -42,7 +45,7 @@ test_simple >>>
 % The simplest scope test
 % S00, S01 
 
-Tests inside types folder:
+Inside types folder:
 test_01 >>>
 % Multiple declarations in one statement
 % S00, S01, S03, S21, S37, S10, S47, S48, S19, S20
@@ -57,9 +60,10 @@ test_yields >>>
 % S24
 
 
-Failing tests(the rules mentioned are the ones that should fail becouse of error):
+Failing:
+(the rules mentioned are the ones that are being purposefully violated)
 
-Tests inside ctrlflow folder:
+Inside ctrlflow folder:
 test_01 >>>
 % Illegal use of exit in main scope
 % S50
@@ -73,7 +77,7 @@ test_04 >>>
 % Illegal use of return (and return value) in non-function/procedure scope
 % S50 
 
-Test inside misc folder:
+Inside misc folder:
 test_01 >>>
 % Illegal use of exit statement in anonymous function
 % S50
@@ -90,7 +94,7 @@ test_05 >>>
 % NO return should be allowed inside yield 
 % S52
 
-Test inside scopes folder:
+Inside scopes folder:
 test_01 >>>
 % Unidentified function/procedure calls
 % S40-41
@@ -104,7 +108,7 @@ test_04 >>>
 % Redeclaring identifier (declared inside minor scope).
 % S37
 
-Test inside types folder:
+Inside types folder:
 test_01 >>>
 % Various expression result type errors due to incorrect usage
 % S34, S30 , S31
