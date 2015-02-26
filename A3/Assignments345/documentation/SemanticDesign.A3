@@ -3,13 +3,11 @@ Semantic Design
 We chose the Visitor Pattern for its clean design structure and ease of adaptability.
 Looking ahead to the next assignment, we reasoned that we could use a similar visitation
 strategy for code generation. Moreover, we liked how this design pattern would allow us to
-store all semantic processing information in one consolidated place (SemanticActions.java)
+do all semantic processing in one consolidated place (SemanticActions.java)
 rather than disperse them across various AST subclasses.
 
 Here is a list of the major interfaces and classes involved in our implementation of the
 Visitor Pattern, along with a brief description of each:
-
-(!!SOMEONE HELP FILL THESE IN!!)
 
 IVisitor: Interface for classes that will be doing the visiting. Contains polymorphic
 definitions for visit method to handle different AST subclasses.
@@ -17,16 +15,21 @@ definitions for visit method to handle different AST subclasses.
 IVisitableElement: Interface for (AST) elements/nodes that will be visited. Implemented by
 BaseAST.
 
-NodeVisitor: Base class that implements the ordering of visiting. Effectively this
-determines the processing/traversal of the AST on a semi-abstract level In other words,
-though it is not an abstract class, no specific implementation for what to do in a "visit"
-is defined here, merely the ordering of visits for ASTs with parent/child nodes.
+NodeVisitor: Base class that implements IVisitor ahd handles the ordering of visitation. In
+this class one visitable element will accept the visitation of its children. This is where
+the traversal of the AST takes place. It contains no semantic checking. 
 
-Semantics:
+Semantics: This class extends NodeVisitor and handles the checking of the semantic rules. 
+For each node in the AST, the proper semantic actions are applied according to the 
+numbering provided to us in the Source Language specification. Semantics only checks the
+semantic rules. The implementation of the semantic rules is stored elsewhere.
 
-SemanticActions:
+SemanticActions: This class stored the implemenation of the semantic rules described in the
+Source Language specification. The main logic occurs in the checkSemanticRule method, which
+takes in a semantic action index and the current AST node. It then performs the specified
+action on that node.
 
-ReflectiveSemanticActions:
+
 
 
 An issue we struggled with was mapping the semantic action codes to our implementation in

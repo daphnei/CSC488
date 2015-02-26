@@ -1,8 +1,9 @@
 package compiler488.semantics;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Set;
 import java.util.Stack;
+import java.util.TreeSet;
 
 import compiler488.ast.ASTList;
 import compiler488.ast.decl.ArrayDeclPart;
@@ -278,10 +279,11 @@ public class SemanticActions {
 
 	private void checkExitIsDirectlyInLoop(ExitStmt element) throws SemanticErrorException {
 		//Check whether there is a loop scope open.
-		HashSet<ScopeType> forbidden = new HashSet<ScopeType>();
+		Set<ScopeType> forbidden = new TreeSet<ScopeType>();
 		forbidden.add(ScopeType.YIELD);
 		forbidden.add(ScopeType.ROUTINE);
 		forbidden.add(ScopeType.PROGRAM);
+		
 		if (!this.table.searchScopesForType(ScopeType.LOOP, forbidden)) {
 			throw new SemanticErrorException("Exit statement does not occur directly inside a loop.");
 		}
@@ -392,9 +394,10 @@ public class SemanticActions {
 	 */
 	private void checkReturnIsInRoutine(ReturnStmt stmt) throws SemanticErrorException {
 		//Check whether there is a loop scope open.
-		HashSet<ScopeType> forbidden = new HashSet<ScopeType>();
+		Set<ScopeType> forbidden = new TreeSet<ScopeType>();
 		forbidden.add(ScopeType.YIELD);
 		forbidden.add(ScopeType.PROGRAM);
+		
 		if (!this.table.searchScopesForType(ScopeType.ROUTINE, forbidden)) {
 			throw new SemanticErrorException("Call to return outside of a procedure or function.");
 		} else {
