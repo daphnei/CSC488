@@ -1,3 +1,21 @@
+% Various expression result type errors due to incorrect usage
+
 begin
-	put (4 + 3) + (4 | 2)
+	
+	integer f
+	f <= true
+	
+	if (! 5) then
+		put "Do nothing."
+	end
+	
+	while ( 4 >= false ) do
+		put "Also do nothing."
+	end
+		
+	put true
+	
+	boolean b
+	b <= - false
+	
 end

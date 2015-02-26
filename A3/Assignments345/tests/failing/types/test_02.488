@@ -1,4 +1,14 @@
+% Nested expression result type errors.
+
 begin
+
 	boolean b
 	b <= (true | (false & (true + 2)))
+	
+	put (4 + 3) + (4 | 2)
+	
+	put (1 + 3 + 4 + 5 + 6 + false + 7)
+
+	b <= 3 <= (! (4 + 3) + true)
+
 end

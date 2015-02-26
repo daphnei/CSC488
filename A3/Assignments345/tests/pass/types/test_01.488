@@ -2,8 +2,8 @@
 
 begin
 
-	integer x, y, zeta[3], iota[2,4]
+	integer x, y, zeta[3], xi[2,4]
 	
-	boolean alpha, beta, gamma
+	boolean alpha, beta, gamma, delta[5], epsilon[10, 11]
 
 end

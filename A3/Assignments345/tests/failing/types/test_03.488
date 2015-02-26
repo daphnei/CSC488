@@ -1,3 +1,16 @@
+% Function return type must match declaration
+
 begin
-	put (1 + 3 + 4 + 5 + 6 + false + 7)
+
+% missing
+integer my_func begin
+   put "Hello world"
+   return 
+   end 
+
+% doesn't match
+boolean my_func2 begin
+	return 3
+	end
+	
 end

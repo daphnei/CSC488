@@ -1,4 +1,15 @@
+% Illegal usage of function (function call must be RHS of statement)
+
 begin
-	boolean b
-	b <= 4 >= true
+
+	integer function high_five
+		begin
+			return 5
+		end
+	
+	high_five
+
+	integer f
+	f < = { high_five yields 5 }
+
 end

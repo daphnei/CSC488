@@ -1,4 +1,24 @@
+% Function/procedure parameter types must match declaration
+
 begin
-	integer f
-	f <= ! 5
+	
+	procedure my_proc (integer x, boolean y)
+	begin
+		if y then
+			put x
+		end
+	end
+	
+	my_proc (true, 5)
+	
+	boolean function my_func (integer x)
+	begin
+		return (x <= 5)
+	end
+
+% mishmash of type mismatch
+	integer i
+	i <= my_func(false)
+
+
 end

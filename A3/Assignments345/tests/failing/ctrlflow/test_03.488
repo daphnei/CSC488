@@ -1,0 +1,10 @@
+% Illegal placement of exit (not "directly inside" loop)
+% Inspired by https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10927
+
+begin
+	loop 
+		procedure p begin
+			exit
+		end
+	end
+end

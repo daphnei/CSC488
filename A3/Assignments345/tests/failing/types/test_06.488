@@ -1,5 +1,17 @@
+% Type errors in arrays
+
 begin
-	boolean b
-	b <= 3 <= (! (4 + 3) + true)
+	
+	integer ai[10]
+	boolean bi[10]
+	
+	ai[1] <= true
+	
+	bi[1] <= 5
+	
+	ai[true] <= 6 
+	
+	bi[1] <= "Undefined behaviour"
+	
 
 end

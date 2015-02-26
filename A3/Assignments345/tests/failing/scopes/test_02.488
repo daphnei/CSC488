@@ -1,10 +1,19 @@
 % Redeclaring identifier in minor scope.
-%From forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10951
+% From forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10951
 begin
-    integer a
-    
-	loop
+	integer a, b
+
+	if 1 = 1
+	then
 		integer a
+	end
+	
+	loop
+		integer b
+	end
+	
+	while false do 
+		boolean a, b
 	end
 
 end
