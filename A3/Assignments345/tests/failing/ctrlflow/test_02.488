@@ -1,5 +1,5 @@
-% Illegal use of return inside main scope.
-%from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10927
+% Illegal use of return in non-function/procedure scope.
+% based on a forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10927
 % S51
 
 begin

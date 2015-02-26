@@ -91,8 +91,8 @@ public class SemanticActions {
 			table.openScope(ScopeType.LOOP);
 			break;
 			
-		case 100: // Open up a new loop scope. This one was not on the sheet. We made it up.
-			table.openScope(ScopeType.LOOP);
+		case 100: // Open up a new yield scope. This one was not on the sheet. We made it up.
+			table.openScope(ScopeType.YIELD);
 			break;
 			
 		// Declarations
@@ -345,7 +345,13 @@ public class SemanticActions {
 	 */
 	private void checkIdentifierIsFunction(IIdentifier funCallExpn) throws SemanticErrorException {
 		String ident = funCallExpn.getIdentifier();
-		RoutineSemType routineSemType = getRoutineSemTypeFromSymbolTable(this.table, ident);
+		RoutineSemType routineSemType;
+		try {
+			routineSemType = getRoutineSemTypeFromSymbolTable(this.table, ident);
+		} catch (SemanticErrorException exception) {
+			setExpressionResultType(funCallExpn, ErrorSemType.ERROR);
+			throw exception;
+		}
 
 		// Make sure it is a function and not a procedure. Functions should have a return type.
 		if (routineSemType.getReturnType() == null) {
@@ -375,7 +381,7 @@ public class SemanticActions {
 	 */
 	private void checkRoutineHasReturnStatement() throws SemanticErrorException {
 		if (!this.openRoutines.peek().seenReturnStatement()) {
-			throw new SemanticErrorException("Function or procedure is missing a return statement.");
+			throw new SemanticErrorException("Function or procedure is missing a proper return statement.");
 		}
 	}
 
@@ -476,6 +482,9 @@ public class SemanticActions {
 	 * @throws SemanticErrorException if the check encounters a semantic error.
 	 */
 	private void checkAssignmentTypesMatch(AssignStmt assignStmt) throws SemanticErrorException {
+		if (assignStmt.getRval().hasError() || assignStmt.getLval().hasError()) {
+			return;
+		}
 		if (assignStmt.getRval().getResultType() == null || assignStmt.getLval().getResultType() == null) {
 			throw new SemanticErrorException(NULL_RESULT_TYPE_EXCEPTION);
 		}
@@ -525,13 +534,19 @@ public class SemanticActions {
 		}
 
 		boolean resultIsGood = (firstResultType.equals(secondResultType));
-		System.out.println("The first has a" + firstResultType + " while the second has a " + secondResultType);
 		if (!resultIsGood) {
 			throw new SemanticErrorException("The left side of the expression resolves to a " + firstResultType
 					+ "while the right resolves to a " + secondResultType + ".");
 		}
 	}
 
+	/**
+	 * Gets the routine type from the symbol table with the specified identifier.
+	 * @param symbolTable
+	 * @param ident
+	 * @return the found type
+	 * @throws SemanticErrorException
+	 */
 	private RoutineSemType getRoutineSemTypeFromSymbolTable(SymbolTable symbolTable, String ident) throws SemanticErrorException {
 		Symbol symbol = symbolTable.retrieveSymbol(ident);
 	

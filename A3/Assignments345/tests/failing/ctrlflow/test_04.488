@@ -1,0 +1,8 @@
+% Illegal use of return (and return value) in non-function/procedure scope
+% S50
+
+begin
+
+	return (true)
+	
+end 

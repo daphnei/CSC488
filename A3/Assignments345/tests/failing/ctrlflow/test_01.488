@@ -1,4 +1,4 @@
-% Illegal use of exit in main scope
+% Illegal use of exit in non-loop (main scope)
 % S50
 
 begin

@@ -76,7 +76,6 @@ public class SymbolTable {
 	 */
 	public void closeCurrentScope() throws SemanticErrorException {
 		this.checkIfThereIsAnyScope();
-
 		// If the current scope is major, destroy all the symbols that were declared in it.
 		if (this.scopeTypes.peek().isMajor()) {			
 			for (String identifier : this.table.keySet()) {
@@ -153,7 +152,7 @@ public class SymbolTable {
 
 			// Create the new symbol to the front of the symbol list.
 			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
-			symbols.add(newSymbol);
+			symbols.push(newSymbol);
 
 			return newSymbol;
 		} else if (symbols.peek().getScope() == this.curScopeIndex) {
@@ -166,7 +165,7 @@ public class SymbolTable {
 
 			// This is unacceptable if there is no major scope between the current and the last.
 			int i = this.searchForLastMajorScope();
-			if (symbols.peek().getScope() < i) {
+			if (symbols.peek().getScope() >= i) {
 				throw new SymbolConflictException(identifier);
 			}
 
@@ -174,19 +173,23 @@ public class SymbolTable {
 			// that was declared
 			// in an upper scope.
 			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
-			symbols.add(newSymbol);
+			symbols.push(newSymbol);
 
 			return newSymbol;
 		}
 	}
 	
+	/**
+	 * Looks down the scope stack for the last scope that was major.
+	 * @return the found scope, or -1 if none.
+	 */
 	public int searchForLastMajorScope() {
 		int currentScope = this.curScopeIndex;
 		for (ScopeType scopeType : this.scopeTypes) {
 			if (scopeType.isMajor()) {
-				return this.curScopeIndex;
+				return currentScope;
 			}
-			this.curScopeIndex--;
+			currentScope--;
 		}
 		
 		return -1;

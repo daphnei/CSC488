@@ -1,0 +1,11 @@
+% Unidentified function/procedure calls
+% S40-41
+
+begin
+	proc
+	proc1(5, true)
+	
+	integer i
+	i <= func(false, 1)
+
+end

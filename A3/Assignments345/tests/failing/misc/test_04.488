@@ -1,0 +1,9 @@
+% Array declared with improper bounds
+% S46
+
+begin
+	integer a1[2..1]
+	integer a2[0]
+	boolean a3[2..4, 4..2], a4[0..-3, -4..-2]
+	
+end
