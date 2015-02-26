@@ -15,6 +15,7 @@ import compiler488.ast.expn.FunctionCallExpn;
 import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.stmt.AssignStmt;
+import compiler488.ast.stmt.ExitStmt;
 import compiler488.ast.stmt.ProcedureCallStmt;
 import compiler488.ast.stmt.ReturnStmt;
 import compiler488.ast.type.Type;
@@ -144,7 +145,7 @@ public class SemanticActions {
 		// Statement Checking
 
 		case 50: // Check that exit statement is directly inside a loop.
-			printTodo();
+			checkExitIsDirectlyInLoop((ExitStmt) element);
 			break;
 
 		case 51: // Check that return is inside a function
@@ -270,6 +271,19 @@ public class SemanticActions {
 		this.table.addSymbolToCurScope(routineDecl.getName(), this.openRoutines.peek());
 	}
 
+	private void checkExitIsDirectlyInLoop(ExitStmt element) throws SemanticErrorException {
+		//Check whether there is a loop scope open.
+		int firstLoopScopeIndex = this.table.searchScopesForType(ScopeType.LOOP);
+		int firstRoutineScopeIndex = this.table.searchScopesForType(ScopeType.ROUTINE);
+		
+		//Check that there exists an open loop scope, and that that open loop scope is 
+		//closer than the first open routine scope
+		boolean exitIsValid = firstLoopScopeIndex >= 0 && firstLoopScopeIndex < firstRoutineScopeIndex;
+		if (!exitIsValid) {
+			throw new SemanticErrorException("Exit statement does not occur directly inside a loop.");
+		}
+	}
+	
 	/**
 	 * Checks that the input routine call is being done with the proper paramter types.
 	 * @param routineCall

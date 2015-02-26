@@ -185,14 +185,19 @@ public class SymbolTable {
 	 * @param searchTarget 
 	 * @return True if a scope of the input type is open, false otherwise
 	 */
-	public boolean checkIfScopeTypeIsOpen(ScopeType searchTarget) {
+	public int searchScopesForType(ScopeType searchTarget) {
+		//The lowest index scope is the last element in the scopeTypes list.
+		//this.curScopeIndex corresponds to the first element in the scopeTypes list.
+		int scopeIndex = this.curScopeIndex;
+		
 		for (ScopeType scopeType : this.scopeTypes) {
 			if (scopeType.equals(searchTarget)) {
-				return true;
+				return scopeIndex;
 			}
+			scopeIndex--;
 		}
 		
-		return false;
+		return -1;
 	}
 
 	/**
