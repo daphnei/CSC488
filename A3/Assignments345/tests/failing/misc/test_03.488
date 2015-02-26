@@ -1,0 +1,25 @@
+% Function/procedure parameter count mismatch
+% S43
+
+begin
+
+	procedure proc (integer p1, integer p2, integer p3)
+	begin
+		return
+	end
+	
+	boolean function func (integer i)
+	begin
+		
+		return (i = 1) 
+	end
+	
+	proc(3, 40) 		% too few
+	proc(0, 0, 0, 0) 	% too many
+	
+	boolean b, c
+	b <= func(1, 20)
+	c <= func
+	
+
+end

@@ -1,0 +1,14 @@
+% Function must contain return
+% S53
+
+begin
+	integer function my_func
+	begin
+		put 5
+	end
+	
+	boolean function my_func2
+	begin
+	end
+
+end
