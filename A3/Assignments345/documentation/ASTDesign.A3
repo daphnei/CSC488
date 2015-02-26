@@ -25,3 +25,5 @@ However, ProcedureCallStmt extends Stmt while FunctionCallExpn extends Expn. We 
 be able to treat these nodes similarly since in the symbol table there is no distinction
 made between procedures and functions. We therefore had them both implement an
 IRoutineCall interface, which ensures that the common methods are present in both.
+
+The AST is generated in a natural way, aligned with bottom up parsing as determined by our .cup file. As the parser processes tokens, the corresponding AST nodes are added to the tree being grown.

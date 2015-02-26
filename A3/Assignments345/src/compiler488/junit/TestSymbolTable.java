@@ -2,6 +2,9 @@
 //
 //import static org.junit.Assert.assertEquals;
 //
+//import java.util.Set;
+//import java.util.TreeSet;
+//
 //import org.junit.After;
 //import org.junit.Before;
 //import org.junit.Rule;
@@ -11,6 +14,7 @@
 //import compiler488.exceptions.SemanticErrorException;
 //import compiler488.semantics.types.BooleanSemType;
 //import compiler488.semantics.types.IntegerSemType;
+//import compiler488.symbol.ScopeType;
 //import compiler488.symbol.Symbol;
 //import compiler488.symbol.SymbolTable;
 //
@@ -40,10 +44,10 @@
 //		//Test before nay scope has been opened.
 //		assertEquals(this.symbolTable.getCurrentScope(), -1);
 //		
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
 //		assertEquals(this.symbolTable.getCurrentScope(), 0);
 //		
-//		this.symbolTable.openMinorScope();
+//		this.symbolTable.openScope(ScopeType.GENERIC);
 //		assertEquals(this.symbolTable.getCurrentScope(), 1);
 //		
 //		this.symbolTable.closeCurrentScope();
@@ -67,7 +71,7 @@
 //	 */
 //	@Test
 //	public void testCloseScopeInvalid2() throws SemanticErrorException {
-//		this.symbolTable.openMinorScope();
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
 //		this.symbolTable.closeCurrentScope();
 //		
 //		this.thrown.expect(SemanticErrorException.class);
@@ -80,7 +84,7 @@
 //	 */
 //	@Test
 //	public void testAddSymbolsOneScope() throws SemanticErrorException {
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
 //	
 //		Symbol s = this.symbolTable.addSymbolToCurScope("foo", new BooleanSemType());
 //		Symbol s2 = this.symbolTable.retrieveSymbol("foo");
@@ -97,7 +101,7 @@
 //	 */
 //	@Test
 //	public void testAddSymbolsNoScope() throws SemanticErrorException {
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
 //		this.symbolTable.closeCurrentScope();
 //		this.thrown.expect(SemanticErrorException.class);
 //		this.symbolTable.addSymbolToCurScope("foo", new BooleanSemType());
@@ -109,7 +113,7 @@
 //	 */
 //	@Test
 //	public void testRetrieveSymbolsNoScope() throws SemanticErrorException {
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
 //		this.symbolTable.addSymbolToCurScope("foo", new BooleanSemType());
 //		this.symbolTable.closeCurrentScope();
 //		
@@ -125,13 +129,13 @@
 //	 */
 //	@Test
 //	public void testRetrieveSymbolsInvalid2() throws SemanticErrorException {
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
 //				
 //		//A scope exists, but foo has not been declared in it.
 //		Symbol s = this.symbolTable.retrieveSymbol("foo");
 //		assertEquals(s, null);
 //		
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.ROUTINE);
 //		this.symbolTable.addSymbolToCurScope("foo", new BooleanSemType());
 //		this.symbolTable.closeCurrentScope();
 //				
@@ -146,11 +150,11 @@
 //	 */
 //	@Test
 //	public void testMultipleScopes() throws SemanticErrorException {
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
 //		
 //		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", new BooleanSemType());
 //		
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.ROUTINE);
 //		
 //		//foo exists in an upper scope.
 //		assertEquals(foo, this.symbolTable.retrieveSymbol("foo"));
@@ -171,15 +175,42 @@
 //	 * Test that an error is thrown if user attempts to redeclare a symbol in a minor scope.
 //	 * @throws SemanticError
 //	 */
+//	@Test
 //	public void testRedeclareInMinorScope() throws SemanticErrorException {
-//		this.symbolTable.openMajorScope();
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
 //		
 //		Symbol foo = this.symbolTable.addSymbolToCurScope("foo", new BooleanSemType());
 //		
-//		this.symbolTable.openMinorScope();
+//		this.symbolTable.openScope(ScopeType.GENERIC);
 //		
-//		//this.thrown.expect(SemanticError.class);
+//		this.thrown.expect(SemanticErrorException.class);
 //		Symbol bar = this.symbolTable.addSymbolToCurScope("foo", new IntegerSemType());
 //		
+//	}
+//	
+//	/**
+//	 * Tests for the searchScopeType method
+//	 */
+//	@Test
+//	public void testSearchScopesForType() {
+//		this.symbolTable.openScope(ScopeType.PROGRAM);
+//		this.symbolTable.openScope(ScopeType.ROUTINE);
+//		this.symbolTable.openScope(ScopeType.LOOP);
+//		this.symbolTable.openScope(ScopeType.ROUTINE);
+//		this.symbolTable.openScope(ScopeType.GENERIC);
+//		this.symbolTable.openScope(ScopeType.YIELD);
+//		
+//		Set<ScopeType> forbidden = new TreeSet<ScopeType>();
+//		forbidden.add(ScopeType.ROUTINE);
+//		
+//		boolean foundGenericBeforeForbidden = this.symbolTable.searchScopesForType(ScopeType.GENERIC, forbidden);
+//		assertEquals(foundGenericBeforeForbidden, true);
+//		
+//		boolean foundLoopBeforeForbidden = this.symbolTable.searchScopesForType(ScopeType.LOOP, forbidden);
+//		assertEquals(foundLoopBeforeForbidden, false);
+//
+//		boolean foundProgramBeforeForbidden = this.symbolTable.searchScopesForType(ScopeType.PROGRAM, forbidden);
+//		assertEquals(foundProgramBeforeForbidden, false);
+//
 //	}
 //}
