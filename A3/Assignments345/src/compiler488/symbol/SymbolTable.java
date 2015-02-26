@@ -1,10 +1,8 @@
 package compiler488.symbol;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.Set;
 import java.util.Stack;
 
 import compiler488.exceptions.InvalidScopeException;
@@ -203,7 +201,7 @@ public class SymbolTable {
 	 * @param searchTarget 
 	 * @return True if a scope of the input type is open, false otherwise
 	 */
-	public boolean searchScopesForType(ScopeType searchTarget, HashSet<ScopeType> forbiddenSet) {
+	public boolean searchScopesForType(ScopeType searchTarget, Set<ScopeType> forbiddenSet) {
 		// The lowest index scope is the last element in the scopeTypes list.
 		// this.curScopeIndex corresponds to the first element in the scopeTypes list.	
 		for (ScopeType scopeType : this.scopeTypes) {
