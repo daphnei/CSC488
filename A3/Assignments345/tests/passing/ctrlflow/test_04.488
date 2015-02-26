@@ -1,0 +1,10 @@
+% Loop using "exit when expression"
+% S00, S01, S03, S21, S37, S47, S10, S34, S06, S07, S26, S31, S20, S30, S50
+begin
+	integer i
+	i <= 0
+	loop
+		i <= i + 1
+		exit when (i >= 10) 
+	end
+end

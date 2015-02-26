@@ -1,24 +1,110 @@
 List of semantic rules being tested in which file.
 
-Failing tests:
+Passing tests(all rules used in the files are mentioned):
 
 Tests inside ctrlflow folder:
-test_01 >>> S50
-test_02 >>> S51
-test_03 >>> S50
+test_01 >>>
+% Procedure without explicit return ("running off the end")
+% S00, S01, S03, S41, S08, S14, S21, S16, S15, S18, S31
+test_02 >>>
+% Regular procedure with return stmt.
+% S00, S01, S03, S41, S08, S14, S21, S16, S15, S18, S31, S52
+test_03 >>>
+% Loop exit inside minor scope (still counts as "directly inside") 
+% S00, S01, S03, S06, S07, S50
+test_04 >>>
+% Loop using "exit when expression"
+% S00, S01, S03, S21, S37, S47, S10, S34, S06, S07, S26, S31, S20, S30, S50
+
+Tests inside misc folder:
+test_01 >>>
+% Anon function with "return" as stmt ("weird but legal")
+% S00, S01, S03, S41, S17, S08, S09, S13, S21, S10, S47, S37, S24, S52, S34
+test_basic >>>
+% Declarations & creating entries in the symbol table as well as check the declarations via access
+% S10-19, S46-48 , S51-53
+% S25, S27-28, S34-39, S40-45
+
+Tests inside scopes folder:
+test_01 >>>
+% Identifier declared in if-block (still counts as part of main scope)
+% S00, S01, S03, S30, S20, S47, S10, S21, S37, S34, S26, S31
+test_02 >>>
+% Redeclaring (and reassigning) identifier inside new major scope
+% S00, S01, S03, S21, S47, S10, S37, S34, S26, S41, S17, S08, S09, S13
+% S20, S51, S35, S31
+test_03 >>>
+% Accessing identifiers declared in main scope from inside routines
+% S00, S01, S03, S21, S47, S10, S37, S41, S08, S14, S16, S15, S18, S09, S13
+% S34, S26, S31, S20, S51, S35
+test_basic >>>
+% Bread and butter scope and program semantic operators
+% S00, S01, S03, S21, S47, S10, S37, S40, S11, S04, S05, S53, S13, S51, S35
+% S41, S17, S08, S09, S52
+test_simple >>>
+% The simplest scope test
+% S00, S01 
+
+Tests inside types folder:
+test_01 >>>
+% Multiple declarations in one statement
+% S00, S01, S03, S21, S37, S10, S47, S48, S19, S20
+test_02 >>>
+% Assignments and comparisons look alike
+% S00, S01, S03, S21, S37, S47, S10, S20, S34, S26, S31
+test_basic >>>
+% Expressions (all kinds) and type checking
+% S20-24, S26, S30-32
+test_yields >>>
+% YIELDS
+% S24
+
+
+Failing tests(the rules mentioned are the ones that should fail becouse of error):
+
+Tests inside ctrlflow folder:
+test_01 >>>
+% Illegal use of exit in main scope
+% S50
+test_02 >>>
+% Illegal use of return inside main scope.
+% S51 
+test_03 >>>
+% Illegal placement of exit (not "directly inside" loop)
+% S50 
 
 Test inside misc folder:
-test_01 >>> S50
+test_01 >>>
+% Illegal use of exit statement in anonymous function
+% S50
 
 Test inside scopes folder:
-test_02 >>> S37
-test_03 >>> S37
-test_04 >>> S37
+test_02 >>>
+% Redeclaring identifier in minor scope.
+% S37
+test_03 >>>
+% Illegal use of undeclared identifier.
+% S37
+test_04 >>>
+% Redeclaring identifier (declared inside minor scope).
+% S37
 
 Test inside types folder:
-test_01 >>> S34, S30 , S31
-test_02 >>> S31, S30
-test_03 >>> S35, S52
-test_04 >>> S31, S36
-test_05 >>> S41
-test_06 >>> S34
+test_01 >>>
+% Various expression result type errors due to incorrect usage
+% S34, S30 , S31
+test_02 >>>
+% Nested expression result type errors.
+% S31 , S30
+test_03 >>>
+% Function return type must match declaration
+% S35, S52
+test_04 >>>
+% Function/procedure parameter types must match declaration
+% S31, S36
+test_05 >>>
+% Illegal usage of function (function call must be RHS of statement)
+% S41
+test_06 >>>
+% Type errors in arrays
+% S34
