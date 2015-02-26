@@ -241,6 +241,9 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(ExitStmt visitable) {
 		super.visit(visitable);
+		if (visitable.getExpn() != null) {
+			this.semanticAction(30, visitable.getExpn());
+		}
 		this.semanticAction(50, visitable);
 	}
 
