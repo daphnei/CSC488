@@ -14,7 +14,7 @@ begin
 	begin
 		boolean x
 		x < = true
-		return x
+		return ( x )
 	end
 	
 	put "x is ", x, skip

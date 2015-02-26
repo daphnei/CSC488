@@ -1,0 +1,9 @@
+% Assignments and comparisons look alike
+begin
+	integer i
+	boolean j
+	
+	i <= 5
+	j <= (i <= 6)
+
+end

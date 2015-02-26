@@ -1,0 +1,19 @@
+% Bread and butter scope and program semantic operators
+% S00-09
+
+begin
+	integer a
+
+	integer function f 
+	begin
+		return (0)
+	end
+
+	procedure p
+	begin
+		return
+	end
+
+	begin
+	end
+end

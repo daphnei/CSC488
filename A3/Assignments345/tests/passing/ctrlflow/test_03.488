@@ -1,5 +1,6 @@
-% Loop exit inside minor scope (still counts as directly inside)
-%From forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10927
+% Loop exit inside minor scope (still counts as "directly inside") 
+% S50
+% (inspired by forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10927)
 begin
 	loop
 		begin

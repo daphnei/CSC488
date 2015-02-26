@@ -1,5 +1,5 @@
 % Identifier declared in if-block (still counts as part of main scope)
-%from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10967
+% from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10967
 begin
 	if true then
 		integer x

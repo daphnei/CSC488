@@ -1,5 +1,5 @@
 % Procedure without explicit return ("running off the end")
-%from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10845
+% from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10845
 begin
 	procedure p (integer a) begin
 	put a, skip
