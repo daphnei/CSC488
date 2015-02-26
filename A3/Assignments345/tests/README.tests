@@ -17,9 +17,6 @@ test_04 >>>
 % S00, S01, S03, S21, S37, S47, S10, S34, S06, S07, S26, S31, S20, S30, S50
 
 Tests inside misc folder:
-test_01 >>>
-% Anon function with "return" as stmt ("weird but legal")
-% S00, S01, S03, S41, S17, S08, S09, S13, S21, S10, S47, S37, S24, S52, S34
 test_basic >>>
 % Declarations & creating entries in the symbol table as well as check the declarations via access
 % S10-19, S46-48 , S51-53
@@ -71,14 +68,32 @@ test_02 >>>
 % S51 
 test_03 >>>
 % Illegal placement of exit (not "directly inside" loop)
+% S50
+test_04 >>>
+% Illegal use of return (and return value) in non-function/procedure scope
 % S50 
 
 Test inside misc folder:
 test_01 >>>
 % Illegal use of exit statement in anonymous function
 % S50
+test_02 >>>
+% Function must contain return
+% S53
+test_03 >>>
+% Function/procedure parameter count mismatch
+% S43
+test_04 >>>
+% Array declared with improper bounds
+% S46
+test_05 >>>
+% NO return should be allowed inside yield 
+% S52
 
 Test inside scopes folder:
+test_01 >>>
+% Unidentified function/procedure calls
+% S40-41
 test_02 >>>
 % Redeclaring identifier in minor scope.
 % S37
