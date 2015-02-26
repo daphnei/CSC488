@@ -84,17 +84,15 @@ public class SymbolTable {
 	
 				// Check if any symbols exist for this identifier.
 				if (symbols != null && !symbols.isEmpty()) {
-					// If symbols do exist, check if the first one is in the current
-					// scope.
-					if (symbols.peek().getScope() >= this.curScopeIndex) {
+					// If symbols do exist, check if the first one is in the current scope.
+					while (!symbols.isEmpty() && symbols.peek().getScope() >= this.curScopeIndex) {
 						symbols.pop();
 					}
 				}
 			}
 		}
 
-		// All of the symbols that were declared in the current scope have been
-		// removed.
+		// All of the symbols that were declared in the current scope have been removed.
 		// Now decrement the scope index.
 		this.curScopeIndex--;
 		this.scopeTypes.pop();
@@ -158,7 +156,7 @@ public class SymbolTable {
 			symbols.add(newSymbol);
 
 			return newSymbol;
-		} else if (symbols.get(0).getScope() == this.curScopeIndex) {
+		} else if (symbols.peek().getScope() == this.curScopeIndex) {
 			// If a symbol with the input identifier already exists in the
 			// current scope, then it is an error.
 			throw new SymbolConflictException(identifier);
@@ -166,8 +164,9 @@ public class SymbolTable {
 			// A symbol with the input identifier exists but it is in an upper
 			// scope.
 
-			// This is unacceptable if the current scope is minor.
-			if (this.scopeTypes.peek().isMinor()) {
+			// This is unacceptable if there is no major scope between the current and the last.
+			int i = this.searchForLastMajorScope();
+			if (symbols.peek().getScope() < i) {
 				throw new SymbolConflictException(identifier);
 			}
 
@@ -179,6 +178,18 @@ public class SymbolTable {
 
 			return newSymbol;
 		}
+	}
+	
+	public int searchForLastMajorScope() {
+		int currentScope = this.curScopeIndex;
+		for (ScopeType scopeType : this.scopeTypes) {
+			if (scopeType.isMajor()) {
+				return this.curScopeIndex;
+			}
+			this.curScopeIndex--;
+		}
+		
+		return -1;
 	}
 	
 	/**

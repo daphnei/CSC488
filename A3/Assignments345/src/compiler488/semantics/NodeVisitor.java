@@ -244,8 +244,10 @@ public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(Program visitable) {
-		for (Stmt bodyStmt : visitable.getBody()) {
-			bodyStmt.accept(this);
+		if (visitable.getBody() != null) {
+			for (Stmt bodyStmt : visitable.getBody()) {
+				bodyStmt.accept(this);
+			}
 		}
 	}
 
@@ -267,8 +269,10 @@ public class NodeVisitor implements IVisitor {
 
 	@Override
 	public void visit(Scope visitable) {
-		for (Stmt bodyStmt : visitable.getBody()) {
-			bodyStmt.accept(this);
+		if (visitable.getBody() != null) {
+			for (Stmt bodyStmt : visitable.getBody()) {
+				bodyStmt.accept(this);
+			}
 		}
 	}
 
