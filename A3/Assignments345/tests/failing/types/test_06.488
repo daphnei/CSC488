@@ -12,7 +12,8 @@ begin
 	
 	ai[true] <= 6 
 	
-	bi[1] <= "Undefined behaviour"
+	%This is a syntax error.
+	%bi[1] <= "Undefined behaviour"
 	
 
 end

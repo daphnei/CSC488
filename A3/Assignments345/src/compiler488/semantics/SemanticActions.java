@@ -302,8 +302,9 @@ public class SemanticActions {
 		for (int i = 0; i < args.size(); i++) {
 			PrimitiveSemType argType = args.get(i).getResultType();
 			if (!argType.equals(params.get(i))) {
-				throw new SemanticErrorException("In '" + routineCall.getIdentifier() + "', parameter " + i + " is expected to be a "
-						+ params.get(i) + " but a " + argType + " was provided instead");
+				throw new SemanticErrorException("In call to'" + routineCall.getIdentifier() + 
+						"', routine expected a " + params.get(i) + " for parameter " + i +
+						" but found a " + argType + ".");
 			}
 		}
 	}

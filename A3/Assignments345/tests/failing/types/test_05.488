@@ -5,7 +5,7 @@ begin
 
 	integer function high_five
 		begin
-			return 5
+			return(5)
 		end
 	
 	high_five
