@@ -9,7 +9,6 @@ rather than disperse them across various AST subclasses.
 Here is a list of the major interfaces and classes involved in our implementation of the
 Visitor Pattern, along with a brief description of each:
 
-(!!SOMEONE HELP FILL THESE IN!!)
 
 IVisitor: Interface for classes that will be doing the visiting. Contains polymorphic
 definitions for visit method to handle different AST subclasses.
@@ -22,12 +21,24 @@ determines the processing/traversal of the AST on a semi-abstract level In other
 though it is not an abstract class, no specific implementation for what to do in a "visit"
 is defined here, merely the ordering of visits for ASTs with parent/child nodes.
 
-Semantics:
+Semantics: A class that extends NodeVisitor, and keeps track of scope and state as it
+iterates over the AST and verifies that the semantics of the program are correct.
+For each node in the AST, it will call the appropriate semantic actions for each node
+through a common "semanticActions" method. The method takes the node to analyaze and the
+number of the semantic action to check. The numbers are the same as those from the 
+Semantics handout, so that it is easy for use to ensure all cases have been covered.
+While the semantics are running, they can throw a SemanticsErrorException, which is
+caught by this class, and used to show an error message to the user. This
+SemanticsErrorException has several child types with unique error messages.
 
-SemanticActions:
+SemanticActions: A class holds the implementation of each semantic action. The actions
+are implemented in this class to seperate them from the Visitor code in Semantics. This
+class uses the symbol table and node information to verify the individual rules.
 
-ReflectiveSemanticActions:
+This class also keeps track of a stack of functions, so that the rules have a pointer
+to the current function that the scope is in.
 
+---
 
 An issue we struggled with was mapping the semantic action codes to our implementation in
 a one-to-one manner. As you'll notice, some of the semantic actions in our implementation
@@ -38,12 +49,14 @@ variable is not explicitly dealt with, as we bind types to variables as part of 
 declaration of that variable.
 
 
-Another problem that arose was dealing with type tracking. Since we wanted to keep the AST
-very light, we were not sure where to store type information to handle features like
+Another problem that arose was dealing with declaration type tracking. Since we wanted to keep the AST
+very seperated from the analysis, we were not sure where to store type information to handle features like
 multiple variable declarations. After exploring some other options, we decided on the
 following. We always store a current type for declarations that we can refer to for
-processing multiple declarations. (TODO: expand on type tracking) We struggled with how to
-handle type tracking
+processing multiple declarations.
+
+We added our own SemType system to represent types in the Symbol table. This includes
+PrimitiveTypes like Boolean and Integer, and generic types like Array and Routine.
 
 We added a special error type to keep track of and propogates semantic issues but without
 generating duplicate errors related to the same issue.
