@@ -29,8 +29,17 @@ Source Language specification. The main logic occurs in the checkSemanticRule me
 takes in a semantic action index and the current AST node. It then performs the specified
 action on that node.
 
+The checkSemanticRule method will throw a SemanticErrorException if a semantic rule is
+violated. The SemanticErrorException includes a user-friendly message explaining 
+the nature of the problem. SemanticErrorExceptions are caught in the Semantics class, 
+and the error is printed out. The use of Exceptions allows our program to continue processing
+the AST even when a semantic error has occured. In this way, we can find and present to the
+user as many errors as possible. 
 
-
+We avoid presenting duplicate errors by keeping track of what the previous error was, and
+then not printing it if it shows up again. In addition, for expressions, once the first
+error has been detected, all future errors for that expression will be supressed by only
+choosing to throw an error if the expression's resultType is not already of type Error.
 
 An issue we struggled with was mapping the semantic action codes to our implementation in
 a one-to-one manner. As you'll notice, some of the semantic actions in our implementation
@@ -40,7 +49,6 @@ dealing with another semantic operator. For example, S47 for associating a type 
 variable is not explicitly dealt with, as we bind types to variables as part of the
 declaration of that variable.
 
-
 Another problem that arose was dealing with type tracking. Since we wanted to keep the AST
 very light, we were not sure where to store type information to handle features like
 multiple variable declarations. After exploring some other options, we decided on the
@@ -48,5 +56,3 @@ following. We always store a current type for declarations that we can refer to 
 processing multiple declarations. (TODO: expand on type tracking) We struggled with how to
 handle type tracking
 
-We added a special error type to keep track of and propogates semantic issues but without
-generating duplicate errors related to the same issue.
