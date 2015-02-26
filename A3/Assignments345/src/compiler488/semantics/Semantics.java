@@ -225,7 +225,9 @@ public class Semantics extends NodeVisitor {
 
 	@Override
 	public void visit(WhileDoStmt visitable) {
+		this.semanticAction(99, visitable);
 		super.visit(visitable);
+		this.semanticAction(1, visitable);
 		this.semanticAction(30, visitable.getExpn());
 	}
 
@@ -239,7 +241,7 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(ExitStmt visitable) {
 		super.visit(visitable);
-		// TODO: Needs scope refactor
+		this.semanticAction(50, visitable);
 	}
 
 	@Override
@@ -416,7 +418,6 @@ public class Semantics extends NodeVisitor {
 	public void visit(EqualsExpn visitable) {
 		super.visit(visitable);
 		this.semanticAction(32, visitable);
-		
 		this.semanticAction(20, visitable);
 	}
 
@@ -434,9 +435,10 @@ public class Semantics extends NodeVisitor {
 
 	@Override
 	public void visit(AnonFuncExpn visitable) {
+		this.semanticAction(100, visitable);
 		super.visit(visitable);
+		this.semanticAction(1, visitable);
 		this.semanticAction(24, visitable);
-		// TODO: more
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package compiler488.semantics;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Stack;
 
 import compiler488.ast.ASTList;
@@ -87,6 +88,10 @@ public class SemanticActions {
 			break;
 
 		case 99: // Open up a new loop scope. This one was not on the sheet. We made it up.
+			table.openScope(ScopeType.LOOP);
+			break;
+			
+		case 100: // Open up a new loop scope. This one was not on the sheet. We made it up.
 			table.openScope(ScopeType.LOOP);
 			break;
 			
@@ -273,13 +278,11 @@ public class SemanticActions {
 
 	private void checkExitIsDirectlyInLoop(ExitStmt element) throws SemanticErrorException {
 		//Check whether there is a loop scope open.
-		int firstLoopScopeIndex = this.table.searchScopesForType(ScopeType.LOOP);
-		int firstRoutineScopeIndex = this.table.searchScopesForType(ScopeType.ROUTINE);
-		
-		//Check that there exists an open loop scope, and that that open loop scope is 
-		//closer than the first open routine scope
-		boolean exitIsValid = firstLoopScopeIndex >= 0 && firstLoopScopeIndex < firstRoutineScopeIndex;
-		if (!exitIsValid) {
+		HashSet<ScopeType> forbidden = new HashSet<ScopeType>();
+		forbidden.add(ScopeType.YIELD);
+		forbidden.add(ScopeType.ROUTINE);
+		forbidden.add(ScopeType.PROGRAM);
+		if (!this.table.searchScopesForType(ScopeType.LOOP, forbidden)) {
 			throw new SemanticErrorException("Exit statement does not occur directly inside a loop.");
 		}
 	}
@@ -381,7 +384,11 @@ public class SemanticActions {
 	 * @throws SemanticErrorException if the check encounters a semantic error.
 	 */
 	private void checkReturnIsInRoutine(ReturnStmt stmt) throws SemanticErrorException {
-		if (this.openRoutines.isEmpty()) {
+		//Check whether there is a loop scope open.
+		HashSet<ScopeType> forbidden = new HashSet<ScopeType>();
+		forbidden.add(ScopeType.YIELD);
+		forbidden.add(ScopeType.PROGRAM);
+		if (!this.table.searchScopesForType(ScopeType.ROUTINE, forbidden)) {
 			throw new SemanticErrorException("Call to return outside of a procedure or function.");
 		} else {
 			SemType seen = stmt.getValue() == null ? null : stmt.getValue().getResultType(); 			
