@@ -292,7 +292,7 @@ variablename                ::= IDENT:var                       // scalar variab
                             ;
 
 bound                       ::= INTCONST:g                  // positive array bound TO-DO
-                                {:  int[] in = {g, 0};
+                                {:  int[] in = {1, g};
                                     RESULT = in; :}
                             |   generalBound:g1 DOT DOT generalBound:g2     // positive or negative array bounds TO-DO
                                 {:  int[] in = {g1, g2};

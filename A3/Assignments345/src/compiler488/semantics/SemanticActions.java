@@ -15,6 +15,7 @@ import compiler488.ast.expn.FunctionCallExpn;
 import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.stmt.AssignStmt;
+import compiler488.ast.stmt.ExitStmt;
 import compiler488.ast.stmt.ProcedureCallStmt;
 import compiler488.ast.stmt.ReturnStmt;
 import compiler488.ast.type.Type;
@@ -33,6 +34,7 @@ import compiler488.semantics.types.IntegerSemType;
 import compiler488.semantics.types.PrimitiveSemType;
 import compiler488.semantics.types.RoutineSemType;
 import compiler488.semantics.types.SemType;
+import compiler488.symbol.ScopeType;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 
@@ -58,12 +60,12 @@ public class SemanticActions {
 		// Scopes and Program
 
 		case 0: // Open program scope.
-			table.openMajorScope();
+			table.openScope(ScopeType.PROGRAM);
 			break;
 
 		case 4: // Open function scope.
 		case 8: // Open procedure scope.
-			table.openMajorScope();
+			table.openScope(ScopeType.ROUTINE);
 			break;
 
 		case 1: // End all scopes.
@@ -81,9 +83,13 @@ public class SemanticActions {
 			break;
 
 		case 6: // Open ordinary scope.
-			table.openMinorScope();
+			table.openScope(ScopeType.GENERIC);
 			break;
 
+		case 99: // Open up a new loop scope. This one was not on the sheet. We made it up.
+			table.openScope(ScopeType.LOOP);
+			break;
+			
 		// Declarations
 
 		case 10: // Declare scalar.
@@ -139,7 +145,7 @@ public class SemanticActions {
 		// Statement Checking
 
 		case 50: // Check that exit statement is directly inside a loop.
-			printTodo();
+			checkExitIsDirectlyInLoop((ExitStmt) element);
 			break;
 
 		case 51: // Check that return is inside a function
@@ -265,6 +271,19 @@ public class SemanticActions {
 		this.table.addSymbolToCurScope(routineDecl.getName(), this.openRoutines.peek());
 	}
 
+	private void checkExitIsDirectlyInLoop(ExitStmt element) throws SemanticErrorException {
+		//Check whether there is a loop scope open.
+		int firstLoopScopeIndex = this.table.searchScopesForType(ScopeType.LOOP);
+		int firstRoutineScopeIndex = this.table.searchScopesForType(ScopeType.ROUTINE);
+		
+		//Check that there exists an open loop scope, and that that open loop scope is 
+		//closer than the first open routine scope
+		boolean exitIsValid = firstLoopScopeIndex >= 0 && firstLoopScopeIndex < firstRoutineScopeIndex;
+		if (!exitIsValid) {
+			throw new SemanticErrorException("Exit statement does not occur directly inside a loop.");
+		}
+	}
+	
 	/**
 	 * Checks that the input routine call is being done with the proper paramter types.
 	 * @param routineCall

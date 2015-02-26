@@ -231,8 +231,9 @@ public class Semantics extends NodeVisitor {
 
 	@Override
 	public void visit(LoopStmt visitable) {
+		this.semanticAction(99, visitable);
 		super.visit(visitable);
-		// Do nothing.
+		this.semanticAction(1, visitable);
 	}
 
 	@Override
