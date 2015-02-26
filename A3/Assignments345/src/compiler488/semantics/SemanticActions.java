@@ -1,6 +1,7 @@
 package compiler488.semantics;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Stack;
 
 import compiler488.ast.ASTList;
@@ -87,6 +88,10 @@ public class SemanticActions {
 			break;
 
 		case 99: // Open up a new loop scope. This one was not on the sheet. We made it up.
+			table.openScope(ScopeType.LOOP);
+			break;
+			
+		case 100: // Open up a new loop scope. This one was not on the sheet. We made it up.
 			table.openScope(ScopeType.LOOP);
 			break;
 			
@@ -273,13 +278,11 @@ public class SemanticActions {
 
 	private void checkExitIsDirectlyInLoop(ExitStmt element) throws SemanticErrorException {
 		//Check whether there is a loop scope open.
-		int firstLoopScopeIndex = this.table.searchScopesForType(ScopeType.LOOP);
-		int firstRoutineScopeIndex = this.table.searchScopesForType(ScopeType.ROUTINE);
-		
-		//Check that there exists an open loop scope, and that that open loop scope is 
-		//closer than the first open routine scope
-		boolean exitIsValid = firstLoopScopeIndex >= 0 && firstLoopScopeIndex < firstRoutineScopeIndex;
-		if (!exitIsValid) {
+		HashSet<ScopeType> forbidden = new HashSet<ScopeType>();
+		forbidden.add(ScopeType.YIELD);
+		forbidden.add(ScopeType.ROUTINE);
+		forbidden.add(ScopeType.PROGRAM);
+		if (!this.table.searchScopesForType(ScopeType.LOOP, forbidden)) {
 			throw new SemanticErrorException("Exit statement does not occur directly inside a loop.");
 		}
 	}
@@ -346,6 +349,7 @@ public class SemanticActions {
 
 		// Make sure it is a function and not a procedure. Functions should have a return type.
 		if (routineSemType.getReturnType() == null) {
+			setExpressionResultType(funCallExpn, ErrorSemType.ERROR);
 			throw new SemanticErrorException("'" + ident + "' is a procedure, but a function was exptected.");
 		}
 	}
@@ -380,7 +384,11 @@ public class SemanticActions {
 	 * @throws SemanticErrorException if the check encounters a semantic error.
 	 */
 	private void checkReturnIsInRoutine(ReturnStmt stmt) throws SemanticErrorException {
-		if (this.openRoutines.isEmpty()) {
+		//Check whether there is a loop scope open.
+		HashSet<ScopeType> forbidden = new HashSet<ScopeType>();
+		forbidden.add(ScopeType.YIELD);
+		forbidden.add(ScopeType.PROGRAM);
+		if (!this.table.searchScopesForType(ScopeType.ROUTINE, forbidden)) {
 			throw new SemanticErrorException("Call to return outside of a procedure or function.");
 		} else {
 			SemType seen = stmt.getValue() == null ? null : stmt.getValue().getResultType(); 			
@@ -415,16 +423,19 @@ public class SemanticActions {
 	private void checkIdentiferIsArray(SubsExpn element) throws SemanticErrorException {
 		Symbol symbol = this.table.retrieveSymbol(element.getVariable());
 		if (symbol == null) {
+			setExpressionResultType(element, ErrorSemType.ERROR);
 			throw new UndeclaredSymbolException(element.getVariable());
 		}
 
 		// HACK: Can we avoid instanceof?
 		if (!(symbol.getType() instanceof ArraySemType)) {
+			setExpressionResultType(element, ErrorSemType.ERROR);
 			throw new NotArrayException(element.getVariable());
 		}
 		
 		ArraySemType array = (ArraySemType)symbol.getType();
 		if (array.getDimensions() != element.getDimensions()) {
+			setExpressionResultType(element, ErrorSemType.ERROR);
 			throw new SemanticErrorException("Array expects " + array.getDimensions() + " dimensions but is indexed by " + element.getDimensions() + " dimensions.");
 		}
 	}
@@ -485,11 +496,9 @@ public class SemanticActions {
 		PrimitiveSemType expResultType = expression.getResultType();
 		if (expResultType == null) {
 			throw new SemanticErrorException(NULL_RESULT_TYPE_EXCEPTION);
-		}
-		else if (expression.hasError()) {
-			//Don't do anything. The user should already have seen a message about this error.
-		}
-		else if ( !expResultType.equals(resultType) ) {
+		} else if (expression.hasError()) {
+			// Don't do anything. The user should already have seen a message about this error.
+		} else if (!expResultType.equals(resultType)) {
 			expression.setResultType(ErrorSemType.ERROR);
 			throw new SemanticErrorException("Expected a " + resultType + " and found a " + expResultType + ".");
 		}
@@ -503,6 +512,11 @@ public class SemanticActions {
 	 * @throws SemanticErrorException if the check encounters a semantic error.
 	 */
 	private void checkBinaryExpnTypesMatch(BinaryExpn expression) throws SemanticErrorException {
+		if (expression.getFirstExpression().hasError() || expression.getSecondExpression().hasError()) {
+			// Don't throw an error if either side is an error.
+			return;
+		}
+		
 		SemType firstResultType  = expression.getFirstExpression().getResultType();
 		SemType secondResultType = expression.getSecondExpression().getResultType();
 
@@ -539,11 +553,13 @@ public class SemanticActions {
 	private void setExpressionResultTypeFromIdentifier(IdentExpn ident) throws SemanticErrorException {
 		Symbol symbol = this.table.retrieveSymbol(ident.getIdentifier());
 		if (symbol == null) {
+			setExpressionResultType(ident, ErrorSemType.ERROR);
 			throw new UndeclaredSymbolException(ident.getIdentifier());
 		}
 
 		// HACK: Can we avoid instanceof?
 		if (!(symbol.getType() instanceof PrimitiveSemType)) {
+			setExpressionResultType(ident, ErrorSemType.ERROR);
 			throw new SemanticErrorException("Trying to use non-primitive identifier in an expression.");
 		}
 

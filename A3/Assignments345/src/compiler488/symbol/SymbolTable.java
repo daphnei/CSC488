@@ -1,6 +1,7 @@
 package compiler488.symbol;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -181,23 +182,26 @@ public class SymbolTable {
 	}
 	
 	/**
-	 * Checks the types of all open scopes, looking for a scope of the specified type..
+	 * Checks the linearly through all open scopes, looking for a scope of the specified type.
+	 * If it finds the type, it returns true. If it encounters a forbidden type while searching
+	 * it returns false.
+	 * 
 	 * @param searchTarget 
 	 * @return True if a scope of the input type is open, false otherwise
 	 */
-	public int searchScopesForType(ScopeType searchTarget) {
-		//The lowest index scope is the last element in the scopeTypes list.
-		//this.curScopeIndex corresponds to the first element in the scopeTypes list.
-		int scopeIndex = this.curScopeIndex;
-		
+	public boolean searchScopesForType(ScopeType searchTarget, HashSet<ScopeType> forbiddenSet) {
+		// The lowest index scope is the last element in the scopeTypes list.
+		// this.curScopeIndex corresponds to the first element in the scopeTypes list.	
 		for (ScopeType scopeType : this.scopeTypes) {
-			if (scopeType.equals(searchTarget)) {
-				return scopeIndex;
+			if (forbiddenSet.contains(scopeType)) {
+				return false;
 			}
-			scopeIndex--;
+			if (scopeType.equals(searchTarget)) {
+				return true;
+			}
 		}
 		
-		return -1;
+		return false;
 	}
 
 	/**
