@@ -65,7 +65,6 @@ public class SymbolTable {
 	public void openScope(ScopeType type) {
 		this.curScopeIndex++;
 		this.scopeTypes.push(type);
-		System.out.println("oepned" + this.curScopeIndex + type.toString());
 	}
 
 	/**
@@ -96,7 +95,6 @@ public class SymbolTable {
 		// Now decrement the scope index.
 		this.curScopeIndex--;
 		this.scopeTypes.pop();
-		System.out.println("closed to " + this.curScopeIndex );
 	}
 
 	/**
@@ -168,8 +166,6 @@ public class SymbolTable {
 			// This is unacceptable if there is no major scope between the current and the last.
 			int i = this.searchForLastMajorScope();
 			if (symbols.peek().getScope() >= i) {
-				System.out.println("peek " + symbols.peek().getScope());
-				System.out.println("last major " + i);
 				throw new SymbolConflictException(identifier);
 			}
 
@@ -183,6 +179,10 @@ public class SymbolTable {
 		}
 	}
 	
+	/**
+	 * Looks down the scope stack for the last scope that was major.
+	 * @return the found scope, or -1 if none.
+	 */
 	public int searchForLastMajorScope() {
 		int currentScope = this.curScopeIndex;
 		for (ScopeType scopeType : this.scopeTypes) {

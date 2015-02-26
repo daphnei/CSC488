@@ -373,8 +373,8 @@ public class Semantics extends NodeVisitor {
 	@Override
 	public void visit(UnaryMinusExpn visitable) {
 		super.visit(visitable);
-		this.semanticAction(21, visitable.getOperand());
-		this.semanticAction(31, visitable);
+		this.semanticAction(31, visitable.getOperand());
+		this.semanticAction(21, visitable);
 	}
 
 	@Override
