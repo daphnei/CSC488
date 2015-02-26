@@ -1,0 +1,7 @@
+AST DESIGN
+
+Regrettably, there is not much to say about our AST. Because we chose to use the Visitor
+pattern to handle the bulk of the semantic analysis, additions to the AST were few and
+sparse. "Left" and "right" fields were added to the BaseAST to keep track of line and column numbers from the source. The IVisitableElement interface was used so that each AST could be "visited" but have its own "accept" method so that visiting could be handled in a polymorphic manner (more on this in the semantic design document). 
+
+Type tracking was added to the Expn subclass of BaseAST, due to the typed nature of expressions.  

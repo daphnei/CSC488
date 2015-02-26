@@ -24,9 +24,6 @@ public abstract class Expn extends BaseAST implements Printable {
 	}
 	
 	public void setResultType(PrimitiveSemType type) {
-		if (type == null) {
-			System.out.println("POOOOOP");
-		}
 		this.resultType = type;
 	}
 	

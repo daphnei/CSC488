@@ -1,0 +1,16 @@
+A3 README
+
+Here is a brief description of each team member's contributions to this assignment.
+
+Adam: Worked on implementation, as well as design decisions. Wrote most of the Visitor
+Pattern and semantic actions.
+
+Daphne: Worked on implementation, as well as helped with testing and documentation.
+Designed and implemented the symbol table.
+
+Diego: Modified/refactored the .cup file, including adding AST generation. Also helped
+with documentation and testing.
+
+Lisa: Organized and wrote majority of tests. Worked on documentation.
+
+(Jordan: N/A)

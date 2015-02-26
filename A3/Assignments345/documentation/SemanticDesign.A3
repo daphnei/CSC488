@@ -1,0 +1,21 @@
+
+Problems
+
+- semantic actions don't map to implementation one-to-one
+	- certain actions already covered by existing cases
+- semantics marks down things to do, but does them later
+	- (open routine, currdeclaration type)
+	- ex. multi declarations, have no info about type of declaration
+		- keep type 
+		- lookahead not used b/c too complicated, defeats purpose of Visitor
+	
+- certain semantic actions not mapped to b/c covered by existing semantic action (collapsing/reusing)	
+	
+- type system - primitive
+	- error type (for result types) - > propogates error w/o duplicate reporting (isolates problem)	
+	
+- Visitor pattern - > thinking longterm for code generation
+
+- interfaces: (list of class names)
+
+- scope types

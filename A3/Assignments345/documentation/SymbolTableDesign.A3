@@ -1,0 +1,32 @@
+Symbol Table Design
+
+The symbol table is implemented using a hash table, which maps from a string
+identifier to a list of all the symbols using that identifier, one for each scope in which
+the identifier was declared. Because the semantic checker only ever cares about accessing
+the symbol in the most inner scope, it was possible to use a Stack data structure to
+represent the list of symbols.
+
+When a new symbol is created, it is popped onto the stack corresponding to its identifier.
+When the symbol for an identifier is retrieved, the first element on the stack is
+returned. When the current scope is closed, the symbol table will iterate over all of the
+identifiers in the hash table and check if the first elements in their symbol lists belong
+to the to-be-closed scope. If so, that element will be popped from the symbol list. This
+works because it is only possible to close the most inner scope at any given point, and
+using a stack structure guarantees that the symbols declared in the most recent scope will
+always be the first in their symbol lists.
+
+To track how many scopes are currently open, the symbol table uses a counter that starts
+off at -1 (no scopes are open), and is incremented each time a new scope is opened.
+Likewise, it is decremented when a scope is closed. Therefore, the most outer scope is
+represented by an index 0, the next scope by an index 1, and so on. Each symbol keeps
+track of the index of the scope in which it was created.
+
+Because there are different rules for major and minor scopes, we found that we also needed
+to keep track of scope type information. A stack of scope types (major or minor) is stored
+in the symbol table. When a new scope is opened, its type is push onto the top of the
+stack. When a scope is closed, the first element in the type stack is popped off.
+
+If the user attempts to do an invalid operation in the symbol table, a
+SemanticErrorException is thrown, with a helpful error message indicating the nature of
+the issue. For example this will occur if the user attempts to re-declare a variable in a
+scope in which it already exists.

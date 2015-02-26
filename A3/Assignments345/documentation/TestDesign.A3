@@ -1,0 +1,20 @@
+Testing Documentation
+
+Overall, we tried to approach our testing with the end-to-end philosophy in mind. While we
+initially made an attempt to use JUnit testing (as you'll notice, from our source), we
+quickly found this to be inefficient and difficult to manage. We then adopted an ad hoc
+strategy of identifying complex semantic situations and corner cases first, and then going
+back to write comprehensive tests that would cover all of the semantic actions listed in
+the specifications. We felt that a "brute force" testing approach like the one we used for
+testing parsing would be less helpful in the context of semantic analysis, as semantic
+errors are quite nuanced compared to syntactic errors and thus it is more useful to
+
+Thus, rather than write extremely short, innocuous test cases as we had for previous
+assignments, our goal this time was to produce longer, more programmatically interesting
+tests to run semantic analysis on. This is also partly due to the nature of semantic
+operators, some of which are not easily separable for testing in isolation, due to
+dependence on previous events in the program. For instance, a successful check that an
+identifier has been declared as a function depends on such a function having been
+previously defined in the same scope. Moreover, we wanted to ensure that our compiler
+would be capable of catching multiple semantic errors within the same program.
+
