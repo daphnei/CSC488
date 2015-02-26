@@ -65,6 +65,7 @@ public class SymbolTable {
 	public void openScope(ScopeType type) {
 		this.curScopeIndex++;
 		this.scopeTypes.push(type);
+		System.out.println("oepned" + this.curScopeIndex + type.toString());
 	}
 
 	/**
@@ -76,7 +77,6 @@ public class SymbolTable {
 	 */
 	public void closeCurrentScope() throws SemanticErrorException {
 		this.checkIfThereIsAnyScope();
-
 		// If the current scope is major, destroy all the symbols that were declared in it.
 		if (this.scopeTypes.peek().isMajor()) {			
 			for (String identifier : this.table.keySet()) {
@@ -96,6 +96,7 @@ public class SymbolTable {
 		// Now decrement the scope index.
 		this.curScopeIndex--;
 		this.scopeTypes.pop();
+		System.out.println("closed to " + this.curScopeIndex );
 	}
 
 	/**
@@ -153,7 +154,7 @@ public class SymbolTable {
 
 			// Create the new symbol to the front of the symbol list.
 			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
-			symbols.add(newSymbol);
+			symbols.push(newSymbol);
 
 			return newSymbol;
 		} else if (symbols.peek().getScope() == this.curScopeIndex) {
@@ -166,7 +167,9 @@ public class SymbolTable {
 
 			// This is unacceptable if there is no major scope between the current and the last.
 			int i = this.searchForLastMajorScope();
-			if (symbols.peek().getScope() < i) {
+			if (symbols.peek().getScope() >= i) {
+				System.out.println("peek " + symbols.peek().getScope());
+				System.out.println("last major " + i);
 				throw new SymbolConflictException(identifier);
 			}
 
@@ -174,7 +177,7 @@ public class SymbolTable {
 			// that was declared
 			// in an upper scope.
 			Symbol newSymbol = new Symbol(identifier, this.curScopeIndex, type);
-			symbols.add(newSymbol);
+			symbols.push(newSymbol);
 
 			return newSymbol;
 		}
@@ -184,9 +187,9 @@ public class SymbolTable {
 		int currentScope = this.curScopeIndex;
 		for (ScopeType scopeType : this.scopeTypes) {
 			if (scopeType.isMajor()) {
-				return this.curScopeIndex;
+				return currentScope;
 			}
-			this.curScopeIndex--;
+			currentScope--;
 		}
 		
 		return -1;
