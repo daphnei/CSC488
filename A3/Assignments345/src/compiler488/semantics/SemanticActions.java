@@ -383,7 +383,7 @@ public class SemanticActions {
 		if (this.openRoutines.isEmpty()) {
 			throw new SemanticErrorException("Call to return outside of a procedure or function.");
 		} else {
-			SemType seen = stmt.getValue().getResultType();
+			SemType seen = stmt.getValue() == null ? null : stmt.getValue().getResultType(); 			
 			SemType actual = this.openRoutines.peek().getReturnType();
 			if (seen == null && actual != null) {
 				throw new SemanticErrorException("A return must have a parameter inside a function.");
