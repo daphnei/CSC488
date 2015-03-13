@@ -63,7 +63,7 @@ import compiler488.symbol.SymbolTable;
  * 
  * @author g2robint
  */
-public class Semantics extends NodeVisitor {
+public class SemanticsVisitor extends NodeVisitor {
 
 	/**
 	 * Flag for tracing semantic analysis.
@@ -98,7 +98,7 @@ public class Semantics extends NodeVisitor {
 	private BaseAST previousVisitable;
 	private String previousError;
 
-	public Semantics() {
+	public SemanticsVisitor() {
 
 	}
 

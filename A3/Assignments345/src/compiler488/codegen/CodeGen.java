@@ -69,7 +69,7 @@ public class CodeGen
 	 */
 
 	/** Additional initialization for Code Generation (if required) */
-	void Initialize()
+	public void Initialize()
 	{
 		/********************************************************/
 		/* Initialization code for the code generator GOES HERE */
@@ -87,7 +87,7 @@ public class CodeGen
 	 *  @throws MemoryAddressException  from Machine.writeMemory
 	 *  @throws ExecutionException      from Machine.writeMemory
 	 */
-	void Finalize()
+	public void Finalize()
 	throws MemoryAddressException, ExecutionException     // from Machine.writeMemory
 	{
 		/********************************************************/
@@ -104,7 +104,18 @@ public class CodeGen
 		Machine.setMSP((short)  1 );   	/* where memory stack begins */
 		Machine.setMLP((short) ( Machine.memorySize -1 ) );
 		/* limit of stack */
-		Machine.writeMemory((short)  0 , Machine.HALT );
+		Machine.writeMemory((short)  0, Machine.PUSH);
+		Machine.writeMemory((short)  1 , (short)'a');
+		Machine.writeMemory((short)  2, Machine.PUSH);
+		Machine.writeMemory((short)  3 , (short)'b');
+		Machine.writeMemory((short)  4, Machine.PUSH);
+		Machine.writeMemory((short)  5 , (short)'c');
+		Machine.writeMemory((short)  6 , Machine.PRINTC);
+		Machine.writeMemory((short)  7 , Machine.PRINTC);
+		Machine.writeMemory((short)  8 , Machine.PRINTC);		
+		Machine.writeMemory((short)  9 , Machine.HALT);
+		
+		
 
 		return;
 	}
@@ -113,7 +124,7 @@ public class CodeGen
 	 *  action number
 	 * @param actionNumber  code generation action to perform
 	 */
-	void generateCode( int actionNumber )
+	public void generateCode( int actionNumber )
 	{
 		if( traceCodeGen )
 		{

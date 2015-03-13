@@ -1,6 +1,5 @@
 package compiler488.symbol;
 
-import compiler488.ast.type.Type;
 import compiler488.semantics.types.SemType;
 
 public class Symbol {
@@ -15,8 +14,7 @@ public class Symbol {
 	private int scopeIndex;
 
 	/**
-	 * TODO: This is wrong. We should be storing something that allows for procedure.
-	 * function types as well?
+	 * The type associated with this symbol.
 	 */
 	private SemType type;
 

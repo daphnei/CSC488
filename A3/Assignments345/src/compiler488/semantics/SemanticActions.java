@@ -44,12 +44,12 @@ public class SemanticActions {
 
 	public static final String NULL_RESULT_TYPE_EXCEPTION = "Cannot evaluate expression. (COULD INDICATE MISSING RESULT TYPE SET)";
 
-	private Semantics semantics;
+	private SemanticsVisitor semantics;
 	private SymbolTable table;
 
 	public Stack<RoutineSemType> openRoutines;
 
-	public SemanticActions(Semantics semantics, SymbolTable table) {
+	public SemanticActions(SemanticsVisitor semantics, SymbolTable table) {
 		this.table = table;
 		this.semantics = semantics;
 

@@ -30,6 +30,7 @@ public class SymbolTable {
 	 */
 	private LinkedList<ScopeType> scopeTypes;
 	
+	
 	public SymbolTable() {
 		// Don't use this. Instead use Initialize. This allows us to recycle one
 		// SymbolTable object.

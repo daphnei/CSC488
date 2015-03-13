@@ -1,5 +1,0 @@
-begin
-	%Check a mixture of all four binary operations.
-	integer p
-	p <= 4 
-end

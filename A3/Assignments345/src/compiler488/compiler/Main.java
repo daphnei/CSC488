@@ -5,7 +5,8 @@ import java.io.*;
 import compiler488.parser.*;
 import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.stmt.Program;
-import compiler488.semantics.Semantics;
+import compiler488.codegen.CodeGen;
+import compiler488.semantics.SemanticsVisitor;
 import compiler488.runtime.*;
 
 /**
@@ -138,7 +139,6 @@ public class Main {
 	 * @param arguments
 	 *            is an array of strings containing command line arguments.
 	 */
-
 	private static void commandLineArgs(String arguments[]) {
 		int length = arguments.length; // number of command line arguments
 										// passed
@@ -367,7 +367,7 @@ public class Main {
 	 */
 	private static void semanticAnalysis( Program  programAST ) {
 		try {
-			Semantics visitor = new Semantics();
+			SemanticsVisitor visitor = new SemanticsVisitor();
 			visitor.Initialize();			
 			programAST.accept(visitor);
 			visitor.Finalize();
@@ -397,6 +397,10 @@ public class Main {
 		}
 
 		try {
+			CodeGen generator = new CodeGen();
+			generator.Initialize();
+			generator.Finalize();
+			
 			// INSERT CODE HERE TO DO CODE GENERATION
 			// e.g.
 			//
