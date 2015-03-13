@@ -30,7 +30,7 @@ public class Symbol {
 	public int getScope() {
 		return this.scopeIndex;
 	}
-	
+
 	public SemType getType() {
 		return this.type;
 	}

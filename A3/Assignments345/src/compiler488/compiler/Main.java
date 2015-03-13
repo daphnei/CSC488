@@ -5,7 +5,8 @@ import java.io.*;
 import compiler488.parser.*;
 import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.stmt.Program;
-import compiler488.codegen.CodeGen;
+import compiler488.codegen.CodeGenExample;
+import compiler488.codegen.CodeGenVisitor;
 import compiler488.semantics.SemanticsVisitor;
 import compiler488.runtime.*;
 
@@ -397,9 +398,11 @@ public class Main {
 		}
 
 		try {
-			CodeGen generator = new CodeGen();
+			/* CodeGenExample generator = new CodeGenExample();
 			generator.Initialize();
-			generator.Finalize();
+			generator.Finalize(); */
+			CodeGenVisitor generator = new CodeGenVisitor();
+			generator.generateCode(programAST);
 			
 			// INSERT CODE HERE TO DO CODE GENERATION
 			// e.g.
