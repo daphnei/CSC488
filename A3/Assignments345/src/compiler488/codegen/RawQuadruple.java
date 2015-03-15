@@ -11,26 +11,26 @@ import compiler488.runtime.MemoryAddressException;
 public class RawQuadruple extends Quadruple {
 	
 	short operation;
-	Short arguement;
+	Short argument;
 	
 	public RawQuadruple(short operation) {
 		this.operation = operation;
-		this.arguement = null;
+		this.argument = null;
 	}
 	
 	public RawQuadruple(short operation, char argument) {
 		this(operation);
-		this.operation = operation;
+		this.argument = (short)argument;
 	}
 	
 	public RawQuadruple(short operation, int argument) {
 		this(operation);
-		this.operation = operation;
+		this.argument = (short)argument;
 	}
 	
 	public RawQuadruple(short operation, short argument) {
 		this(operation);
-		this.operation = operation;
+		this.argument = argument;
 	}
 
 	@Override
@@ -40,10 +40,15 @@ public class RawQuadruple extends Quadruple {
 		Machine.writeMemory(programCounter, this.operation);
 		programCounter++;
 		
-		if (this.arguement != null) {
-			Machine.writeMemory(programCounter, this.arguement);
+		if (this.argument != null) {
+			Machine.writeMemory(programCounter, this.argument);
 			programCounter++;			
 		}
 		return programCounter;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("(RAW, %s, %d)", Machine.instructionNames[this.operation], this.argument == null ? 0 : this.argument);
 	}
 }
