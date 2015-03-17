@@ -73,8 +73,8 @@ PUSH 0                 %push false to stack                                     
 ADDR 0,q               %address of q
 STORE                  %store the result into q
 
-%1-8
-ADDR 0,q               %address of q                    r <= (-q+1) | ( p | q ) | ((s + (-p+1)) = 2)        %1-8
+%1-8      r <= (-q+1) | ( p | q ) | ((s + (-p+1)) = 2)
+ADDR 0,q               %address of q
 LOAD                   %load q
 NEG                    %process -q
 PUSH 1                 %push 1 to stack
@@ -99,8 +99,8 @@ OR                     %process (-q+1) | ( p | q ) | ((s + (-p+1)) = 2)
 ADDR 0,r               %address of r
 STORE                  %put the result into r
 
-%1-9
-ADDR 0,i               %address of i                                        p <= ( i < j) | ( (k - 1) < l)   | ( j = l )               %1-9
+%1-9           p <= ( i < j) | ( (k - 1) < l)   | ( j = l )
+ADDR 0,i               %address of i                                       
 LOAD                   %load i
 ADDR 0,j               %address of j
 LOAD                   %load j
@@ -122,25 +122,27 @@ OR                     %process  ( ( i < j) | ( (k < l) | (k = l) ) ) | ( j = l 
 ADDR 0,p               %address of p
 STORE                  %store the result into p
 
-%1-10
-ADDR 0,k               %address of k                                      s <= ( ( ( ( (-(k = m)+1) + ( ((k - 1) < j) ) = 2) +  (-(r = s)+1) ) = 2 )       %1-10
+%1-10     s <= ( ( (-(k = m )+1) + ((-j)+1 < (-k))=2 ) +  (-(r = s)+1) )= 2
+ADDR 0,k               %address of k                                     
 LOAD                   %load k
 ADDR 0,m               %address of m
-LOAD                   %load m(erde) HON HON HON BAGUETTE
+LOAD                   %load m
 EQ                     %process (k = m)
 NEG                    %process -(k = m)
 PUSH 1                 %push 1 into stack
 ADD                    %process (-(k = m)+1)
-ADDR 0,k               %address of k
-LOAD                   %load k
-PUSH 1                 %push 1 into stack
-SUB                    %process (k - 1)
 ADDR 0,j               %address of j
 LOAD                   %load j
-LT                     %process ((k - 1) < j) 
-ADD                    %process (-(k = m)+1) + ( (k < j) | (j = k) ) ) 
+NEG                    %process -j
+PUSH 1                 %push 1 into stack
+ADD                    %process ((-j) + 1)
+ADDR 0,k               %address of k
+LOAD                   %load k
+NEG                    %process (-k)
+LT                     %process ((-j)+1 < (-k))
+ADD                    %process (-(k = m )+1) + ((-j)+1 < (-k)) 
 PUSH 2                 %push 2 into stack
-EQ                     %process ( ( (-(k = m)+1) + ( (k < j) | (j = k) ) ) = 2)
+EQ                     %process ( ( (-(k = m )+1) + ((-j)+1 < (-k))=2 
 ADDR 0,r               %address of r
 LOAD                   %load r
 ADDR 0,s               %address of s
@@ -149,14 +151,14 @@ EQ                     %process ( r = s )
 NEG                    %process -( r = s )
 PUSH 1                 %push 1 into stack
 ADD                    %process (-(r = s)+1)
-ADD                    %process ( ( ( (-(k = m)+1) + ( (k < j) | (j = k) ) ) = 2) +  (-(r = s)+1) )
+ADD                    %process ( (-(k = m )+1) + ((-j)+1 < (-k))=2 ) +  (-(r = s)+1) ) 
 PUSH 2                 %push 2 into stack
-EQ                     %process ( ( ( ( (-(k = m)+1) + ( (k < j) | (j = k) ) ) = 2) +  (-(r = s)+1) ) = 2 ) 
+EQ                     %process ( ( (-(k = m )+1) + ((-j)+1 < (-k))=2 ) +  (-(r = s)+1) )= 2 
 ADDR 0,s               %address of s
 STORE                  %store the result into s
 
-%1-11
-ADDR 0,r               %address of r                                               q <= (r = s) |  (-((-s+1) = r)+1)                                   %1-11
+%1-11            q <= (r = s) |  (-((-s+1) = r)+1) 
+ADDR 0,r               %address of r         
 LOAD                   %load r
 ADDR 0,s               %address of s
 LOAD                   %load s
@@ -176,8 +178,8 @@ OR                     %process (r = s) |  (-((-s+1) = r)+1)
 ADDR 0,q               %address of q
 STORE                  %store the result into q
 
-% 1-14
-ADDR 0,A               %address of A                                               B[i+1-baseB1, j-100-baseB2 ] <= A[j-2-baseA1]                                   %1-14
+%1-14                      B[i+1-baseB1, j-100-baseB2 ] <= A[j-2-baseA1]          
+ADDR 0,A               %address of A                                                   
 ADDR 0,j               %address of j
 LOAD                   %load j
 PUSH 2                 %push 2 to stack
@@ -204,8 +206,8 @@ ADD                    %process indexer2 * length2 + indexer1
 ADD                    %process B[i+1-baseB1, j-100-baseB2 ]
 STORE                  %store the result in B[i+1-baseB1, j-100-baseB2 ]
 
-% 1-15
-ADDR 0,D               %address of D                                               C[-4-baseC1] <= D[ i + 20 - baseD1 , k - 7 - baseD2 ]                               % 1-15
+%1-15               C[-4-baseC1] <= D[ i + 20 - baseD1 , k - 7 - baseD2 ]
+ADDR 0,D               %address of D               
 ADDR 0,i               %address of i
 LOAD                   %load i
 PUSH 20                %push 20 into stack
