@@ -31,10 +31,35 @@ begin							% 2-2
 end							% 2-31
 
 
+%for easy reading we used the variable names instead of the addr values they should be
+%follow the list of the addr values they should be  
+%a = 0
+%b = 1
+%c = 2
+%p = 3
+%q = 4
+%r = 5
+%m = 6
+%n = 7
+%c1 = 8
+%p1 = 9
+%q1 = 10
+%r1 = 11
+%w = 12
+%x = 13
+%t = 14
+%u = 15
+%m1 = 16
 
-push activation record to the stack             %2-3 , 2-4 , 2-13, 2-16, 2-23, 2-25, 2-26
+%2-3 , 2-4 , 2-13, 2-16, 2-23, 2-25, 2-26         push activation record to the stack
+0: PUSHMT                 %push the stack pointer to the stack
+1: SETD 0                 %set display 0 to the begining of this activation record
+2: PUSH 15                %in this case N is the size of the activation record for the main 3+3+3+3+2+2+1=17
+3: PUSH 0                 %all variables start with 0 value
+4: DUPN                   %allocate this space
 
-
+%the following lines are in fact their numbers + 5
+%this is because I mistook the original count, and it is a lot of effort to change
 %2-5                if p | q  then  a <= 3 end
 0: ADDR 0,p               %address of p
 1: LOAD                   %load p
@@ -187,31 +212,31 @@ push activation record to the stack             %2-3 , 2-4 , 2-13, 2-16, 2-23, 2
 
 % 2-12  At this point now we are not doing anything about minor scopes
 
-%2-14                    m <= 7 - b +c
+%2-14                    m <= 7 - b +c1
 136: PUSH 7               %push 7 into stack
 137: ADDR 0,b             %push b into stack
 138: LOAD                 %load b
 139: SUB                  %process 7 - b
-140: ADDR 0,c             %push c into stack
-141: LOAD                 %load c
-142: ADD                  %process 7 - b +c
+140: ADDR 0,c1            %push c1 into stack
+141: LOAD                 %load c1
+142: ADD                  %process 7 - b +c1
 143: ADDR 0,m             %address of m
 144: STORE                %store the result into m
 
 % 2-15  At this point now we are not doing anything about minor scopes
 
-%2-17                    p <= { begin  p <= a end yields r-b }
+%2-17                    p1 <= { begin  p1 <= a end yields r1-b }
 145: ADDR 0,a             %address of a
 146: LOAD                 %load a
-147: ADDR 0,p             %address of p
-148: STORE                %store the result into p
-149: ADDR 0,r             %address of r
-150: LOAD                 %load r
+147: ADDR 0,p1            %address of p1
+148: STORE                %store the result into p1
+149: ADDR 0,r1            %address of r1
+150: LOAD                 %load r1
 151: ADDR 0,b             %address of b
 152: LOAD                 %load b
-152: SUB                  %process r-b
-153: ADDR 0,p             %address of p
-154: STORE                %store the result into p
+152: SUB                  %process r1-b
+153: ADDR 0,p1            %address of p1
+154: STORE                %store the result into p1
 
 %2-20                    while (-( p | q )+1)  do
 155: ADDR 0,p             %address of p
@@ -249,18 +274,18 @@ push activation record to the stack             %2-3 , 2-4 , 2-13, 2-16, 2-23, 2
 183: PUSH 209             %push 209 into the stack
 184: BR                   %jump out of the loop
 
-%2-26                   t <= { boolean m  m <= w < t 
+%2-26                   t <= { boolean m1  m1 <= w < t 
 185: ADDR 0,w             %address of w
 186: LOAD                 %load w
 187: ADDR 0,t             %address of t
 188: LOAD                 %load t
 189: LT                   %process w < t
-190: ADDR 1,m             %address of m
-191: STORE                %store the result into m
+190: ADDR 1,m1            %address of m1
+191: STORE                %store the result into m1
 
-%2-27                   if m then t <= t + c end
-192: ADDR 1,m             %address of m
-193: LOAD                 %load m
+%2-27                   if m1 then t <= t + c end
+192: ADDR 1,m1            %address of m1
+193: LOAD                 %load m1
 194: PUSH 203             %push 203 into stack                 
 195: BF                   %jump to the end if m is false
 196: ADDR 0,t             %address of t
@@ -282,5 +307,9 @@ push activation record to the stack             %2-3 , 2-4 , 2-13, 2-16, 2-23, 2
 
 209: PUSH 155             %push 155 into the stack
 210: BR                   %jump to the beginning to make the loop
-211:
+
+%pop activation record of main
+211: PUSH 15                %in this case N is the size of the activation record for the main 3+3+3+3+2+2+1=17
+212: POPN                   %pop the activation record of main
+213: HALT
                           
