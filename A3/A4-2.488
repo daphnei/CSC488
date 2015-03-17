@@ -1,38 +1,38 @@
-%  Assignment 4 Sample Program 2			% 2-1
-begin							% 2-2
-   integer a, b , c					% 2-3
-   boolean p, q, r					% 2-4
-   if p | q  then  a <= 3 end				% 2-5
-   if ! q & ! q  then b <= 2 else b <= 0 end		% 2-6
-   while c < 7 do  c <= 8 end			 	% 2-7
-   loop  a <= 3 exit b <= 7 end				% 2-8
-   while q | r & ! p do  exit when !(b != 10) end	% 2-9
-   put "Value is " , a / b, " or  " , b * -c ,  skip	% 2-10
-   get  a, c, b						% 2-11
-   begin						% 2-12
-       integer m, n, c					% 2-13
-       m <= 7 - b +c 					% 2-14
-       begin						% 2-15
-          integer p, q, r				% 2-16
-          p <= { begin  p <= a end yields r-b }		% 2-17
-       end						% 2-18
-   end							% 2-18
-   while ! ( p | q )  do				% 2-20
-       exit when p & r 					% 2-21
-       loop						% 2-22
-          integer w, x					% 2-23
-          if w <= a then exit end			% 2-24
-          integer t, u					% 2-25
-          t <= { boolean m  m <= w < t 			% 2-26
-                       if m then t <= t + c end		% 2-27
-                           yields t }			% 2-28
-        end	% loop					% 2-29
-   end 	 % while					% 2-30
-end							% 2-31
+%  Assignment 4 Sample Program 2                % 2-1
+begin                                           % 2-2
+   integer a, b , c                             % 2-3
+   boolean p, q, r                              % 2-4
+   if p | q  then  a <= 3 end                   % 2-5
+   if ! q & ! q  then b <= 2 else b <= 0 end    % 2-6
+   while c < 7 do  c <= 8 end                   % 2-7
+   loop  a <= 3 exit b <= 7 end                 % 2-8
+   while q | r & ! p do  exit when !(b != 10) end       % 2-9
+   put "Value is " , a / b, " or  " , b * -c ,  skip    % 2-10
+   get  a, c, b                                 % 2-11
+   begin                                        % 2-12
+       integer m, n, c                          % 2-13
+       m <= 7 - b +c                            % 2-14
+       begin                                    % 2-15
+          integer p, q, r                       % 2-16
+          p <= { begin  p <= a end yields r-b } % 2-17
+       end                                      % 2-18
+   end                                          % 2-18
+   while ! ( p | q )  do                        % 2-20
+       exit when p & r                          % 2-21
+       loop                                     % 2-22
+          integer w, x                          % 2-23
+          if w <= a then exit end               % 2-24
+          integer t, u                          % 2-25
+          t <= { boolean m  m <= w < t          % 2-26
+                       if m then t <= t + c end % 2-27
+                           yields t }           % 2-28
+        end % loop                              % 2-29
+   end   % while                                % 2-30
+end                                             % 2-31
 
 
 %for easy reading we used the variable names instead of the addr values they should be
-%follow the list of the addr values they should be  
+%follow the list of the addr values they should be
 %a = 0
 %b = 1
 %c = 2
@@ -59,7 +59,8 @@ end							% 2-31
 4: DUPN                   %allocate this space
 
 %the following lines are in fact their numbers + 5
-%this is because I mistook the original count, and it is a lot of effort to change
+%this is because I made a mistake with the original count, and it is too much effort to change all the numbers
+
 %2-5                if p | q  then  a <= 3 end
 0: ADDR 0,p               %address of p
 1: LOAD                   %load p
@@ -86,7 +87,7 @@ end							% 2-31
 20: ADD                   %process ( (-q+1) + (-q+1) )
 21: PUSH 2                %push 2 into stack
 22: EQ                    %process ( ( (-q+1) + (-q+1) ) = 2 )
-23: PUSH 30               %push 30 into stack  
+23: PUSH 30               %push 30 into stack
 24: BF                    %if ( ( (-q+1) + (-q+1) ) = 2 ) is false jumps to else
 25: PUSH 2                %push 2 into stack
 26: ADDR 0,b              %address of b
@@ -170,10 +171,10 @@ end							% 2-31
 96: PRINTC                %print char l
 97: PRINTC                %print char u
 98: PRINTC                %print char e
-99: PRINTC                %print char 
+99: PRINTC                %print char
 100: PRINTC               %print char i
 101: PRINTC               %print char s
-102: PRINTC               %print char 
+102: PRINTC               %print char
 103: ADDR 0,a             %address of a
 104: LOAD                 %load a
 105: ADDR 0,b             %address of b
@@ -185,11 +186,11 @@ end							% 2-31
 111: PUSH 'r'             %push char r into stack
 112: PUSH 'o'             %push char o into stack
 113: PUSH ' '             %push char   into stack
-114: PRINTC               %print char 
+114: PRINTC               %print char
 115: PRINTC               %print char o
 116: PRINTC               %print char r
-117: PRINTC               %print char 
-118: PRINTC               %print char 
+117: PRINTC               %print char
+118: PRINTC               %print char
 119: ADDR 0,b             %address of b
 120: LOAD                 %load b
 121: ADDR 0,c             %address of c
@@ -274,7 +275,7 @@ end							% 2-31
 183: PUSH 209             %push 209 into the stack
 184: BR                   %jump out of the loop
 
-%2-26                   t <= { boolean m1  m1 <= w < t 
+%2-26                   t <= { boolean m1  m1 <= w < t
 185: ADDR 0,w             %address of w
 186: LOAD                 %load w
 187: ADDR 0,t             %address of t
@@ -286,7 +287,7 @@ end							% 2-31
 %2-27                   if m1 then t <= t + c end
 192: ADDR 1,m1            %address of m1
 193: LOAD                 %load m1
-194: PUSH 203             %push 203 into stack                 
+194: PUSH 203             %push 203 into stack
 195: BF                   %jump to the end if m is false
 196: ADDR 0,t             %address of t
 197: LOAD                 %load t
@@ -312,4 +313,4 @@ end							% 2-31
 211: PUSH 15                %in this case N is the size of the activation record for the main 3+3+3+3+2+2+1=17
 212: POPN                   %pop the activation record of main
 213: HALT
-                          
+

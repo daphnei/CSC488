@@ -1,23 +1,23 @@
-%  Assignment 4 Sample Program 1		% 1-1
-begin						% 1-2
-   integer i, j, k, l, m			% 1-3
-   k <= (i+3) - j*k + k/l 			% 1-4
-   boolean p, q, r, s, t			% 1-5
-   p <= true					% 1-6
-   q <= false					% 1-7
-   r <= ! q | ( p | q ) | (s & ! p)		% 1-8             >>>>  !q | (p | q) | ! (!s | p)  
-   p <= (i < j) | (k <= l) | (j = l)		% 1-9
-   s <= (k ! = m ) & (j >= k) & ! (r = s)	% 1-10
-   q <= (r = s) | (!s != r)			% 1-11
-   integer A[7] , B[ -100..50 , -40..-30 ]	% 1-12
-   boolean C[ -7 .. -3 ], D[ 50, 20 ]		% 1-13
-   B[i+1, j-100 ] <= A[j-2]			% 1-14
-   C[-4] <= D[ i + 20 , k - 7 ]	        % 1-15
-end					  % 1-16
+%  Assignment 4 Sample Program 1            % 1-1
+begin                                       % 1-2
+   integer i, j, k, l, m                    % 1-3
+   k <= (i+3) - j*k + k/l                   % 1-4
+   boolean p, q, r, s, t                    % 1-5
+   p <= true                                % 1-6
+   q <= false                               % 1-7
+   r <= ! q | ( p | q ) | (s & ! p)         % 1-8             >>>>  !q | (p | q) | ! (!s | p)  
+   p <= (i < j) | (k <= l) | (j = l)        % 1-9
+   s <= (k ! = m ) & (j >= k) & ! (r = s)   % 1-10
+   q <= (r = s) | (!s != r)                 % 1-11
+   integer A[7] , B[ -100..50 , -40..-30 ]  % 1-12
+   boolean C[ -7 .. -3 ], D[ 50, 20 ]       % 1-13
+   B[i+1, j-100 ] <= A[j-2]                 % 1-14
+   C[-4] <= D[ i + 20 , k - 7 ]             % 1-15
+end                                         % 1-16
 
 
 
-%  Assignment 4 Sample Program 1		% 1-1
+%  Assignment 4 Sample Program 1            % 1-1
 
 %for easy reading we used the variable names instead of the addr values they should be
 %follow the list of the addr values they should be    
@@ -36,7 +36,7 @@ end					  % 1-16
 %C = 1678
 %D = 1683
 
-%1-3 , 1-4 , 1-12, 1-13                 push activation record to the stack
+%push activation record to the stack
 PUSHMT                 %push the stack pointer to the stack
 SETD 0                 %set display 0 to the begining of this activation record
 PUSH 2683              %in this case N is the size of the activation record for the main 5+5+7+151*11+5+50*20 = 2683
@@ -62,13 +62,19 @@ DIV                    %process k/l
 ADD                    %process ((i+3) - j*k) + k/l
 ADDR 0,k               %address of k
 STORE                  %store the result into k
+
+%1-6
 PUSH 1                 %push true to stack                                           %1-6
 ADDR 0,p               %address of p
 STORE                  %store the result into p
-PUSH 0                 %push true to stack                                           %1-7
+
+%1-7
+PUSH 0                 %push false to stack                                           %1-7
 ADDR 0,q               %address of q
 STORE                  %store the result into q
-ADDR 0,q               %address of q                    r <= (-q+1) | ( p | q ) | ((s + (-p+1)) = 2) 		%1-8
+
+%1-8
+ADDR 0,q               %address of q                    r <= (-q+1) | ( p | q ) | ((s + (-p+1)) = 2)        %1-8
 LOAD                   %load q
 NEG                    %process -q
 PUSH 1                 %push 1 to stack
@@ -92,7 +98,7 @@ EQ                     %process ((s + (-p+1)) = 2)
 OR                     %process (-q+1) | ( p | q ) | ((s + (-p+1)) = 2)
 ADDR 0,r               %address of r
 STORE                  %put the result into r
-ADDR 0,i               %address of i                                        p <= ( i < j) | ( (k - 1) < l)   | ( j = l )	           %1-9
+ADDR 0,i               %address of i                                        p <= ( i < j) | ( (k - 1) < l)   | ( j = l )               %1-9
 LOAD                   %load i
 ADDR 0,j               %address of j
 LOAD                   %load j
