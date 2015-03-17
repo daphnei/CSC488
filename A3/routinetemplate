@@ -1,0 +1,27 @@
+%function call
+PUSH 0                 %return value start as 0
+PUSH R                 %push return address
+ADDR 1,2               %get address of the display before
+LOAD                   %load display before
+%no parameters to push
+PUSH ADDF              
+BR                     %jump to function
+
+
+%Start of a function
+PUSHMT
+PUSH 3                 %push 3 into stack
+SUB                    %reduce the number of (return value+return address+display before+parameters) from the stack pointer in this case (1+1+1+0)
+SETD 1                 %set display 1 to the start of the activation record of
+PUSH
+PUSH N                 %in this case N is the size of the activation record (variables declared inside the function
+PUSH 0                 %all variables start with 0 value
+DUPN                   %allocate this space
+
+
+%end of the function
+PUSH M                 %M = N + parameters
+POPN
+SETD 1
+BR                     %jump out of to the return address                
+
