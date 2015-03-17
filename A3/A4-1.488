@@ -98,6 +98,8 @@ EQ                     %process ((s + (-p+1)) = 2)
 OR                     %process (-q+1) | ( p | q ) | ((s + (-p+1)) = 2)
 ADDR 0,r               %address of r
 STORE                  %put the result into r
+
+%1-9
 ADDR 0,i               %address of i                                        p <= ( i < j) | ( (k - 1) < l)   | ( j = l )               %1-9
 LOAD                   %load i
 ADDR 0,j               %address of j
@@ -119,6 +121,8 @@ EQ                     %process (j = l)
 OR                     %process  ( ( i < j) | ( (k < l) | (k = l) ) ) | ( j = l )
 ADDR 0,p               %address of p
 STORE                  %store the result into p
+
+%1-10
 ADDR 0,k               %address of k                                      s <= ( ( ( ( (-(k = m)+1) + ( ((k - 1) < j) ) = 2) +  (-(r = s)+1) ) = 2 )       %1-10
 LOAD                   %load k
 ADDR 0,m               %address of m
@@ -150,6 +154,8 @@ PUSH 2                 %push 2 into stack
 EQ                     %process ( ( ( ( (-(k = m)+1) + ( (k < j) | (j = k) ) ) = 2) +  (-(r = s)+1) ) = 2 ) 
 ADDR 0,s               %address of s
 STORE                  %store the result into s
+
+%1-11
 ADDR 0,r               %address of r                                               q <= (r = s) |  (-((-s+1) = r)+1)                                   %1-11
 LOAD                   %load r
 ADDR 0,s               %address of s
@@ -169,6 +175,8 @@ ADD                    %process (-((-s+1) = r)+1)
 OR                     %process (r = s) |  (-((-s+1) = r)+1)
 ADDR 0,q               %address of q
 STORE                  %store the result into q
+
+% 1-14
 ADDR 0,A               %address of A                                               B[i+1-baseB1, j-100-baseB2 ] <= A[j-2-baseA1]                                   %1-14
 ADDR 0,j               %address of j
 LOAD                   %load j
@@ -195,6 +203,8 @@ MUL                    %process indexer2 * length2
 ADD                    %process indexer2 * length2 + indexer1
 ADD                    %process B[i+1-baseB1, j-100-baseB2 ]
 STORE                  %store the result in B[i+1-baseB1, j-100-baseB2 ]
+
+% 1-15
 ADDR 0,D               %address of D                                               C[-4-baseC1] <= D[ i + 20 - baseD1 , k - 7 - baseD2 ]                               % 1-15
 ADDR 0,i               %address of i
 LOAD                   %load i
