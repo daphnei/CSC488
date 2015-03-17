@@ -1,0 +1,286 @@
+%  Assignment 4 Sample Program 2			% 2-1
+begin							% 2-2
+   integer a, b , c					% 2-3
+   boolean p, q, r					% 2-4
+   if p | q  then  a <= 3 end				% 2-5
+   if ! q & ! q  then b <= 2 else b <= 0 end		% 2-6
+   while c < 7 do  c <= 8 end			 	% 2-7
+   loop  a <= 3 exit b <= 7 end				% 2-8
+   while q | r & ! p do  exit when !(b != 10) end	% 2-9
+   put "Value is " , a / b, " or  " , b * -c ,  skip	% 2-10
+   get  a, c, b						% 2-11
+   begin						% 2-12
+       integer m, n, c					% 2-13
+       m <= 7 - b +c 					% 2-14
+       begin						% 2-15
+          integer p, q, r				% 2-16
+          p <= { begin  p <= a end yields r-b }		% 2-17
+       end						% 2-18
+   end							% 2-18
+   while ! ( p | q )  do				% 2-20
+       exit when p & r 					% 2-21
+       loop						% 2-22
+          integer w, x					% 2-23
+          if w <= a then exit end			% 2-24
+          integer t, u					% 2-25
+          t <= { boolean m  m <= w < t 			% 2-26
+                       if m then t <= t + c end		% 2-27
+                           yields t }			% 2-28
+        end	% loop					% 2-29
+   end 	 % while					% 2-30
+end							% 2-31
+
+
+
+push activation record to the stack             %2-3 , 2-4 , 2-13, 2-16, 2-23, 2-25, 2-26
+
+
+%2-5                if p | q  then  a <= 3 end
+0: ADDR 0,p               %address of p
+1: LOAD                   %load p
+2: ADDR 0,q               %address of q
+3: LOAD                   %load q
+4: OR                     %process p | q
+5: PUSH 10                %push 10 into stack
+6: BF                     %if p | q is false it skip the then
+7: PUSH 3                 %push 3 into stack
+8: ADDR 0,a               %address of a
+9: STORE                  %store the result into a
+
+%2-6             if  ( ( (-q+1) + (-q+1) ) = 2 )  then b <= 2 else b <= 0 end
+10: ADDR 0,q              %address of q
+11: LOAD                  %load q
+12: NEG                   %process -q
+13: PUSH 1                %push 1 into stack
+14: ADD                   %process (-q+1)
+15: ADDR 0,q              %address of q
+16: LOAD                  %load q
+17: NEG                   %process -q
+18: PUSH 1                %push 1 into stack
+19: ADD                   %process (-q+1)
+20: ADD                   %process ( (-q+1) + (-q+1) )
+21: PUSH 2                %push 2 into stack
+22: EQ                    %process ( ( (-q+1) + (-q+1) ) = 2 )
+23: PUSH 30               %push 30 into stack  
+24: BF                    %if ( ( (-q+1) + (-q+1) ) = 2 ) is false jumps to else
+25: PUSH 2                %push 2 into stack
+26: ADDR 0,b              %address of b
+27: STORE                 %store the result into b
+28: PUSH 33               %push 33 into stack
+29: BR                    %jump to the end of the if
+30: PUSH 0                %push 0 into stack
+31: ADDR 0,b              %address of b
+32: STORE                 %store the result into b
+
+%2-7               while c < 7 do  c <= 8 end
+33: ADDR 0,c              %address of c
+34: LOAD                  %load c
+35: PUSH 7                %push 7 into stack
+36: LT                    %process c < 7
+37: PUSH 44               %push 44 into stack
+38: BF                    %jump out of the loop if c < 7 is false
+39: PUSH 8                %push 8 into stack
+40: ADDR 0,c              %address of c
+41: STORE                 %store the result into c
+42: PUSH 33               %push 33 into stack                                    - also we can PUSH life, PUSH universe, and PUSH everything_else in this line
+43: BR                    %jump to the beginning to make the loop
+
+%2-8               loop  a <= 3 exit b <= 7 end
+44: PUSH 3                %push 3 into stack
+45: ADDR 0,a              %address of a
+46: STORE                 %store the result into a
+47: PUSH 54               %push 54 into the stack
+48: BR                    %jump out of the loop
+49: PUSH 7                %push 7 into stack
+50: ADDR 0,b              %address of b
+51: STORE                 %store the result into b
+52: PUSH 44               %push 44 into the stack
+53: BR                    %jump to the beginning to make the loop
+
+%2-9               while q | ((r + (-p+1))=2) do  exit when (-(-(b = 10)+1)+1) end
+54: ADDR 0,q              %address of q
+55: LOAD                  %load q
+56: ADDR 0,r              %address of r
+57: LOAD                  %load r
+58: ADDR 0,p              %address of p
+59: LOAD                  %load p
+60: NEG                   %process -p
+61: PUSH 1                %push 1 into stack
+62: ADD                   %process (-p+1)
+63: ADD                   %process (r + (-p+1))
+64: PUSH 2                %push 2 into stack
+65: EQ                    %process ((r + (-p+1))=2)
+66: OR                    %process q | ((r + (-p+1))=2)
+67: PUSH 85               %push 85 into stack
+68: BF                    %jump out of the loop if q | ((r + (-p+1))=2) is false
+69: ADDR 0,b              %address of b
+70: LOAD                  %load b
+71: PUSH 10               %push 10 into stack
+72: EQ                    %process (b = 10)
+73: NEG                   %process -(b = 10)
+74: PUSH 1                %push 1 into stack
+75: ADD                   %process (-(b = 10)+1)
+76: NEG                   %process -(-(b = 10)+1)
+77: PUSH 1                %push 1 into stack
+78: ADD                   %process (-(-(b = 10)+1)+1)
+79: PUSH 83               %push 83 into stack
+80: BF                    %jump to after when true
+81: PUSH 85               %push 85 into stack
+82: BR                    %jump to out of the loop
+83: PUSH 54               %push 54 into stack
+84: BR                    %jump to the beginning to make the loop
+
+%2-10                      put "Value is " , a / b, " or  " , b * -c ,  skip
+85: PUSH ' '              %push char   into stack
+86: PUSH 's'              %push char s into stack
+87: PUSH 'i'              %push char i into stack
+88: PUSH ' '              %push char   into stack
+89: PUSH 'e'              %push char e into stack
+90: PUSH 'u'              %push char u into stack
+91: PUSH 'l'              %push char l into stack
+92: PUSH 'a'              %push char a into stack
+93: PUSH 'V'              %push char V into stack
+94: PRINTC                %print char V
+95: PRINTC                %print char a
+96: PRINTC                %print char l
+97: PRINTC                %print char u
+98: PRINTC                %print char e
+99: PRINTC                %print char 
+100: PRINTC               %print char i
+101: PRINTC               %print char s
+102: PRINTC               %print char 
+103: ADDR 0,a             %address of a
+104: LOAD                 %load a
+105: ADDR 0,b             %address of b
+106: LOAD                 %load b
+107: DIV                  %process a / b
+108: PRINTI               %print the result
+109: PUSH ' '             %push char   into stack
+110: PUSH ' '             %push char   into stack
+111: PUSH 'r'             %push char r into stack
+112: PUSH 'o'             %push char o into stack
+113: PUSH ' '             %push char   into stack
+114: PRINTC               %print char 
+115: PRINTC               %print char o
+116: PRINTC               %print char r
+117: PRINTC               %print char 
+118: PRINTC               %print char 
+119: ADDR 0,b             %address of b
+120: LOAD                 %load b
+121: ADDR 0,c             %address of c
+122: NEG                  %process -c
+123: MUL                  %process  b * -c
+124: PRINTI               %print the result
+125: PUSH '\n'            %push char \n into stack
+126: PRINTC               %print char \n
+
+%2-11                      get  a, c, b
+127: READI                %get the value to put in a
+128: ADDR 0,a             %address of a
+129: STORE                %store the result into a
+130: READI                %get the value to put in c
+131: ADDR 0,c             %address of c
+132: STORE                %store the result into c
+133: READI                %get the value to put in b
+134: ADDR 0,b             %address of b
+135: STORE                %store the result into b
+
+% 2-12  At this point now we are not doing anything about minor scopes
+
+%2-14                    m <= 7 - b +c
+136: PUSH 7               %push 7 into stack
+137: ADDR 0,b             %push b into stack
+138: LOAD                 %load b
+139: SUB                  %process 7 - b
+140: ADDR 0,c             %push c into stack
+141: LOAD                 %load c
+142: ADD                  %process 7 - b +c
+143: ADDR 0,m             %address of m
+144: STORE                %store the result into m
+
+% 2-15  At this point now we are not doing anything about minor scopes
+
+%2-17                    p <= { begin  p <= a end yields r-b }
+145: ADDR 0,a             %address of a
+146: LOAD                 %load a
+147: ADDR 0,p             %address of p
+148: STORE                %store the result into p
+149: ADDR 0,r             %address of r
+150: LOAD                 %load r
+151: ADDR 0,b             %address of b
+152: LOAD                 %load b
+152: SUB                  %process r-b
+153: ADDR 0,p             %address of p
+154: STORE                %store the result into p
+
+%2-20                    while (-( p | q )+1)  do
+155: ADDR 0,p             %address of p
+156: LOAD                 %load p
+157: ADDR 0,q             %address of q
+158: LOAD                 %load q
+159: OR                   %process ( p | q )
+160: NEG                  %process -( p | q )
+161: PUSH 1               %push 1 into stack
+162: ADD                  %process (-( p | q )+1)
+163: PUSH 211             %push 211 into the stack
+164: BF                   %jump out of the loop case (-( p | q )+1) is false
+
+%2-21                         exit when ((p + r)=2)
+165: ADDR 0,p             %address of p
+166: LOAD                 %load p
+167: ADDR 0,r             %address of r
+168: LOAD                 %load r
+169: ADD                  %process (p + r)
+170: PUSH 2               %push 2 into stack
+171: EQ                   %process ((p + r)=2)
+172: PUSH 175             %push 175 into stack
+173: BF                   %jump to after when true
+174: PUSH 211             %push 211 into the stack
+175: BR                   %jump out of the loop
+
+%2-24                     if ((w-1) < a) then exit end
+176: ADDR 0,w             %address of w
+177: LOAD                 %load w
+178: PUSH 1               %push 1 into stack
+179: SUB                  %process (w-1)
+180: LT                   %process ((w-1) < a)
+181: PUSH 185             %push 185 into stack
+182: BF                   %jump to the end if ((w-1) < a) is false
+183: PUSH 209             %push 209 into the stack
+184: BR                   %jump out of the loop
+
+%2-26                   t <= { boolean m  m <= w < t 
+185: ADDR 0,w             %address of w
+186: LOAD                 %load w
+187: ADDR 0,t             %address of t
+188: LOAD                 %load t
+189: LT                   %process w < t
+190: ADDR 1,m             %address of m
+191: STORE                %store the result into m
+
+%2-27                   if m then t <= t + c end
+192: ADDR 1,m             %address of m
+193: LOAD                 %load m
+194: PUSH 203             %push 203 into stack                 
+195: BF                   %jump to the end if m is false
+196: ADDR 0,t             %address of t
+197: LOAD                 %load t
+198: ADDR 0,c             %address of c
+199: LOAD                 %load c
+200: ADD                  %process t + c
+201: ADDR 0,t             %address of t
+202: STORE                %store the result into t
+
+%2-28                        yields t }
+203: ADDR 0,t             %address of t
+204: LOAD                 %load t
+205: ADDR 0,p             %address of p
+206: STORE                %store the result into p
+
+207: PUSH 176             %push 176 into the stack
+208: BR                   %jump to the beginning to make the loop
+
+209: PUSH 155             %push 155 into the stack
+210: BR                   %jump to the beginning to make the loop
+211:
+                          
