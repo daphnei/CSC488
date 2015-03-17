@@ -108,7 +108,7 @@ end                                             % 2-31
 39: PUSH 8                %push 8 into stack
 40: ADDR 0,c              %address of c
 41: STORE                 %store the result into c
-42: PUSH 33               %push 33 into stack                                    - also we can PUSH life, PUSH universe, and PUSH everything_else in this line
+42: PUSH 33               %push 33 into stack
 43: BR                    %jump to the beginning to make the loop
 
 %2-8               loop  a <= 3 exit b <= 7 end
