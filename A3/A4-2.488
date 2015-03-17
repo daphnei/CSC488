@@ -122,7 +122,7 @@ end							% 2-31
 52: PUSH 44               %push 44 into the stack
 53: BR                    %jump to the beginning to make the loop
 
-%2-9               while q | ((r + (-p+1))=2) do  exit when (-(-(b = 10)+1)+1) end
+%2-9               while q | ((r + (-p+1))=2) do  exit when -(-(-(b = 10)+1)+1)+1 end
 54: ADDR 0,q              %address of q
 55: LOAD                  %load q
 56: ADDR 0,r              %address of r
@@ -148,11 +148,12 @@ end							% 2-31
 76: NEG                   %process -(-(b = 10)+1)
 77: PUSH 1                %push 1 into stack
 78: ADD                   %process (-(-(b = 10)+1)+1)
-79: PUSH 83               %push 83 into stack
-80: BF                    %jump to after when true
-81: PUSH 85               %push 85 into stack
-82: BR                    %jump to out of the loop
-83: PUSH 54               %push 54 into stack
+79: NEG                   %process -(-(-(b = 10)+1)+1)
+80: PUSH 1                %push 1 into stack
+81: ADD                   %process -(-(-(b = 10)+1)+1)+1
+82: PUSH 85               %push 85 into stack
+83-1: BR                  %jump out of the loop       (these lines where fixed late so I had to adjust the numbers)
+83-2: PUSH 54             %push 54 into stack          
 84: BR                    %jump to the beginning to make the loop
 
 %2-10                      put "Value is " , a / b, " or  " , b * -c ,  skip
