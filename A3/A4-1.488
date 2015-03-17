@@ -17,26 +17,31 @@ end					  % 1-16
 
 
 
-
-
 %  Assignment 4 Sample Program 1		% 1-1
 
-push activation record to the stack             %1-3 , 1-4 , 1-12, 1-13
-i =
-j =
-k =
-l =
-m =
-p =
-q =
-r =
-s =
-t =
-A =
-B =
-C =
-D =
+%for easy reading we used the variable names instead of the addr values they should be
+%follow the list of the addr values they should be    
+i = 0
+j = 1
+k = 2
+l = 3
+m = 4
+p = 5
+q = 6
+r = 7
+s = 8
+t = 9
+A = 10
+B = 17
+C = 1678
+D = 1683
 
+%1-3 , 1-4 , 1-12, 1-13                 push activation record to the stack
+PUSHMT                 %push the stack pointer to the stack
+SETD 0                 %set display 0 to the begining of this activation record
+PUSH 2683              %in this case N is the size of the activation record for the main 5+5+7+151*11+5+50*20 = 2683
+PUSH 0                 %all variables start with 0 value
+DUPN                   %allocate this space
 
 %1-4
 ADDR 0,i               %address of i
@@ -208,3 +213,7 @@ PUSH -7                %push -7 into stack
 SUB                    %process -4-baseC1
 ADD                    %process C[-4-baseC1]
 STORE                  %store the result into C[-4-baseC1]
+
+%pop activation record of main
+PUSH 2683              %in this case N is the size of the activation record for the main 5+5+7+151*11+5+50*20 = 2683
+POPN                   %pop the activation record of main
