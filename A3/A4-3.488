@@ -1,0 +1,326 @@
+% Assignment 4 Sample Program 3				% 3-1
+begin							% 3-2
+   integer a, b, c, d					% 3-3
+   boolean p, q, r, s					% 3-4
+   procedure P 						% 3-5
+      begin						% 3-6
+         integer e, f					% 3-7
+         if p then  return  end				% 3-8
+         e <= a 					% 3-9
+	 return						% 3-10
+      end  % P						% 3-11
+  integer function F( integer m, boolean n )		% 3-12
+      begin						% 3-13
+         if n then  return ( m + b ) 			% 3-14
+         else  return ( c - m )   end			% 3-15
+      end  % F						% 3-16
+  procedure Q( boolean m , integer n , boolean p )	% 3-17
+    begin						% 3-18
+      integer t, u, v 					% 3-19
+      boolean  function G 				% 3-20
+          begin						% 3-21
+             integer w, x				% 3-22
+             return ( 					% 3-23
+                { boolean b integer d  d<= c P		% 3-24
+                      yields  d + w - v  < 12  } )	% 3-25
+          end  % G					% 3-26
+      put F( t - n + a  , ! G | r ) , skip 		% 3-27
+  end  %Q						% 3-28
+  Q( ! p | q , F( F( b, p ), !q ) , 			% 3-29
+        { P yields p != q } )				% 3-30
+end							% 3-31
+
+
+%for easy reading we used the variable names instead of the addr values they should be
+%follow the list of the addr values they should be  
+%main
+%a = 0
+%b = 1
+%c = 2
+%d = 3
+%p = 4
+%q = 5
+%r = 6
+%s = 7
+% P
+%e = 11
+%f = 12
+% F
+%m = 11
+%n = 12
+% Q
+%m = 11
+%n = 12
+%p = 13
+%t = 14
+%u = 15
+%v = 16
+% G
+%w = 20
+%x = 21
+%b = 22
+%d = 23
+
+
+%3-2,3-3                    push activation record to the stack 
+0: PUSHMT                 %push the stack pointer to the stack
+1: SETD 0                 %set display 0 to the begining of this activation record
+2: PUSH 8                 %in this case N is the size of the activation record for the main 4+4 = 8
+3: PUSH 0                 %all variables start with 0 value
+4: DUPN                   %allocate this space
+
+% 3-5                       procedure P
+5: PUSH 30                %push 30 into the stack
+6: BR                     %jump after the procedure code
+
+%3-6 start of the procedure
+7: PUSHMT                 %push the stack pointer into the stack
+8: PUSH 3                 %push 3 into stack
+9: SUB                    %reduce the number of (return value+return address+display before+parameters) from the stack pointer in this case (1+1+1+0)
+10: SETD 1                %set display 1 to the start of the activation record of
+11: PUSH 2                %in this case 2 is the size of the activation record (variables declared inside the procedure
+12: PUSH 0                %all variables start with 0 value
+13: DUPN                  %allocate this space
+
+%3-8                    if p then  return  end
+14: ADDR 1,p              %address of p
+15: LOAD                  %load p
+16: PUSH 22               %push 22 into the stack
+17: BF                    %jump to the end if p is false
+%jump to end of the procedure
+18: PUSH 26               %push 26 into the stack
+19: BR                    %jump to the end of the procedure
+
+%3-9                      e <= a
+20: ADDR 0,a              %address of a
+21: LOAD                  %load a
+22: ADDR 1,e              %address of e
+23: STORE                 %store the result into e
+
+%3-10 jump to end of the procedure
+24: PUSH 26               %push 26 into the stack
+25: BR                    %jump to the end of the procedure
+
+%3-11 end of the procedure
+26: PUSH 2                %2 = 2 + 0 ( variables + parameters)
+27: POPN                  %free the memory
+28: SETD 1                %set display to the caller display
+29: BR                    %jump out of to the return address
+
+% 3-12                integer function F( integer m, boolean n )
+30: PUSH 69               %push 69 into the stack
+31: BR                    %jump after the function code
+
+%3-13                  start of the function
+32: PUSHMT                %push the stack pointer into the stack
+33: PUSH 5                %push 5 into stack
+34: SUB                   %reduce the number of (return value+return address+display before+parameters) from the stack pointer in this case (1+1+1+2)
+35: SETD 1                %set display 1 to the start of the activation record of
+36: PUSH 0                %in this case 0 is the size of the activation record (variables declared inside the function
+37: PUSH 0                %all variables start with 0 value
+38: DUPN                  %allocate this space
+
+%3-14                 if n then  return ( m + b )
+39: ADDR 1,n              %address of n
+40: LOAD                  %load n
+41: PUSH 56               %push 60 into the stack
+42: BF                    %jump to the else if n is false
+47: ADDR 1,m              %address of m
+48: LOAD                  %load m
+49: ADDR 0,b              %address of b
+50: LOAD                  %load b
+51: ADD                   %process m + b
+52: ADDR 1,0              %address of the return value
+53: STORE                 %store the result into the return value
+%jump to the end of the function
+54: PUSH 65               %push 65 into the stack
+55: BR                    %jump to the end of the function
+
+%3-15                else  return ( c - m )   end
+56: ADDR 0,c              %address of c
+57: LOAD                  %load c
+58: ADDR 1,m              %address of m
+59: LOAD                  %load m
+60: SUB                   %process c - m
+61: ADDR 1,0              %address of the return value
+62: STORE                 %store the result into the return value
+%jump to the end of the function
+63: PUSH 65               %push 65 into the stack
+64: BR                    %jump to the end of the function
+
+%3-16 end of the function
+65: PUSH 2                %2 = 0 + 2 ( variables + parameters)
+66: POPN                  %free the memory
+67: SETD 1                %set display to the caller display
+68: BR                    %jump out of to the return address
+
+%3-17                     procedure Q( boolean m , integer n , boolean p )
+69: PUSH 144              %push 144 into the stack
+70: BR                    %jump after the procedure code
+
+%3-18               start of the procedure
+71: PUSHMT                %push the stack pointer into the stack
+72: PUSH 6                %push 6 into stack
+73: SUB                   %reduce the number of (return value+return address+display before+parameters) from the stack pointer in this case (1+1+1+3)
+74: SETD 1                %set display 1 to the start of the activation record of
+75: PUSH 3                %in this case 3 is the size of the activation record (variables declared inside the procedure
+76: PUSH 0                %all variables start with 0 value
+77: DUPN                  %allocate this space 
+
+%3-20                   boolean  function G
+78: PUSH 111              %push 111 to the stack
+79: BR                    %jump after the function code
+
+%3-21                  start of the function
+80: PUSHMT                %push the stack pointer into the stack
+81: PUSH 3                %push 5 into stack
+82: SUB                   %reduce the number of (return value+return address+display before+parameters) from the stack pointer in this case (1+1+1+0)
+83: SETD 2                %set display 1 to the start of the activation record of
+84: PUSH 4                %in this case 4 is the size of the activation record ( variables declared inside the function )
+85: PUSH 0                %all variables start with 0 value
+86: DUPN                  %allocate this space
+
+% 3-24  { boolean b integer d  d<= c P
+87: ADDR 0,c              %address of c
+88: LOAD                  %load c
+89: ADDR 2,d              %address of d
+90: STORE                 %store the result into d
+%call P
+91: PUSH 0                %return value start as 0
+92: PUSH 97               %push return address
+93: ADDR 1,2              %get address of the display before we are calling a function of LL 1 so we save display 1
+94: LOAD                  %load display before
+%no parameters to push
+95: PUSH 7                %push 7 into stack 
+96: BR                    %jump to function
+
+%3-25                      yields  d + w - v  < 12  } )
+97: ADDR 2,d              %address of d
+98: LOAD                  %load d
+99: ADDR 2,w              %address of w
+100: LOAD                 %load w
+101: ADD                  %process d + w
+102: ADDR 1,v             %address of v
+103: LOAD                 %load v
+104: SUB                  %process d + w - v
+105: PUSH 12              %push 12 into the stack
+106: LT                   %process d + w - v  < 12
+
+%3-23       return (
+103: ADDR 1,0             %address of the return value
+104: STORE                %store the result into the return value
+%jump to the end of the function
+105: PUSH 107             %push 107 to the stack
+106: BR                   %jump to the end of the function
+
+% 3-26  end of the function
+107: PUSH 4               %4 = 4 + 0 ( variables + parameters)
+108: POPN                 %free the memory
+109: SETD 2               %set display to the caller display
+110: BR                   %jump out of to the return address
+
+%3-27              put F( t - n + a  , (-G+1) | r ) , skip
+111: PUSH 0               %return value start as 0
+112: PUSH 137             %push return address
+113: ADDR 1,2             %get address of the display before
+114: LOAD                 %load display before
+%parameters to push
+115: ADDR 1,t             %address of t
+116: LOAD                 %load t
+117: ADDR 1,n             %address of n
+118: LOAD                 %load n
+119: SUB                  %process t - n
+120: ADDR 0,a             %address of a
+121: LOAD                 %load a
+122: ADD                  %process t - n + a
+%call G
+123: PUSH 0               %return value start as 0
+124: PUSH 129             %push return address
+125: ADDR 2,2             %get address of the display before
+126: LOAD                 %load display before
+%no parameters to push
+127: PUSH 80              %push 80 into the stack              
+128: BR                   %jump to function
+
+129: NEG                  %process -G
+130: PUSH 1               %push 1 into the stack
+131: ADD                  %process -G+1
+132: ADDR 0,r             %address of r
+133: LOAD                 %load r
+134: OR                   %process (-G+1) | r
+
+135: PUSH 32              %push 32 into the stack
+136: BR                   %jump to function
+
+137: PRINTI               %print the result
+138: PUSH '\n'            %push the char \n to the stack
+139: PRINTC               %print the char \n
+
+% 3-28 end of the function
+140: PUSH 6               %6 = 3 + 3 ( variables + parameters)
+141: POPN                 %free the memory
+142: SETD 1               %set display to the caller display
+143: BR                   %jump out of to the return address
+
+%3-29                    Q( (-p+1) | q , F( F( b, p ), (-q+1) ) ,
+144: PUSH 0                 %return value start as 0
+145: PUSH 192               %push return address
+146: ADDR 1,2               %get address of the display before
+147: LOAD                   %load display before
+% parameters to push
+148: ADDR 0,p             %address of p
+149: LOAD                 %load p
+150: NEG                  %process -p
+151: PUSH 1               %push 1 into the stack
+152: ADD                  %process (-p+1) 
+153: ADDR 0,q             %address of q
+154: LOAD                 %load q
+155: OR                   %(-p+1) | q
+
+156: PUSH 0               %return value start as 0
+157: PUSH 176             %push return address
+158: ADDR 1,2             %get address of the display before
+159: LOAD                 %load display before
+%no parameters to push
+160: PUSH 0               %return value start as 0
+161: PUSH 170             %push return address
+162: ADDR 1,2             %get address of the display before
+163: LOAD                 %load display before
+%no parameters to push
+164: ADDR 0,b             %address of b
+165: LOAD                 %load b
+166: ADDR 0,p             %address of p
+167: LOAD                 %load p
+168: PUSH 32              %push 32 into the stack
+169: BR                   %jump to function
+170: ADDR 0,q             %address of q
+171: LOAD                 %load q
+172: PUSH 1               %push 1 into stack
+173: ADD                  %process (-q+1)
+174: PUSH 32              %push 32 into the stack  
+175: BR                   %jump to function
+
+%3-30                  { P yields -(p = q)+1 } ) 
+176: PUSH 0               %return value start as 0
+177: PUSH 182             %push return address
+178: ADDR 1,2             %get address of the display before
+179: LOAD                 %load display before
+%no parameters to push
+180: PUSH 7               %push 7 into the stack              
+181: BR                   %jump to function
+
+182: ADDR 0,p             %address of p
+183: LOAD                 %load p
+184: ADDR 0,q             %address of q
+185: LOAD                 %load q
+186: EQ                   %process (p = q)
+187: NEG                  %process -(p = q)
+188: PUSH 1               %push 1 into stack
+189: ADD                  %process -(p = q)+1
+190: PUSH 71              %push 71 into the stack
+191: BR                   %jump to function 
+
+% 3-31 pop activation record of main
+192: PUSH 8                 %in this case N is the size of the activation record for the main 4+4 = 8
+193: POPN                   %pop the activation record of main
+194: HALT
