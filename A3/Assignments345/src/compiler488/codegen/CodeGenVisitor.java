@@ -25,6 +25,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
 		this.writer = new CodeWriter();
 		program.accept(this);
+		this.writer.printWrittenCode();		
 
 		Machine.setPC((short) 0); /* where code to be executed begins */
 		Machine.setMSP(this.writer.getCurrentProgramLength()); /* where memory stack begins */

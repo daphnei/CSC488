@@ -17,6 +17,12 @@ public class CodeWriter {
 		return this.programCounter;
 	}
 	
+	public void printWrittenCode() {
+		for (String str : this.debugRecord) {
+			System.out.println(str);
+		}
+	}
+	
 	
 	public short writeRawAssembly(short operation) {
 		return this.writeRawAssembly(operation, null);
