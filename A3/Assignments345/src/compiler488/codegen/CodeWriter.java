@@ -29,17 +29,17 @@ public class CodeWriter {
 	}
 	
 	public short writeRawAssembly(short operation, char argument) {
-		return this.writeRawAssembly(operation, (short)argument);
+		return this.writeRawAssembly(operation, (int)argument);
 	}
 	
 	// TODO: If what you want to write doesn't fall neatly into this category, create your own "writeBranch" method or something.
-	public short writeRawAssembly(short operation, Short argument) {
+	public short writeRawAssembly(short operation, Integer argument) {
 		short writePosition = this.programCounter;
 		
 		Machine.writeMemory(this.programCounter, operation);
 		this.programCounter++;		
 		if (argument != null) {
-			Machine.writeMemory(this.programCounter, argument);
+			Machine.writeMemory(this.programCounter, (short)(int)argument);
 			this.programCounter++;			
 		}
 		

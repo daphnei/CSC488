@@ -1,3 +1,6 @@
 begin
-  put "hello world"
+  put "hello world", 5, 100
+  put skip
+  put 3
+ 
 end
