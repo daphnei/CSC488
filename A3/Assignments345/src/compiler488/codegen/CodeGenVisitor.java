@@ -53,6 +53,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(IfStmt visitable) {
 		// DO NOT CALL SUPER
 		
+		// TODO: Handle conditional AND and OR
 		// Leaves the result on top of the stack.
 		visitable.getCondition().accept(this);
 		

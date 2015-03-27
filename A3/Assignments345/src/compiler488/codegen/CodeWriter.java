@@ -8,6 +8,7 @@ public class CodeWriter {
 	
 	private short programCounter = 0;
 	private List<String> debugRecord = new LinkedList<String>();
+	private List<AddressPatch> addressPatch = new LinkedList<AddressPatch>();
 	
 	public CodeWriter() {
 		
@@ -46,7 +47,13 @@ public class CodeWriter {
 		this.record(writePosition, "RAW", Machine.instructionNames[operation], argument == null ? 0 : argument);
 		return writePosition;
 	}
-
+	
+	/*public AddressPatch writeBranchIfFalse(short address, ) {
+		// Expects 
+	}
+	
+	public AddressPatch writeBranchAlways(short address, )*/
+	
 	// TODO: Add overloads for the method with variable parameters.
 	private void record(short memoryAddr, String writeType, Object arg1, Object arg2) {
 		String debug = String.format("%d : (%s, %s, %s)", memoryAddr, writeType, arg1.toString(), arg2.toString());
