@@ -37,11 +37,11 @@ public class CodeWriter {
 		short writePosition = this.programCounter;
 		
 		Machine.writeMemory(this.programCounter, operation);
+		this.programCounter++;		
 		if (argument != null) {
 			Machine.writeMemory(this.programCounter, argument);
 			this.programCounter++;			
 		}
-		this.programCounter++;		
 		
 		this.record(writePosition, "RAW", Machine.instructionNames[operation], argument == null ? 0 : argument);
 		return writePosition;
