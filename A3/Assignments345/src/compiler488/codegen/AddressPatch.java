@@ -7,4 +7,9 @@ package compiler488.codegen;
 public class AddressPatch {
 	public short addressToBePatched;
 	public short beginningOfBranchOperationAddress;
+	
+	public AddressPatch(int addressToBePatched, int beginningOfBranchOperationAddress) {
+		this.addressToBePatched = (short)addressToBePatched;
+		this.beginningOfBranchOperationAddress = (short)beginningOfBranchOperationAddress;
+	}
 }

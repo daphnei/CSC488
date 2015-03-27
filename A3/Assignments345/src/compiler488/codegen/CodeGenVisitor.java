@@ -12,6 +12,7 @@ import compiler488.ast.stmt.IfStmt;
 import compiler488.ast.stmt.Program;
 import compiler488.ast.stmt.PutStmt;
 import compiler488.ast.stmt.Stmt;
+import compiler488.compiler.Main;
 import compiler488.runtime.ExecutionException;
 import compiler488.runtime.Machine;
 import compiler488.runtime.MemoryAddressException;
@@ -30,7 +31,11 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
 		this.writer = new CodeWriter();
 		program.accept(this);
-		this.writer.printWrittenCode();		
+		this.writer.printWrittenCode();	
+		if (!this.writer.isCompletelyPatched()) {
+			Main.errorOccurred = true;
+			System.out.print("ERROR: We have unpatched branch statements! Please fix them!");
+		}
 
 		Machine.setPC((short)0); /* where code to be executed begins */
 		Machine.setMSP(this.writer.getCurrentProgramLength()); /* where memory stack begins */
