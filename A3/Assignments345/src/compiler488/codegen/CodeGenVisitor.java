@@ -16,35 +16,31 @@ public class CodeGenVisitor extends NodeVisitor {
 
 	public static final boolean DEBUGGING = false;
 
-	public LinkedList<Quadruple> quadruples = new LinkedList<Quadruple>();
+	private CodeWriter writer;
 
 	public CodeGenVisitor() {
+		
 	}
 
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
+		this.writer = new CodeWriter();
 		program.accept(this);
 
-		short programCount = 0;
-		for (Quadruple quad : quadruples) {
-			programCount = quad.generateCode(programCount);
-			System.out.println(quad.toString());
-		}
-
 		Machine.setPC((short) 0); /* where code to be executed begins */
-		Machine.setMSP(programCount); /* where memory stack begins */
+		Machine.setMSP(this.writer.getCurrentProgramLength()); /* where memory stack begins */
 		Machine.setMLP((short) (Machine.memorySize - 1)); /* */
 	}
 
 	@Override
 	public void visit(Program visitable) {
 		if (DEBUGGING) {
-			quadruples.add(new RawQuadruple(Machine.TRON));
+			writer.writeRawAssembly(Machine.TRON);
 		}
 		super.visit(visitable);
 		if (DEBUGGING) {
-			quadruples.add(new RawQuadruple(Machine.TROFF));
+			writer.writeRawAssembly(Machine.TROFF);
 		}
-		quadruples.add(new RawQuadruple(Machine.HALT));
+		writer.writeRawAssembly(Machine.HALT);
 	}
 	
 	public void visit(IfStmt visitable) {
@@ -53,7 +49,6 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Leaves the result on top of the stack.
 		visitable.getCondition().accept(this);
 		
-		quadruples.add()
 		for (Stmt trueStmt : visitable.getWhenTrue()) {
 			trueStmt.accept(this);
 		}
@@ -67,18 +62,17 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 	
 	public void visit(BoolConstExpn visitable) {
-		super.visit(visitable);
-		
-		quadruples.add(new RawQuadruple(Machine.PUSH, visitable.getValue() ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE));
+		super.visit(visitable);		
+		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue() ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE);
 	}
 
 	@Override
 	public void visit(PutStmt visitable) {
 		super.visit(visitable);
 		
-		quadruples.add(new RawQuadruple(Machine.PUSH, 'i'));
-		quadruples.add(new RawQuadruple(Machine.PUSH, 'h'));
-		quadruples.add(new RawQuadruple(Machine.PRINTC));
-		quadruples.add(new RawQuadruple(Machine.PRINTC));
+		this.writer.writeRawAssembly(Machine.PUSH, 'i');
+		this.writer.writeRawAssembly(Machine.PUSH, 'h');
+		this.writer.writeRawAssembly(Machine.PRINTC);
+		this.writer.writeRawAssembly(Machine.PRINTC);
 	}
 }
