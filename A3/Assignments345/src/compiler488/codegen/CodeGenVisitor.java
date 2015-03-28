@@ -3,7 +3,10 @@ package compiler488.codegen;
 import java.util.LinkedList;
 
 import compiler488.ast.Printable;
+import compiler488.ast.expn.AnonFuncExpn;
+import compiler488.ast.expn.ArithExpn;
 import compiler488.ast.expn.BoolConstExpn;
+import compiler488.ast.expn.BoolExpn;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.IntConstExpn;
 import compiler488.ast.expn.SkipConstExpn;
@@ -20,7 +23,7 @@ import compiler488.semantics.NodeVisitor;
 
 public class CodeGenVisitor extends NodeVisitor {
 
-	public static final boolean DEBUGGING = false;
+	public static final boolean DEBUGGING = true;
 
 	private CodeWriter writer;
 
@@ -41,6 +44,8 @@ public class CodeGenVisitor extends NodeVisitor {
 		Machine.setMSP(this.writer.getCurrentProgramCounter()); /* where memory stack begins */
 		Machine.setMLP((short)(Machine.memorySize - 1)); /* */
 	}
+	
+	// --- Program ---
 
 	@Override
 	public void visit(Program visitable) {
@@ -53,6 +58,8 @@ public class CodeGenVisitor extends NodeVisitor {
 		}
 		writer.writeRawAssembly(Machine.HALT);
 	}
+	
+	// --- Statements ---
 	
 	@Override
 	public void visit(IfStmt visitable) {
@@ -85,17 +92,6 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 	
 	@Override
-	public void visit(BoolConstExpn visitable) {
-		super.visit(visitable);		
-		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue() ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE);
-	}
-	
-	@Override
-	public void visit(IntConstExpn visitable) {
-		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue());
-	}
-
-	@Override
 	public void visit(PutStmt visitable) {
 		// DO NOT CALL SUPER
 		
@@ -121,4 +117,95 @@ public class CodeGenVisitor extends NodeVisitor {
 			}
 		}
 	}
+	
+	// --- Expressions ---
+	
+	@Override
+	public void visit(AnonFuncExpn visitable) {
+		// TODO
+		super.visit(visitable);
+	}
+	
+	@Override
+	public void visit(ArithExpn visitable) {
+		super.visit(visitable);
+		
+		String s = visitable.getOpSymbol();
+		if (s.equals("+")) {
+			this.writer.writeRawAssembly(Machine.ADD);
+		} else if (s.equals("-")) {
+			this.writer.writeRawAssembly(Machine.SUB);
+		} else if (s.equals("*")) {
+			this.writer.writeRawAssembly(Machine.MUL);
+		} else if (s.equals("/")) {
+			this.writer.writeRawAssembly(Machine.DIV);
+		} else { 
+			System.out.println("WARNING: Encountered bad symbol.");
+		}
+	}
+	
+	@Override
+	public void visit(BoolConstExpn visitable) {
+		super.visit(visitable);		
+		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue() ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE);
+	}
+	
+	@Override
+	public void visit(BoolExpn visitable) {
+		// Do conditional evaluation!
+		
+		// Evaluate the first expression.
+		visitable.getFirstExpression().accept(this);
+		
+		if (visitable.getOpSymbol().equals("|")) {
+			// If we see "true", we don't want to evaluate the second expression.
+			AddressPatch toNextExpnPatch = this.writer.writePatchableBranchIfFalse();
+			
+			// So, we have seen "true", lets push "true" back on the track and jump to the end. 
+			this.writer.writeRawAssembly(Machine.PUSH, Machine.MACHINE_TRUE);
+			AddressPatch toEndPatch = this.writer.writePatchableBranchAlways();
+			
+			// So, we have seen "false", lets evaluate the next expression and leave that.
+			this.writer.patchAddress(toNextExpnPatch);
+			visitable.getSecondExpression().accept(this);
+			
+			// Now, we are done evaluating the second expression.
+			this.writer.patchAddress(toEndPatch);	
+			
+		} else if (visitable.getOpSymbol().equals("&")) {
+			// If we see "false", we don't want to evaluate the second expression.
+			AddressPatch toNextExpnPatch = this.writer.writePatchableBranchIfFalse();
+			
+			// So, we have seen "true", lets evaluate the next expression.
+			visitable.getSecondExpression().accept(this);
+			AddressPatch toEndPatch = this.writer.writePatchableBranchAlways();
+			
+			// So, we have seen "false", lets just push that and get out!
+			this.writer.patchAddress(toNextExpnPatch);
+			this.writer.writeRawAssembly(Machine.PUSH, Machine.MACHINE_FALSE);
+			
+			// Now, we are done evaluating the second expression.
+			this.writer.patchAddress(toEndPatch);		
+			
+		} else {
+			System.out.println("WARNING: Encountered bad symbol.");
+		}
+	}
+	
+	@Override
+	public void visit(IntConstExpn visitable) {
+		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue());
+	}
+	
+	@Override
+	public void visit(SkipConstExpn visitable) {
+		// Handled by PutStmt
+	}
+	
+	@Override
+	public void visit(TextConstExpn visitable) {
+		// Handled by PutStmt
+	}
+	
+	
 }

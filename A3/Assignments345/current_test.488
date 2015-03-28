@@ -1,20 +1,5 @@
 begin
-  put "hello world", 5, 100
-  put skip
-  put 3
-  put skip
-  if true then
+  if false & true then
     put "yes", skip
-  end 
-  put "maybe", skip
-  if true then
-    put "YEAH", skip
-  else 
-    put "no", skip
-  end
-  if false then
-    put "nope.avi", skip
-  else
-    put "YAH", skip
   end
 end
