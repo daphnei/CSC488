@@ -1,7 +1,7 @@
 package compiler488.codegen;
 
 import compiler488.ast.Printable;
-import compiler488.ast.decl.Declaration;
+import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.MultiDeclarations;
 import compiler488.ast.decl.ScalarDeclPart;
 import compiler488.ast.expn.BoolConstExpn;
@@ -15,17 +15,13 @@ import compiler488.ast.stmt.IfStmt;
 import compiler488.ast.stmt.Program;
 import compiler488.ast.stmt.PutStmt;
 import compiler488.ast.stmt.Stmt;
-import compiler488.ast.type.IntegerType;
-import compiler488.ast.type.Type;
 import compiler488.compiler.Main;
 import compiler488.exceptions.ExecutionException;
 import compiler488.exceptions.MemoryAddressException;
 import compiler488.runtime.Machine;
 import compiler488.semantics.NodeVisitor;
-import compiler488.semantics.types.BooleanSemType;
-import compiler488.semantics.types.IntegerSemType;
+import compiler488.semantics.types.ArraySemType;
 import compiler488.semantics.types.PrimitiveSemType;
-import compiler488.semantics.types.SemType;
 import compiler488.symbol.CodeGenSymbolTable;
 import compiler488.symbol.ScopeType;
 import compiler488.symbol.SymScope;
@@ -193,8 +189,24 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 	
 	@Override
+	public void visit(ArrayDeclPart visitable) {
+		String varName = visitable.getName();
+		
+		ArraySemType varType = 
+				new ArraySemType(this.currentDeclarationType,
+								 visitable.getLowerBoundary1(),
+								 visitable.getUpperBoundary1(),
+								 visitable.getLowerBoundary2(),
+								 visitable.getUpperBoundary2());
+		
+		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, varType);
+		SymScope scope = this.symbolTable.getCurrentScope();
+		newSymbol.setOffset(scope.assignSpaceForNewVariable(varType.getSize()));
+	}
+	
+	@Override
 	public void visit(MultiDeclarations visitable) {
-		// HACK: Keep track of the declaration state and use it later.
+		// Keep track of the declaration state and use it later.
 		this.currentDeclarationType = visitable.getType().getSemanticType();
 		
 		super.visit(visitable);
