@@ -2,6 +2,8 @@ package compiler488.codegen;
 
 import compiler488.ast.Printable;
 import compiler488.ast.decl.Declaration;
+import compiler488.ast.decl.MultiDeclarations;
+import compiler488.ast.decl.ScalarDeclPart;
 import compiler488.ast.expn.BoolConstExpn;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.IdentExpn;
@@ -22,6 +24,7 @@ import compiler488.runtime.Machine;
 import compiler488.semantics.NodeVisitor;
 import compiler488.semantics.types.BooleanSemType;
 import compiler488.semantics.types.IntegerSemType;
+import compiler488.semantics.types.PrimitiveSemType;
 import compiler488.semantics.types.SemType;
 import compiler488.symbol.CodeGenSymbolTable;
 import compiler488.symbol.ScopeType;
@@ -36,6 +39,11 @@ public class CodeGenVisitor extends NodeVisitor {
 	private CodeWriter writer;
 
 	private SymbolTable symbolTable;
+	
+	/**
+	 * The a variable set while traversing the tree that keeps track of the current declaration type.
+	 */
+	private PrimitiveSemType currentDeclarationType;
 	
 	public CodeGenVisitor() {
 		this.symbolTable = new CodeGenSymbolTable();
@@ -123,15 +131,20 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(IdentExpn visitable) {
 		String varName = visitable.getIdentifier();
 		
-		Symbol symbol = this.symbolTable.retrieveSymbol(varName);
-		SymScope scope = this.symbolTable.getCurrentScope();
-		this.writer.writeRawAssemply(Machine.ADDR, scope.getLexicalLevel(), symbol.getOffset());
+		// Push the address of the variable on to the top of the stack. 
+		// Use an address visitor to do this.
+		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
+		visitable.accept(addressVisitor);
+		
+		// Load the value at that address on to the top of the stack.
+		this.writer.writeRawAssembly(Machine.LOAD);
 	}
 
 	public void visit(AssignStmt visitable) {
 		// Get the address of the left expression and push it onto the stack.
 		//TODO: handle arrays.
-		visitable.getLval().accept(this);
+		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
+		visitable.getLval().accept(addressVisitor);
 		
 		// Get the value of the right expression and push it onto the stack.
 		visitable.getRval().accept(this);
@@ -168,18 +181,22 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 	
 	@Override
-	public void visit(Declaration visitable) {
+	public void visit(ScalarDeclPart visitable) {
 		String varName = visitable.getName();
-		Type varType = visitable.getType();
-
-		SemType semType;
-		if (varType instanceof IntegerType)
-			semType = new IntegerSemType();
-		else
-			semType = new BooleanSemType();
+		PrimitiveSemType varType = this.currentDeclarationType;
 		
-		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, semType);
+		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, varType);
 		SymScope scope = this.symbolTable.getCurrentScope();
 		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));
+	}
+	
+	@Override
+	public void visit(MultiDeclarations visitable) {
+		// HACK: Keep track of the declaration state and use it later.
+		this.currentDeclarationType = visitable.getType().getSemanticType();
+		
+		super.visit(visitable);
+		
+		this.currentDeclarationType = null;
 	}
 }
