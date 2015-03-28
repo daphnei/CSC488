@@ -8,12 +8,14 @@ import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.IntConstExpn;
 import compiler488.ast.expn.SkipConstExpn;
 import compiler488.ast.expn.TextConstExpn;
+import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.IfStmt;
 import compiler488.ast.stmt.Program;
 import compiler488.ast.stmt.PutStmt;
 import compiler488.ast.stmt.Stmt;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
+import compiler488.compiler.Main;
 import compiler488.exceptions.ExecutionException;
 import compiler488.exceptions.MemoryAddressException;
 import compiler488.runtime.Machine;
@@ -37,15 +39,20 @@ public class CodeGenVisitor extends NodeVisitor {
 	
 	public CodeGenVisitor() {
 		this.symbolTable = new CodeGenSymbolTable();
+		this.symbolTable.Initialize();
 	}
 
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
 		this.writer = new CodeWriter();
 		program.accept(this);
-		this.writer.printWrittenCode();		
+		this.writer.printWrittenCode();	
+		if (!this.writer.isCompletelyPatched()) {
+			Main.errorOccurred = true;
+			System.out.print("ERROR: We have unpatched branch statements! Please fix them!");
+		}
 
 		Machine.setPC((short)0); /* where code to be executed begins */
-		Machine.setMSP(this.writer.getProgramCounter()); /* where memory stack begins */
+		Machine.setMSP(this.writer.getCurrentProgramCounter()); /* where memory stack begins */
 		Machine.setMLP((short)(Machine.memorySize - 1)); /* */
 	}
 
@@ -74,21 +81,30 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(IfStmt visitable) {
 		// DO NOT CALL SUPER
+		// TODO: Handle conditional AND and OR!
 		
-		// TODO: Handle conditional AND and OR
 		// Leaves the result on top of the stack.
 		visitable.getCondition().accept(this);
 		
+		// If false, we want to jump to the end of the IF-block or inside the ELSE-block.
+		AddressPatch patchIf = this.writer.writePatchableBranchIfFalse();
 		
 		for (Stmt trueStmt : visitable.getWhenTrue()) {
 			trueStmt.accept(this);
 		}
 
 		// If there is no else, then "whenFalse" will be null.
-		if (visitable.getWhenFalse() != null) {
+		if (visitable.getWhenFalse() == null) {
+			// Patch up the IF-block to jump here when false.
+			this.writer.patchAddress(patchIf, this.writer.getCurrentProgramCounter());
+		} else {
+			AddressPatch pathToEnd = this.writer.writePatchableBranchAlways();
+			this.writer.patchAddress(patchIf, this.writer.getCurrentProgramCounter());
+			
 			for (Stmt falseStmt : visitable.getWhenFalse()) {
 				falseStmt.accept(this);
 			}
+			this.writer.patchAddress(pathToEnd, this.writer.getCurrentProgramCounter());
 		}
 	}
 	
@@ -102,7 +118,28 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(IntConstExpn visitable) {
 		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue());
 	}
+	
+	@Override
+	public void visit(IdentExpn visitable) {
+		String varName = visitable.getIdentifier();
+		
+		Symbol symbol = this.symbolTable.retrieveSymbol(varName);
+		SymScope scope = this.symbolTable.getCurrentScope();
+		this.writer.writeRawAssemply(Machine.ADDR, scope.getLexicalLevel(), symbol.getOffset());
+	}
 
+	public void visit(AssignStmt visitable) {
+		// Get the address of the left expression and push it onto the stack.
+		//TODO: handle arrays.
+		visitable.getLval().accept(this);
+		
+		// Get the value of the right expression and push it onto the stack.
+		visitable.getRval().accept(this);
+		
+		// Store the value at the address.
+		this.writer.writeRawAssembly(Machine.STORE);
+	}
+	
 	@Override
 	public void visit(PutStmt visitable) {
 		// DO NOT CALL SUPER
@@ -144,15 +181,5 @@ public class CodeGenVisitor extends NodeVisitor {
 		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, semType);
 		SymScope scope = this.symbolTable.getCurrentScope();
 		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));
-	}
-	
-	@Override
-	public void visit(IdentExpn visitable) {
-		String varName = visitable.getIdentifier();
-		
-		Symbol symbol = this.symbolTable.retrieveSymbol(varName);
-		SymScope scope = this.symbolTable.getCurrentScope();
-		
-		this.writer.writeRawAssembly(Machine.ADDR, scope.getLexicalLevel(), symbol.getOffset());
 	}
 }
