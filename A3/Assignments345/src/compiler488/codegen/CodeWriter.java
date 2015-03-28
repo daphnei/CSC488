@@ -30,6 +30,8 @@ public class CodeWriter {
 		}
 	}
 	
+	// --- Raw Assembly ---
+	
 	public short writeRawAssembly(short operation) {
 		return this.internalWriteAssembly(operation, null, null);
 	}
@@ -77,6 +79,8 @@ public class CodeWriter {
 		return this.programCounter;
 	}
 	
+	// --- Branch ---
+	
 	public AddressPatch writePatchableBranchIfFalse() {
 		return this.writePatchableBranch(Machine.BF);
 	}
@@ -97,8 +101,8 @@ public class CodeWriter {
 		short originalMemory = this.programCounter;		
 		this.writeBranch(branchOperation, this.programCounter);
 		
-		int debugRecordIndex = this.debugRecord.size() - 2;
-		this.record(debugRecordIndex, originalMemory, branchOperation, "PATCH-ME", null);
+		int debugRecordIndex = this.debugRecord.size() - 3; // HACK: Be careful about this!
+		this.record(debugRecordIndex, originalMemory, Machine.PUSH, "PATCHME", null);
 		
 		AddressPatch patch = new AddressPatch(originalMemory + 1, this.programCounter, debugRecordIndex);
 		this.requiredPatches.add(patch);
@@ -106,17 +110,35 @@ public class CodeWriter {
 		return patch; 
 	}
 	
-	private short writeBranch(short branchOperation, short addressToBranch) {	
+	private short writeBranch(short branchOperation, short addressToBranch) {
+		this.record("<BRANCH>");
 		this.writeRawAssembly(Machine.PUSH, addressToBranch);
-		this.writeRawAssembly(branchOperation);		
+		this.writeRawAssembly(branchOperation);
+		this.record("</BRANCH>");
 		return this.programCounter;
+	}
+	
+	// --- Unsupported Operations ---
+	
+	public short writeNot() {
+		this.record("<NOT>");
+		this.writeRawAssembly(Machine.PUSH, Machine.MACHINE_FALSE);
+		this.writeRawAssembly(Machine.EQ);
+		this.record("</NOT>");
+		return this.programCounter;
+	}
+	
+	// --- Helpers ---
+	
+	public void patchAddress(AddressPatch needingPatch) {
+		this.patchAddress(needingPatch, this.programCounter);
 	}
 	
 	public void patchAddress(AddressPatch needingPatch, short newAddress) {
 		if (this.requiredPatches.contains(needingPatch)) {
 			Machine.writeMemory(needingPatch.addressToBePatched, newAddress);
 			this.requiredPatches.remove(needingPatch);
-			this.record("PATCHED : " + needingPatch.addressToBePatched + " is set to " + newAddress);
+			this.record("PATCH >> " + needingPatch.addressToBePatched + " is set to " + newAddress);
 		} else {
 			System.out.println("ERROR: Trying to patch address that has already been patched!");
 		}
@@ -133,6 +155,7 @@ public class CodeWriter {
 				Machine.instructionNames[machineOp],
 				arg1 != null ? arg1.toString() : "",
 				arg2 != null ? arg2.toString() : "");
+		
 		
 		if (debugIndex >= this.debugRecord.size()) {
 			this.debugRecord.add(debug);

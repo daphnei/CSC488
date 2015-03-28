@@ -4,7 +4,10 @@ import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.MultiDeclarations;
 import compiler488.ast.decl.ScalarDeclPart;
+import compiler488.ast.expn.AnonFuncExpn;
+import compiler488.ast.expn.ArithExpn;
 import compiler488.ast.expn.BoolConstExpn;
+import compiler488.ast.expn.BoolExpn;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.IntConstExpn;
@@ -30,10 +33,9 @@ import compiler488.symbol.SymbolTable;
 
 public class CodeGenVisitor extends NodeVisitor {
 
-	//TODO: Once all the code is generated, update all places that currently rely on this crappy hard-coded constant.
+	public static final boolean DEBUGGING = true;
+	// TODO: Once all the code is generated, update all places that currently rely on this crappy hard-coded constant.
 	private static final int FIRST_ADDRESS_IN_STACK = 500;
-	
-	public static final boolean DEBUGGING = false;
 
 	private CodeWriter writer;
 
@@ -62,6 +64,8 @@ public class CodeGenVisitor extends NodeVisitor {
 		Machine.setMSP(this.writer.getCurrentProgramCounter()); /* where memory stack begins */
 		Machine.setMLP((short)(Machine.memorySize - 1)); /* */
 	}
+	
+	// --- Program ---
 
 	@Override
 	public void visit(Program visitable) {
@@ -82,6 +86,59 @@ public class CodeGenVisitor extends NodeVisitor {
 			writer.writeRawAssembly(Machine.TROFF);
 		}
 		writer.writeRawAssembly(Machine.HALT);
+	}
+	
+	// --- Declarations ---
+	
+	@Override
+	public void visit(ScalarDeclPart visitable) {
+		String varName = visitable.getName();
+		PrimitiveSemType varType = this.currentDeclarationType;
+		
+		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, varType);
+		SymScope scope = this.symbolTable.getCurrentScope();
+		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));
+	}
+	
+	@Override
+	public void visit(MultiDeclarations visitable) {
+		// Keep track of the declaration state and use it later.
+		this.currentDeclarationType = visitable.getType().getSemanticType();
+		
+		super.visit(visitable);
+		
+		this.currentDeclarationType = null;
+	}
+	
+	@Override
+	public void visit(ArrayDeclPart visitable) {
+		String varName = visitable.getName();
+		
+		ArraySemType varType = 
+				new ArraySemType(this.currentDeclarationType,
+								 visitable.getLowerBoundary1(),
+								 visitable.getUpperBoundary1(),
+								 visitable.getLowerBoundary2(),
+								 visitable.getUpperBoundary2());
+		
+		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, varType);
+		SymScope scope = this.symbolTable.getCurrentScope();
+		newSymbol.setOffset(scope.assignSpaceForNewVariable(varType.getSize()));
+	}
+	
+	// --- Statements ---
+
+	public void visit(AssignStmt visitable) {
+		// Get the address of the left expression and push it onto the stack.
+		//TODO: handle arrays.
+		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
+		visitable.getLval().accept(addressVisitor);
+		
+		// Get the value of the right expression and push it onto the stack.
+		visitable.getRval().accept(this);
+		
+		// Store the value at the address.
+		this.writer.writeRawAssembly(Machine.STORE);
 	}
 	
 	@Override
@@ -115,43 +172,6 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 	
 	@Override
-	public void visit(BoolConstExpn visitable) {
-		super.visit(visitable);		
-		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue() ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE);
-	}
-	
-	@Override
-	public void visit(IntConstExpn visitable) {
-		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue());
-	}
-	
-	@Override
-	public void visit(IdentExpn visitable) {
-		String varName = visitable.getIdentifier();
-		
-		// Push the address of the variable on to the top of the stack. 
-		// Use an address visitor to do this.
-		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
-		visitable.accept(addressVisitor);
-		
-		// Load the value at that address on to the top of the stack.
-		this.writer.writeRawAssembly(Machine.LOAD);
-	}
-
-	public void visit(AssignStmt visitable) {
-		// Get the address of the left expression and push it onto the stack.
-		//TODO: handle arrays.
-		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
-		visitable.getLval().accept(addressVisitor);
-		
-		// Get the value of the right expression and push it onto the stack.
-		visitable.getRval().accept(this);
-		
-		// Store the value at the address.
-		this.writer.writeRawAssembly(Machine.STORE);
-	}
-	
-	@Override
 	public void visit(PutStmt visitable) {
 		// DO NOT CALL SUPER
 		
@@ -178,39 +198,105 @@ public class CodeGenVisitor extends NodeVisitor {
 		}
 	}
 	
+	// --- Expressions ---
+	
 	@Override
-	public void visit(ScalarDeclPart visitable) {
-		String varName = visitable.getName();
-		PrimitiveSemType varType = this.currentDeclarationType;
-		
-		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, varType);
-		SymScope scope = this.symbolTable.getCurrentScope();
-		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));
+	public void visit(AnonFuncExpn visitable) {
+		// TODO
+		super.visit(visitable);
 	}
 	
 	@Override
-	public void visit(ArrayDeclPart visitable) {
-		String varName = visitable.getName();
-		
-		ArraySemType varType = 
-				new ArraySemType(this.currentDeclarationType,
-								 visitable.getLowerBoundary1(),
-								 visitable.getUpperBoundary1(),
-								 visitable.getLowerBoundary2(),
-								 visitable.getUpperBoundary2());
-		
-		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, varType);
-		SymScope scope = this.symbolTable.getCurrentScope();
-		newSymbol.setOffset(scope.assignSpaceForNewVariable(varType.getSize()));
-	}
-	
-	@Override
-	public void visit(MultiDeclarations visitable) {
-		// Keep track of the declaration state and use it later.
-		this.currentDeclarationType = visitable.getType().getSemanticType();
-		
+	public void visit(ArithExpn visitable) {
 		super.visit(visitable);
 		
-		this.currentDeclarationType = null;
+		String s = visitable.getOpSymbol();
+		if (s.equals("+")) {
+			this.writer.writeRawAssembly(Machine.ADD);
+		} else if (s.equals("-")) {
+			this.writer.writeRawAssembly(Machine.SUB);
+		} else if (s.equals("*")) {
+			this.writer.writeRawAssembly(Machine.MUL);
+		} else if (s.equals("/")) {
+			this.writer.writeRawAssembly(Machine.DIV);
+		} else { 
+			System.out.println("WARNING: Encountered bad symbol.");
+		}
+	}
+	
+	@Override
+	public void visit(BoolConstExpn visitable) {
+		super.visit(visitable);		
+		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue() ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE);
+	}
+	
+	@Override
+	public void visit(BoolExpn visitable) {
+		// Do conditional evaluation!
+		
+		// Evaluate the first expression.
+		visitable.getFirstExpression().accept(this);
+		
+		if (visitable.getOpSymbol().equals("|")) {
+			// If we see "true", we don't want to evaluate the second expression.
+			AddressPatch toNextExpnPatch = this.writer.writePatchableBranchIfFalse();
+			
+			// So, we have seen "true", lets push "true" back on the track and jump to the end. 
+			this.writer.writeRawAssembly(Machine.PUSH, Machine.MACHINE_TRUE);
+			AddressPatch toEndPatch = this.writer.writePatchableBranchAlways();
+			
+			// So, we have seen "false", lets evaluate the next expression and leave that.
+			this.writer.patchAddress(toNextExpnPatch);
+			visitable.getSecondExpression().accept(this);
+			
+			// Now, we are done evaluating the second expression.
+			this.writer.patchAddress(toEndPatch);	
+			
+		} else if (visitable.getOpSymbol().equals("&")) {
+			// If we see "false", we don't want to evaluate the second expression.
+			AddressPatch toNextExpnPatch = this.writer.writePatchableBranchIfFalse();
+			
+			// So, we have seen "true", lets evaluate the next expression.
+			visitable.getSecondExpression().accept(this);
+			AddressPatch toEndPatch = this.writer.writePatchableBranchAlways();
+			
+			// So, we have seen "false", lets just push that and get out!
+			this.writer.patchAddress(toNextExpnPatch);
+			this.writer.writeRawAssembly(Machine.PUSH, Machine.MACHINE_FALSE);
+			
+			// Now, we are done evaluating the second expression.
+			this.writer.patchAddress(toEndPatch);		
+			
+		} else {
+			System.out.println("WARNING: Encountered bad symbol.");
+		}
+	}
+	
+	@Override
+	public void visit(IntConstExpn visitable) {
+		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue());
+	}
+	
+	@Override
+	public void visit(IdentExpn visitable) {
+		String varName = visitable.getIdentifier();
+		
+		// Push the address of the variable on to the top of the stack. 
+		// Use an address visitor to do this.
+		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
+		visitable.accept(addressVisitor);
+		
+		// Load the value at that address on to the top of the stack.
+		this.writer.writeRawAssembly(Machine.LOAD);
+	}
+	
+	@Override
+	public void visit(SkipConstExpn visitable) {
+		// Handled by PutStmt
+	}
+	
+	@Override
+	public void visit(TextConstExpn visitable) {
+		// Handled by PutStmt
 	}
 }
