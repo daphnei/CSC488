@@ -14,7 +14,7 @@ public class CodeWriter {
 		
 	}
 	
-	public short getCurrentProgramLength() {
+	public short getProgramCounter() {
 		return this.programCounter;
 	}
 	
@@ -30,6 +30,10 @@ public class CodeWriter {
 	}
 	
 	public short writeRawAssembly(short operation, char argument) {
+		return this.writeRawAssembly(operation, (int)argument);
+	}
+	
+	public short writeRawAssembly(short operation, short argument) {
 		return this.writeRawAssembly(operation, (int)argument);
 	}
 	

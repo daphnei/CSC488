@@ -28,7 +28,7 @@ public class SymbolTable {
 	 * Keeps track of the type of each open scope.
 	 * The most recently opened scope will be at the end.
 	 */
-	private LinkedList<ScopeType> scopeTypes;
+	private LinkedList<SymScope> scopes;
 	
 	
 	public SymbolTable() {
@@ -41,7 +41,7 @@ public class SymbolTable {
 	 */
 	public void Initialize() {
 		this.table = new HashMap<String, Stack<Symbol>>();
-		this.scopeTypes = new LinkedList<ScopeType>();
+		this.scopes = new LinkedList<SymScope>();
 
 		this.curScopeIndex = -1; // Set this to -1 so that the first scope
 									// created will have index 0.
@@ -53,7 +53,7 @@ public class SymbolTable {
 	 */
 	public void Finalize() {
 		this.table.clear();
-		this.scopeTypes.clear();
+		this.scopes.clear();
 	}
 
 	/**
@@ -63,9 +63,17 @@ public class SymbolTable {
 	 */
 	public void openScope(ScopeType type) {
 		this.curScopeIndex++;
-		this.scopeTypes.push(type);
+		this.scopes.push(this.createNewScope(type));		
 	}
 
+	/**
+	 * Created a new scope and returns it.
+	 * @param type The tyoe of the new scope.
+	 */
+	protected SymScope createNewScope(ScopeType type) {
+		return new SymScope(type);
+	}
+	
 	/**
 	 * Closes the current scope and deletes all of the symbols that were defined
 	 * in it.
@@ -76,7 +84,7 @@ public class SymbolTable {
 	public void closeCurrentScope() throws SemanticErrorException {
 		this.checkIfThereIsAnyScope();
 		// If the current scope is major, destroy all the symbols that were declared in it.
-		if (this.scopeTypes.peek().isMajor()) {			
+		if (this.scopes.peek().isMajor()) {			
 			for (String identifier : this.table.keySet()) {
 				Stack<Symbol> symbols = this.table.get(identifier);
 	
@@ -93,7 +101,7 @@ public class SymbolTable {
 		// All of the symbols that were declared in the current scope have been removed.
 		// Now decrement the scope index.
 		this.curScopeIndex--;
-		this.scopeTypes.pop();
+		this.scopes.pop();
 	}
 
 	/**
@@ -184,8 +192,8 @@ public class SymbolTable {
 	 */
 	public int searchForLastMajorScope() {
 		int currentScope = this.curScopeIndex;
-		for (ScopeType scopeType : this.scopeTypes) {
-			if (scopeType.isMajor()) {
+		for (SymScope scope : this.scopes) {
+			if (scope.isMajor()) {
 				return currentScope;
 			}
 			currentScope--;
@@ -205,11 +213,11 @@ public class SymbolTable {
 	public boolean searchScopesForType(ScopeType searchTarget, Set<ScopeType> forbiddenSet) {
 		// The lowest index scope is the last element in the scopeTypes list.
 		// this.curScopeIndex corresponds to the first element in the scopeTypes list.	
-		for (ScopeType scopeType : this.scopeTypes) {
-			if (forbiddenSet.contains(scopeType)) {
+		for (SymScope scope : this.scopes) {
+			if (forbiddenSet.contains(scope.getScopeType())) {
 				return false;
 			}
-			if (scopeType.equals(searchTarget)) {
+			if (scope.getScopeType().equals(searchTarget)) {
 				return true;
 			}
 		}
@@ -221,10 +229,18 @@ public class SymbolTable {
 	 * @return the index of the currently open scope, or -1 if no scope has been
 	 *         opened yet.
 	 */
-	public int getCurrentScope() {
+	public int getCurrentScopeIndex() {
 		return this.curScopeIndex;
 	}
 
+	/**
+	 * Returns the scope object associated with the currently open scope.
+	 * @return
+	 */
+	public SymScope getCurrentScope() {
+		return this.scopes.peek();
+	}
+	
 	/**
 	 * Checks is any scope exists.
 	 * 
