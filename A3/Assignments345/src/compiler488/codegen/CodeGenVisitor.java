@@ -38,7 +38,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		}
 
 		Machine.setPC((short)0); /* where code to be executed begins */
-		Machine.setMSP(this.writer.getCurrentProgramLength()); /* where memory stack begins */
+		Machine.setMSP(this.writer.getCurrentProgramCounter()); /* where memory stack begins */
 		Machine.setMLP((short)(Machine.memorySize - 1)); /* */
 	}
 
@@ -57,21 +57,30 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(IfStmt visitable) {
 		// DO NOT CALL SUPER
+		// TODO: Handle conditional AND and OR!
 		
-		// TODO: Handle conditional AND and OR
 		// Leaves the result on top of the stack.
 		visitable.getCondition().accept(this);
 		
+		// If false, we want to jump to the end of the IF-block or inside the ELSE-block.
+		AddressPatch patchIf = this.writer.writePatchableBranchIfFalse();
 		
 		for (Stmt trueStmt : visitable.getWhenTrue()) {
 			trueStmt.accept(this);
 		}
 
 		// If there is no else, then "whenFalse" will be null.
-		if (visitable.getWhenFalse() != null) {
+		if (visitable.getWhenFalse() == null) {
+			// Patch up the IF-block to jump here when false.
+			this.writer.patchAddress(patchIf, this.writer.getCurrentProgramCounter());
+		} else {
+			AddressPatch pathToEnd = this.writer.writePatchableBranchAlways();
+			this.writer.patchAddress(patchIf, this.writer.getCurrentProgramCounter());
+			
 			for (Stmt falseStmt : visitable.getWhenFalse()) {
 				falseStmt.accept(this);
 			}
+			this.writer.patchAddress(pathToEnd, this.writer.getCurrentProgramCounter());
 		}
 	}
 	

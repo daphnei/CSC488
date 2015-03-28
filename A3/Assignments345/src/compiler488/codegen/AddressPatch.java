@@ -6,10 +6,12 @@ package compiler488.codegen;
  */
 public class AddressPatch {
 	public short addressToBePatched;
-	public short beginningOfBranchOperationAddress;
+	public short addressAfterOperation;
+	public int debugRecordIndex;
 	
-	public AddressPatch(int addressToBePatched, int beginningOfBranchOperationAddress) {
+	public AddressPatch(int addressToBePatched, int addressAfterOperation, int debugRecordIndex) {
 		this.addressToBePatched = (short)addressToBePatched;
-		this.beginningOfBranchOperationAddress = (short)beginningOfBranchOperationAddress;
+		this.debugRecordIndex = debugRecordIndex;
+		this.addressAfterOperation = (short)addressAfterOperation;
 	}
 }
