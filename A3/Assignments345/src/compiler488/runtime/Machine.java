@@ -1,7 +1,10 @@
 package compiler488.runtime ;
 
 import java.io.*;
+
 import compiler488.compiler.Main;
+import compiler488.exceptions.ExecutionException;
+import compiler488.exceptions.MemoryAddressException;
 
 /** Machine - a pseduo machine interpreter for CSC488S Course Project <BR>
  *  The class writes to System.out and System.err and reads from System.in

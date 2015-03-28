@@ -3,6 +3,7 @@ package compiler488.codegen;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
 import compiler488.runtime.Machine;
 
 public class CodeWriter {
@@ -32,33 +33,49 @@ public class CodeWriter {
 	// --- Raw Assembly ---
 	
 	public short writeRawAssembly(short operation) {
-		return this.writeRawAssembly(operation, null);
+		return this.internalWriteAssembly(operation, null, null);
 	}
 	
 	public short writeRawAssembly(short operation, char argument) {
-		return this.writeRawAssembly(operation, (int)argument);
+		return this.internalWriteAssembly(operation, (int)argument, null);
 	}
 	
 	public short writeRawAssembly(short operation, short argument) {
-		return this.writeRawAssembly(operation, (int)argument);
+		return this.internalWriteAssembly(operation, (int)argument, null);
 	}
 	
+	public short writeRawAssembly(short operation, Integer argument) {
+		return this.internalWriteAssembly(operation, (int)argument, null);
+	}
+	
+	public short writeRawAssemply(short operation, short argument1, int argument2) {
+		return this.internalWriteAssembly(operation, (int) argument1, (int) argument2);
+	}
+
 	/**
 	 * Writes an assembly instruction to memory.
 	 * @param operation The operation to write.
 	 * @param argument The argument (null if none) with the operation.
 	 * @return The program counter after the lines have been written.
 	 */
-	public short writeRawAssembly(short operation, Integer argument) {
+	private short internalWriteAssembly(short operation, Integer argument1, Integer argument2) {
 		short writePosition = this.programCounter;
 		Machine.writeMemory(this.programCounter, operation);
 		this.programCounter++;		
-		if (argument != null) {
-			Machine.writeMemory(this.programCounter, (short)(int)argument);
-			this.programCounter++;			
+		
+		// Check if there is a first argument.
+		if (argument1 != null) {
+			Machine.writeMemory(this.programCounter, (short)(int)argument1);
+			this.programCounter++;	
+			
+			// If there was a first argument, there might also be a second arguments.
+			if (argument2 != null) {
+				Machine.writeMemory(this.programCounter, (short)(int)argument2);
+				this.programCounter++;			
+			}
 		}
 		
-		this.record(writePosition, operation, argument, null);
+		this.record(writePosition, operation, argument1, argument2);
 		return this.programCounter;
 	}
 	

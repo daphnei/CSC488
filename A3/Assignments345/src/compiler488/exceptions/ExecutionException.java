@@ -1,4 +1,4 @@
-package compiler488.runtime;
+package compiler488.exceptions;
 
 /** Exception subclass for reporting machine run time  errors
  * @author Danny House

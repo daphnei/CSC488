@@ -1,9 +1,9 @@
 package compiler488.codegen;
 
 import compiler488.compiler.Main;
+import compiler488.exceptions.ExecutionException;
+import compiler488.exceptions.MemoryAddressException;
 import compiler488.runtime.Machine;
-import compiler488.runtime.MemoryAddressException;
-import compiler488.runtime.ExecutionException ;
 
 /**      CodeGenerator.java
  *<pre>

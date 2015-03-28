@@ -1,14 +1,12 @@
 package compiler488.exceptions;
 
-import compiler488.ast.AST;
-
 /**
  * This exception should be thrown when a semantic error occurs.
  * The message encoded should be user friendly.
  * 
  * @author daphne
  */
-public class SemanticErrorException extends Exception {
+public class SemanticErrorException extends RuntimeException {
 		
 	public SemanticErrorException(String message) {
 		super(message);
