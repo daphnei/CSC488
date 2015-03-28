@@ -1,6 +1,5 @@
 package compiler488.exceptions;
 
-import compiler488.ast.AST;
 
 /**
  * An exception that is thrown when the user attempts to

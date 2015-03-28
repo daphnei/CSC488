@@ -444,9 +444,9 @@ public class SemanticActions {
 		}
 		
 		ArraySemType array = (ArraySemType)symbol.getType();
-		if (array.getDimensions() != element.getDimensions()) {
+		if (array.getNumDimensions() != element.getDimensions()) {
 			setExpressionResultType(element, ErrorSemType.ERROR);
-			throw new SemanticErrorException("Array expects " + array.getDimensions() + " dimensions but is indexed by " + element.getDimensions() + " dimensions.");
+			throw new SemanticErrorException("Array expects " + array.getNumDimensions() + " dimensions but is indexed by " + element.getDimensions() + " dimensions.");
 		}
 	}
 
