@@ -5,6 +5,7 @@ import compiler488.ast.expn.AnonFuncExpn;
 import compiler488.ast.expn.ArithExpn;
 import compiler488.ast.decl.Declaration;
 import compiler488.ast.decl.MultiDeclarations;
+import compiler488.ast.decl.RoutineDecl;
 import compiler488.ast.decl.ScalarDeclPart;
 import compiler488.ast.expn.BoolConstExpn;
 import compiler488.ast.expn.BoolExpn;
@@ -77,13 +78,15 @@ public class CodeGenVisitor extends NodeVisitor {
 			writer.writeRawAssembly(Machine.TRON);
 		}
 		
-		//Open a new scope.
+		// Open a new scope.
 		this.symbolTable.openScope(ScopeType.PROGRAM);
 		SymScope scope = this.symbolTable.getCurrentScope();
 		
 		// Write out to the display.
 		this.writer.writeRawAssembly(Machine.PUSH, FIRST_ADDRESS_IN_STACK);
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
+		
+		this.symbolTable.closeCurrentScope();
 		
 		super.visit(visitable);
 		if (DEBUGGING) {
@@ -112,6 +115,16 @@ public class CodeGenVisitor extends NodeVisitor {
 		super.visit(visitable);
 		
 		this.currentDeclarationType = null;
+	}
+	
+	@Override
+	public void visit(RoutineDecl visitable) {
+		AddressPatch endOfFunctionDefinitionPatch = this.writer.writePatchableBranchAlways();
+		
+		super.visit(visitable);
+		
+		this.writer.patchAddress(endOfFunctionDefinitionPatch);
+		
 	}
 	
 	// --- Statements ---

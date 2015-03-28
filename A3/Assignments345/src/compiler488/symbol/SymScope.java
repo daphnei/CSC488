@@ -32,11 +32,11 @@ public class SymScope {
 	}
 	
 	public boolean isMajor() {
-		return this.scopeType.equals(ScopeType.YIELD) || this.scopeType.equals(ScopeType.PROGRAM) || this.scopeType.equals(ScopeType.ROUTINE);
+		return this.scopeType.isMinor();
 	}
 	
 	public boolean isMinor() {
-		return this.scopeType.equals(ScopeType.LOOP) || this.scopeType.equals(ScopeType.GENERIC);
+		return this.scopeType.isMinor();
 	}
 	
 	/**

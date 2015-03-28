@@ -1,19 +1,22 @@
 package compiler488.symbol;
 
 public class CodeGenSymbolTable extends SymbolTable {
-	/**
-	 * The highestmost lexical level current in use.
-	 */
-	short openLexicalLevel;
 	
 	public CodeGenSymbolTable() {
-		this.openLexicalLevel = -1;
+		
+	}
+	
+	private int getOpenLexicalLevel() {
+		if (this.scopes.isEmpty()) {
+			return -1;
+		}
+		return this.scopes.peek().getLexicalLevel();
 	}
 	
 	@Override
 	protected SymScope createNewScope(ScopeType type) {
-		this.openLexicalLevel++;
-		SymScope scope = new SymScope(type, this.openLexicalLevel);
+		short nextLevel = (short)(this.getOpenLexicalLevel() + (type.isMajor() ? 1 : 0));
+		SymScope scope = new SymScope(type, nextLevel);
 		return scope;
 	}
 }
