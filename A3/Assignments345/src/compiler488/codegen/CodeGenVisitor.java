@@ -34,6 +34,9 @@ import compiler488.symbol.SymbolTable;
 
 public class CodeGenVisitor extends NodeVisitor {
 
+	//TODO: Once all the code is generated, update all places that currently rely on this crappy hard-coded constant.
+	private static final int FIRST_ADDRESS_IN_STACK = 500;
+	
 	public static final boolean DEBUGGING = false;
 
 	private CodeWriter writer;
@@ -75,8 +78,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		SymScope scope = this.symbolTable.getCurrentScope();
 		
 		// Write out to the display.
-		 //TODO: palace the top of the stack ata meaningful location.
-		this.writer.writeRawAssembly(Machine.PUSH, 500);
+		this.writer.writeRawAssembly(Machine.PUSH, FIRST_ADDRESS_IN_STACK);
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
 		
 		super.visit(visitable);
