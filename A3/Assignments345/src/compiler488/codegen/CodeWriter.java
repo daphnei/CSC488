@@ -56,7 +56,7 @@ public class CodeWriter {
 			this.programCounter++;			
 		}
 		
-		this.record(writePosition, "RAW", Machine.instructionNames[operation], argument);
+		this.record(writePosition, operation, argument, null);
 		return this.programCounter;
 	}
 	
@@ -81,7 +81,7 @@ public class CodeWriter {
 		this.writeBranch(branchOperation, this.programCounter);
 		
 		int debugRecordIndex = this.debugRecord.size() - 2;
-		this.record(debugRecordIndex, originalMemory, "RAW", Machine.instructionNames[branchOperation], "PATCH-ME");
+		this.record(debugRecordIndex, originalMemory, branchOperation, "PATCH-ME", null);
 		
 		AddressPatch patch = new AddressPatch(originalMemory + 1, this.programCounter, debugRecordIndex);
 		this.requiredPatches.add(patch);
@@ -105,12 +105,18 @@ public class CodeWriter {
 		}
 	}
 	
-	private void record(short memoryAddr, String writeType, Object arg1, Object arg2) {
-		this.record(this.debugRecord.size(), memoryAddr, writeType, arg1, arg2);
+	private void record(short memoryAddr, short machineOp, Object arg1, Object arg2) {
+		this.record(this.debugRecord.size(), memoryAddr, machineOp, arg1, arg2);
 	}
 	
-	private void record(int debugIndex, short memoryAddr, String writeType, Object arg1, Object arg2) {
-		String debug = String.format("%d : (%s, %s, %s)", memoryAddr, writeType, arg1.toString(), arg2 != null ? arg2.toString() : "NULL");
+	private void record(int debugIndex, short memoryAddr, short machineOp, Object arg1, Object arg2) {
+		String debug = String.format(
+				"%d : (%s, %s, %s)",
+				memoryAddr,
+				Machine.instructionNames[machineOp],
+				arg1 != null ? arg1.toString() : "",
+				arg2 != null ? arg2.toString() : "");
+		
 		if (debugIndex >= this.debugRecord.size()) {
 			this.debugRecord.add(debug);
 		} else {
