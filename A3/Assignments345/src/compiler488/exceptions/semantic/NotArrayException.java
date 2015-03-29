@@ -1,4 +1,4 @@
-package compiler488.exceptions;
+package compiler488.exceptions.semantic;
 
 /**
  * An exception that is thrown when the user tries to use a variable

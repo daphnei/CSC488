@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
 
-import compiler488.exceptions.InvalidScopeException;
-import compiler488.exceptions.SemanticErrorException;
-import compiler488.exceptions.SymbolConflictException;
+import compiler488.exceptions.semantic.InvalidScopeException;
+import compiler488.exceptions.semantic.SemanticErrorException;
+import compiler488.exceptions.semantic.SymbolConflictException;
 import compiler488.semantics.types.SemType;
 
 public class SymbolTable {

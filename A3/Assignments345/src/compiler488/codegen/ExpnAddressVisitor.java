@@ -39,7 +39,7 @@ public class ExpnAddressVisitor extends NodeVisitor {
 	}
 	
 	@Override
-	public void visit(SubsExpn visitable) {
+	public void visit(SubsExpn visitable) {		
 		// Retrieve the symbol semtype associated with this expression.
 		ArraySemType semType = (ArraySemType) this.symbolTable.retrieveSymbol(visitable.getVariable()).getType();
 		
@@ -47,8 +47,7 @@ public class ExpnAddressVisitor extends NodeVisitor {
 		visitable.getSubscript1().accept(this.codeGenVisitor);
 		
 		// Add the dimension offset to this subscript.
-		this.writer.writeRawAssembly(Machine.PUSH, semType.getOffsetDim1());
-		this.writer.writeRawAssembly(Machine.ADD);
+		this.writer.writeSubscriptOffsetAndBoundsCheck(semType.getOffsetDim1(), semType.getLengthDim1(), visitable.getLineNumber());
 		
 		if (visitable.getSubscript2() == null) {
 			// Push the first memory address of the array on to the stack.
@@ -67,13 +66,12 @@ public class ExpnAddressVisitor extends NodeVisitor {
 			visitable.getSubscript2().accept(this.codeGenVisitor);
 			
 			// Add the dimension offset to this subscript.
-			this.writer.writeRawAssembly(Machine.PUSH, semType.getOffsetDim2());
-			this.writer.writeRawAssembly(Machine.ADD);
+			this.writer.writeSubscriptOffsetAndBoundsCheck(semType.getOffsetDim2(), semType.getLengthDim2(), visitable.getLineNumber());
 			
 			// Do one more add to complete the computation.
 			this.writer.writeRawAssembly(Machine.ADD);
 		}
-		
+		//ArrayIndexOutOfBoundsException
 		// Once this point has been reached, the code to find the address of the desired 
 		// position in the array has been generated. This value has been pushed to the top
 		// of the stack.

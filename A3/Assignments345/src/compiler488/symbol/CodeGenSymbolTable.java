@@ -1,6 +1,5 @@
 package compiler488.symbol;
 
-import compiler488.exceptions.SemanticErrorException;
 import compiler488.semantics.types.SemType;
 
 public class CodeGenSymbolTable extends SymbolTable {

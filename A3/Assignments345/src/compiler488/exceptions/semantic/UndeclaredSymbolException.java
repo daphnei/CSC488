@@ -1,4 +1,4 @@
-package compiler488.exceptions;
+package compiler488.exceptions.semantic;
 
 import compiler488.ast.AST;
 
