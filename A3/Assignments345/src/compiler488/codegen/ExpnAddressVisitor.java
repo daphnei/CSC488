@@ -20,20 +20,19 @@ import compiler488.symbol.SymbolTable;
 public class ExpnAddressVisitor extends NodeVisitor {
 	private SymbolTable symbolTable;
 	private CodeWriter writer;
+	private CodeGenVisitor codeGenVisitor;
 	
-	public ExpnAddressVisitor(SymbolTable symbolTable, CodeWriter writer) {
+	public ExpnAddressVisitor(SymbolTable symbolTable, CodeWriter writer, CodeGenVisitor codeGenVisitor) {
 		this.symbolTable = symbolTable;
 		this.writer = writer;
+		this.codeGenVisitor = codeGenVisitor;
 	}
 	
 	@Override
 	public void visit(IdentExpn visitable) {
 		String varName = visitable.getIdentifier();
-		
-		Symbol symbol = this.symbolTable.retrieveSymbol(varName);
-		SymScope scope = this.symbolTable.getCurrentScope();
-		
+				
 		// Push the address of this variable on to the top of the stack.
-		this.writer.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(this.symbolTable), symbol.getOffset());
+		this.writer.writeSymbolAddress(varName);
 	}
 }

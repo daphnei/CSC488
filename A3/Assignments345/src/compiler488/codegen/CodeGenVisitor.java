@@ -15,6 +15,7 @@ import compiler488.ast.expn.FunctionCallExpn;
 import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.IntConstExpn;
 import compiler488.ast.expn.SkipConstExpn;
+import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.expn.TextConstExpn;
 import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.IfStmt;
@@ -60,7 +61,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
-		this.writer = new CodeWriter();
+		this.writer = new CodeWriter(this.symbolTable);
 		program.accept(this);
 		this.writer.printWrittenCode();	
 		if (!this.writer.isCompletelyPatched()) {
@@ -228,7 +229,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(AssignStmt visitable) {
 		// Get the address of the left expression and push it onto the stack.
 		// TODO: handle arrays.
-		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
+		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
 		visitable.getLval().accept(addressVisitor);
 		
 		// Get the value of the right expression and push it onto the stack.
@@ -422,7 +423,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		
 		// Push the address of the variable on to the top of the stack. 
 		// Use an address visitor to do this.
-		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
+		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
 		visitable.accept(addressVisitor);
 		
 		// Load the value at that address on to the top of the stack.
@@ -432,6 +433,29 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(SkipConstExpn visitable) {
 		// Handled by PutStmt
+	}
+	
+	@Override
+	public void visit(SubsExpn visitable) {
+		// Evaluate the left and right subscripts, pushing the results on to the stack.
+		visitable.getSubscript1().accept(this);
+		if (visitable.getSubscript2() != null) {
+			visitable.getSubscript2().accept(this);
+		}
+				
+		// Push the first memory address of the array on to the stack.
+		this.writer.writeSymbolAddress(visitable.getVariable());
+		
+		// If there is only one dimension, our lives our easy, and a simple add is enough 
+		// to get to the proper memory address.
+		if (visitable.getSubscript2() == null) {
+			
+		
+		}
+		
+		// Do magic math to get an offset from the beginning of the address of the variable.
+		
+		
 	}
 	
 	@Override

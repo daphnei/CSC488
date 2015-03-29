@@ -5,15 +5,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import compiler488.runtime.Machine;
+import compiler488.symbol.Symbol;
+import compiler488.symbol.SymbolTable;
 
 public class CodeWriter {
 	
 	private short programCounter = 0;
 	private List<String> debugRecord = new ArrayList<String>();
 	private List<AddressPatch> requiredPatches = new LinkedList<AddressPatch>();
+	private SymbolTable symbolTable;
 	
-	public CodeWriter() {
-		
+	public CodeWriter(SymbolTable symbolTable) {
+		this.symbolTable = symbolTable;
 	}
 	
 	public short getCurrentProgramCounter() {
@@ -141,6 +144,11 @@ public class CodeWriter {
 	}
 	
 	// --- Helpers ---
+	
+	public void writeSymbolAddress(String symbolIdentifier) {
+		Symbol symbol = this.symbolTable.retrieveSymbol(symbolIdentifier);
+		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(this.symbolTable), symbol.getOffset());
+	}
 	
 	public void patchAddress(AddressPatch needingPatch) {
 		this.patchAddress(needingPatch, this.programCounter);
