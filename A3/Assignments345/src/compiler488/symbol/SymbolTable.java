@@ -242,6 +242,15 @@ public class SymbolTable {
 	}
 	
 	/**
+	 * Returns the current major scope.
+	 * @return
+	 */
+	public SymScope getCurrentMajorScope() {
+		int index = this.searchForLastMajorScope();
+		return this.scopes.get(index);
+	}
+	
+	/**
 	 * Checks is any scope exists.
 	 * 
 	 * @throws SemanticError

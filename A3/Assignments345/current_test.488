@@ -8,6 +8,6 @@ begin
     end
   end
   integer x
-  x <= compute(1)
+  x <= compute(0)
   put x
 end
