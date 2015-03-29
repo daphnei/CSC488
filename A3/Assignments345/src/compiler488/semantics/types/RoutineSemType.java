@@ -9,19 +9,24 @@ import java.util.ArrayList;
  */
 public class RoutineSemType extends SemType {
 	/**
-	 * The types of the routines parameters. Empty if there are no parameters.
+	 * SEMANTIC ANALYIS: The types of the routines parameters. Empty if there are no parameters.
 	 */
 	private ArrayList<PrimitiveSemType> parameters;
 	
 	/**
-	 * The return type. Null if this is a procedure.
+	 * SEMANTIC ANALYIS: The return type. Null if this is a procedure.
 	 */
 	private PrimitiveSemType returnType;
 
 	/**
-	 * This starts out as false and then gets set to true once a return statement is seen.
+	 * SEMANTIC ANALYIS: This starts out as false and then gets set to true once a return statement is seen.
 	 */
 	private boolean seenReturnStatement;
+	
+	/**
+	 * CODE GEN: The address to branch to when calling the routine.
+	 */
+	private short routineStartAddress = -1;
 	
 	/**
 	 * Create a function with parameters and a return value.
@@ -61,5 +66,13 @@ public class RoutineSemType extends SemType {
 	 */
 	public boolean seenReturnStatement() {
 		return this.seenReturnStatement;
+	}
+	
+	public void setStartAddress(short addr) {
+		this.routineStartAddress = addr;
+	}
+
+	public short getStartAddress() {
+		return this.routineStartAddress;
 	}
 }

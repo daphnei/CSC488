@@ -11,6 +11,7 @@ import compiler488.ast.expn.ArithExpn;
 import compiler488.ast.expn.BoolConstExpn;
 import compiler488.ast.expn.BoolExpn;
 import compiler488.ast.expn.Expn;
+import compiler488.ast.expn.FunctionCallExpn;
 import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.IntConstExpn;
 import compiler488.ast.expn.SkipConstExpn;
@@ -37,8 +38,7 @@ import compiler488.symbol.SymbolTable;
 public class CodeGenVisitor extends NodeVisitor {
 
 	public static final boolean DEBUGGING = true;
-	// TODO: Once all the code is generated, update all places that currently rely on this crappy hard-coded constant.
-	private static final int FIRST_ADDRESS_IN_STACK = 500;
+	private static final short DISPLAY_OFFSET_IN_CONTROL_BLOCK = 2;
 
 	private CodeWriter writer;
 
@@ -48,6 +48,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	 * The a variable set while traversing the tree that keeps track of the current declaration type.
 	 */
 	private PrimitiveSemType currentDeclarationType;
+	
 	
 	public CodeGenVisitor() {
 		this.symbolTable = new CodeGenSymbolTable();
@@ -72,7 +73,9 @@ public class CodeGenVisitor extends NodeVisitor {
 
 	@Override
 	public void visit(Program visitable) {
+		// Begin code generation...
 		if (DEBUGGING) {
+			System.out.println("START CODE GENERATION...");
 			writer.writeRawAssembly(Machine.TRON);
 		}
 		
@@ -80,17 +83,28 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.symbolTable.openScope(ScopeType.PROGRAM);
 		SymScope scope = this.symbolTable.getCurrentScope();
 		
-		// Write out to the display.
-		this.writer.writeRawAssembly(Machine.PUSH, FIRST_ADDRESS_IN_STACK);
+		// Write value to the display.
+		// TODO: Replace this with the regular activation block.
+		AddressPatch stackStartPatch = this.writer.writePatchablePush();
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
 		
-		this.symbolTable.closeCurrentScope();
+		// TODO: Push some fake space for holding all the variables.
+		this.writer.writeRawAssembly(Machine.PUSH, 0); 
+		this.writer.writeRawAssembly(Machine.PUSH, 3);
+		this.writer.writeRawAssembly(Machine.DUPN);
 		
+		// Generate code for the rest of the program.
 		super.visit(visitable);
+		
+		// Finish up the program.
+		this.symbolTable.closeCurrentScope();		
 		if (DEBUGGING) {
 			writer.writeRawAssembly(Machine.TROFF);
 		}
-		writer.writeRawAssembly(Machine.HALT);
+		writer.writeRawAssembly(Machine.HALT);		
+		
+		// Set the start address of the stack.
+		writer.patchAddress(stackStartPatch);
 	}
 	
 	// --- Declarations ---
@@ -128,6 +142,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.symbolTable.openScope(ScopeType.ROUTINE);
 		
 		RoutineSemType routineType = new RoutineSemType(visitable.getType().getSemanticType());
+		routineType.setStartAddress(this.writer.getCurrentProgramCounter());
 		this.symbolTable.addSymbolToCurScope(visitable.getName(), routineType);
 		
 		// The following values are pushed on from the caller.
@@ -136,10 +151,11 @@ public class CodeGenVisitor extends NodeVisitor {
 		// - The value in the display
 		// - The parameters
 		
-		// --- Prologue.		
+		// --- Prologue.
+		// TODO: Refactor into helper.
 		
 		// Set the display register.
-		short partialActivationRecordSize = 10; // TODO
+		short partialActivationRecordSize = 3; // TODO
 		this.writer.writeRawAssembly(Machine.PUSHMT);
 		this.writer.writeRawAssembly(Machine.PUSH, partialActivationRecordSize);
 		this.writer.writeRawAssembly(Machine.SUB);
@@ -147,8 +163,8 @@ public class CodeGenVisitor extends NodeVisitor {
 		
 		// Push space for local variables on stack.
 		short localVariableSize = 10; // TODO
-		this.writer.writeRawAssembly(Machine.PUSH, localVariableSize);
 		this.writer.writeRawAssembly(Machine.PUSH, 0); // Dummy value.
+		this.writer.writeRawAssembly(Machine.PUSH, localVariableSize);
 		this.writer.writeRawAssembly(Machine.DUPN);
 		
 		// Set the offset properly in the function scope.
@@ -158,9 +174,10 @@ public class CodeGenVisitor extends NodeVisitor {
 		super.visit(visitable);
 		
 		// --- Epilogue.
+		// TODO: Refactor into helper.
 		
 		// Delete the local variables.
-		short localParameterSize = 5; // TODO
+		short localParameterSize = 7; // TODO
 		this.writer.writeRawAssembly(Machine.PUSH, localVariableSize + localParameterSize);
 		this.writer.writeRawAssembly(Machine.POPN);
 		
@@ -201,7 +218,7 @@ public class CodeGenVisitor extends NodeVisitor {
 
 	public void visit(AssignStmt visitable) {
 		// Get the address of the left expression and push it onto the stack.
-		//TODO: handle arrays.
+		// TODO: handle arrays.
 		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
 		visitable.getLval().accept(addressVisitor);
 		
@@ -215,7 +232,6 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(IfStmt visitable) {
 		// DO NOT CALL SUPER
-		// TODO: Handle conditional AND and OR!
 		
 		// Leaves the result on top of the stack.
 		visitable.getCondition().accept(this);
@@ -270,6 +286,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 	
 	// --- Expressions ---
+
 	
 	@Override
 	public void visit(AnonFuncExpn visitable) {
@@ -341,6 +358,37 @@ public class CodeGenVisitor extends NodeVisitor {
 		} else {
 			System.out.println("WARNING: Encountered bad symbol.");
 		}
+	}
+	
+	@Override
+	public void visit(FunctionCallExpn visitable) {
+		// TODO: Refactor into helper.
+		
+		// Push space for the return value.
+		this.writer.writeRawAssembly(Machine.PUSH, 0);
+		
+		// Push the return address.
+		AddressPatch afterFunctionCallPatch = this.writer.writePatchablePush();
+		
+		// Push the value of the current display onto the stack.
+		this.writer.writeRawAssembly(
+				Machine.ADDR,
+				this.symbolTable.getCurrentScope().getLexicalLevel(),
+				DISPLAY_OFFSET_IN_CONTROL_BLOCK);
+		this.writer.writeRawAssembly(Machine.LOAD);
+		
+		// Push parameters onto the stack.
+		for (Expn expn : visitable.getArguments()) {
+			expn.accept(this);
+		}
+		
+		// Branch to the caller.
+		Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
+		RoutineSemType routine = (RoutineSemType)symbol.getType();
+		this.writer.writeBranchAlways(routine.getStartAddress());
+		
+		// Patch now that we know were to come back to after calling the function.
+		this.writer.patchAddress(afterFunctionCallPatch);
 	}
 	
 	@Override
