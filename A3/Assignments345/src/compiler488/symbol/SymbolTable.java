@@ -28,7 +28,7 @@ public class SymbolTable {
 	 * Keeps track of the type of each open scope.
 	 * The most recently opened scope will be at the end.
 	 */
-	private LinkedList<SymScope> scopes;
+	protected LinkedList<SymScope> scopes;
 	
 	
 	public SymbolTable() {
@@ -68,7 +68,7 @@ public class SymbolTable {
 
 	/**
 	 * Created a new scope and returns it.
-	 * @param type The tyoe of the new scope.
+	 * @param type The type of the new scope.
 	 */
 	protected SymScope createNewScope(ScopeType type) {
 		return new SymScope(type);

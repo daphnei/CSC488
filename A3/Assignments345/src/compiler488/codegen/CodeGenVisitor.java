@@ -3,6 +3,8 @@ package compiler488.codegen;
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.MultiDeclarations;
+import compiler488.ast.decl.RoutineDecl;
+import compiler488.ast.decl.ScalarDecl;
 import compiler488.ast.decl.ScalarDeclPart;
 import compiler488.ast.expn.AnonFuncExpn;
 import compiler488.ast.expn.ArithExpn;
@@ -26,6 +28,7 @@ import compiler488.runtime.Machine;
 import compiler488.semantics.NodeVisitor;
 import compiler488.semantics.types.ArraySemType;
 import compiler488.semantics.types.PrimitiveSemType;
+import compiler488.semantics.types.RoutineSemType;
 import compiler488.symbol.CodeGenSymbolTable;
 import compiler488.symbol.ScopeType;
 import compiler488.symbol.SymScope;
@@ -74,13 +77,15 @@ public class CodeGenVisitor extends NodeVisitor {
 			writer.writeRawAssembly(Machine.TRON);
 		}
 		
-		//Open a new scope.
+		// Open a new scope.
 		this.symbolTable.openScope(ScopeType.PROGRAM);
 		SymScope scope = this.symbolTable.getCurrentScope();
 		
 		// Write out to the display.
 		this.writer.writeRawAssembly(Machine.PUSH, FIRST_ADDRESS_IN_STACK);
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
+		
+		this.symbolTable.closeCurrentScope();
 		
 		super.visit(visitable);
 		if (DEBUGGING) {
@@ -109,6 +114,72 @@ public class CodeGenVisitor extends NodeVisitor {
 		super.visit(visitable);
 		
 		this.currentDeclarationType = null;
+	}
+	
+	@Override
+	public void visit(ScalarDecl visitable) {
+		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(visitable.getName(), visitable.getType().getSemanticType());
+		SymScope scope = this.symbolTable.getCurrentScope();
+		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));		
+	}
+	
+	@Override
+	public void visit(RoutineDecl visitable) {	
+		AddressPatch endOfFunctionDefinitionPatch = this.writer.writePatchableBranchAlways();
+		this.symbolTable.openScope(ScopeType.ROUTINE);
+		
+		RoutineSemType routineType = new RoutineSemType(visitable.getType().getSemanticType());
+		this.symbolTable.addSymbolToCurScope(visitable.getName(), routineType);
+		
+		// The following values are pushed on from the caller.
+		// - Return value space
+		// - The line of code to return to
+		// - The value in the display
+		// - The parameters
+		
+		// --- Prologue.		
+		
+		// Set the display register.
+		short partialActivationRecordSize = 10; // TODO
+		this.writer.writeRawAssembly(Machine.PUSHMT);
+		this.writer.writeRawAssembly(Machine.PUSH, partialActivationRecordSize);
+		this.writer.writeRawAssembly(Machine.SUB);
+		this.writer.writeRawAssembly(Machine.SETD, this.symbolTable.getCurrentScope().getLexicalLevel());
+		
+		// Push space for local variables on stack.
+		short localVariableSize = 10; // TODO
+		this.writer.writeRawAssembly(Machine.PUSH, localVariableSize);
+		this.writer.writeRawAssembly(Machine.PUSH, 0); // Dummy value.
+		this.writer.writeRawAssembly(Machine.DUPN);
+		
+		// Set the offset properly in the function scope.
+		this.symbolTable.getCurrentScope().assignSpaceForNewVariable(localVariableSize + partialActivationRecordSize);
+		
+		// --- Visit children.
+		super.visit(visitable);
+		
+		// --- Epilogue.
+		
+		// Delete the local variables.
+		short localParameterSize = 5; // TODO
+		this.writer.writeRawAssembly(Machine.PUSH, localVariableSize + localParameterSize);
+		this.writer.writeRawAssembly(Machine.POPN);
+		
+		// Set the display register back; the value on the stack is the previous value for this register.
+		this.writer.writeRawAssembly(Machine.SETD, this.symbolTable.getCurrentScope().getLexicalLevel());
+
+		// Jump to back to where this method was called.
+		this.writer.writeRawAssembly(Machine.BR);
+		
+		// The return value is left on the stack for use.
+		// TODO: Do we pop this for procedures?
+		if (visitable.getType() == null) {
+			this.writer.writeRawAssembly(Machine.POP);
+		}
+		
+		
+		this.writer.patchAddress(endOfFunctionDefinitionPatch);		
+		this.symbolTable.closeCurrentScope();
 	}
 	
 	@Override

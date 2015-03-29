@@ -1,5 +1,8 @@
 begin
-  if false & true then
-    put "yes", skip
+  integer function compute(integer var) begin
+    return (var + 1)
   end
+  integer value
+  value <= compute(1)
+  put value
 end

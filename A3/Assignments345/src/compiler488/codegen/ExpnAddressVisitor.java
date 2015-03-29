@@ -36,6 +36,6 @@ public class ExpnAddressVisitor extends NodeVisitor {
 		SymScope scope = this.symbolTable.getCurrentScope();
 		
 		// Push the address of this variable on to the top of the stack.
-		this.writer.writeRawAssemply(Machine.ADDR, scope.getLexicalLevel(), symbol.getOffset());
+		this.writer.writeRawAssemply(Machine.ADDR, symbol.getLexicalLevel(), symbol.getOffset());
 	}
 }
