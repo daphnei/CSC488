@@ -10,6 +10,7 @@ import compiler488.ast.expn.AnonFuncExpn;
 import compiler488.ast.expn.ArithExpn;
 import compiler488.ast.expn.BoolConstExpn;
 import compiler488.ast.expn.BoolExpn;
+import compiler488.ast.expn.EqualsExpn;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.FunctionCallExpn;
 import compiler488.ast.expn.IdentExpn;
@@ -44,17 +45,26 @@ public class CodeGenVisitor extends NodeVisitor {
 	private static final short CONTROL_BLOCK_RETURN_VALUE = 0;
 	private static final short CONTROL_BLOCK_RETURN_ADDRESS = 1;
 	private static final short CONTROL_BLOCK_DISPLAY = 2;
-	private static final short CONTROL_BLOCK_SIZE = 3;
+	public static final short CONTROL_BLOCK_SIZE = 3;
 
+
+	/**
+	 * A writer that keeps track of the program counter and provides a consistent interface for
+	 * writing to the Machine.
+	 */
 	private CodeWriter writer;
 
+	/**
+	 * A symbol table that holds all the identifiers in scopes as we traverse the AST generating
+	 * code.
+	 */
 	private SymbolTable symbolTable;
 
 	/**
-	 * The a variable set while traversing the tree that keeps track of the current declaration type.
+	 * The a variable set while traversing the tree that keeps track of the current declaration
+	 * type.
 	 */
 	private PrimitiveSemType currentDeclarationType;
-
 
 	public CodeGenVisitor() {
 		this.symbolTable = new CodeGenSymbolTable();
@@ -64,15 +74,15 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
 		this.writer = new CodeWriter(this.symbolTable);
 		program.accept(this);
-		this.writer.printWrittenCode();	
+		this.writer.printWrittenCode();
 		if (!this.writer.isCompletelyPatched()) {
 			Main.errorOccurred = true;
 			System.out.print("ERROR: We have unpatched branch statements! Please fix them!");
 		}
 
-		Machine.setPC((short)0); /* where code to be executed begins */
+		Machine.setPC((short) 0); /* where code to be executed begins */
 		Machine.setMSP(this.writer.getCurrentProgramCounter()); /* where memory stack begins */
-		Machine.setMLP((short)(Machine.memorySize - 1)); /* */
+		Machine.setMLP((short) (Machine.memorySize - 1)); /* */
 	}
 
 	// --- Program ---
@@ -97,6 +107,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.writer.writeRawAssembly(Machine.PUSH, 0); // Push return address
 		this.writer.writeRawAssembly(Machine.ADDR, (short)0, 0); // Push display value.
 
+
 		scope.assignSpaceForNewVariable(3); // Don't start assigning on top of the control block.
 
 		// TODO: Push some fake space for holding all the variables.
@@ -108,11 +119,12 @@ public class CodeGenVisitor extends NodeVisitor {
 		super.visit(visitable);
 
 		// Finish up the program.
-		this.symbolTable.closeCurrentScope();		
+		this.symbolTable.closeCurrentScope();
 		if (DEBUGGING) {
 			writer.writeEndDebug();
 		}
 		writer.writeRawAssembly(Machine.HALT);		
+
 
 		// Set the start address of the stack.
 		writer.patchAddress(stackStartPatch);
@@ -144,16 +156,17 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(ScalarDecl visitable) {
 		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(visitable.getName(), visitable.getType().getSemanticType());
 		SymScope scope = this.symbolTable.getCurrentScope();
-		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));		
+		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));
 	}
 
 	@Override
-	public void visit(RoutineDecl visitable) {	
+	public void visit(RoutineDecl visitable) {
+		// Allow the
 		AddressPatch endOfFunctionDefinitionPatch = this.writer.writePatchableBranchAlways();
-		this.symbolTable.openScope(ScopeType.ROUTINE);
 
 		RoutineSemType routineType = new RoutineSemType(visitable.getType().getSemanticType());
 		routineType.setStartAddress(this.writer.getCurrentProgramCounter());
+		routineType.setLexicalLevel((short) (this.symbolTable.getCurrentScope().getLexicalLevel() + 1));
 		this.symbolTable.addSymbolToCurScope(visitable.getName(), routineType);
 
 		// The following values are pushed on from the caller.
@@ -206,6 +219,7 @@ public class CodeGenVisitor extends NodeVisitor {
 
 
 		this.writer.patchAddress(endOfFunctionDefinitionPatch);		
+
 		this.symbolTable.closeCurrentScope();
 	}
 
@@ -227,7 +241,9 @@ public class CodeGenVisitor extends NodeVisitor {
 
 	// --- Statements ---
 
-	public void visit(AssignStmt visitable) {		
+	public void visit(AssignStmt visitable) {
+		// DO NOT CALL SUPER
+
 		// Get the address of the left expression and push it onto the stack.
 		// TODO: handle arrays.
 		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
@@ -284,7 +300,7 @@ public class CodeGenVisitor extends NodeVisitor {
 				this.writer.writeRawAssembly(Machine.PRINTC);
 			} else if (printable instanceof Expn) {
 				// Handle regular expressions.
-				Expn expn = (Expn)printable;
+				Expn expn = (Expn) printable;
 				expn.accept(this);
 				this.writer.writeRawAssembly(Machine.PRINTI);
 			} else {
@@ -294,7 +310,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 
 	@Override
-	public void visit(ReturnStmt visitable) {		
+	public void visit(ReturnStmt visitable) {
 		if (visitable.getValue() != null) {
 			// Put the return value into the control block.
 			this.writer.writeRawAssembly(Machine.ADDR, this.symbolTable.getCurrentScope().getLexicalLevel(), CONTROL_BLOCK_RETURN_VALUE);
@@ -318,22 +334,22 @@ public class CodeGenVisitor extends NodeVisitor {
 		super.visit(visitable);
 
 		String s = visitable.getOpSymbol();
-		if (s.equals("+")) {
+		if (s.equals(ArithExpn.OP_PLUS)) {
 			this.writer.writeRawAssembly(Machine.ADD);
-		} else if (s.equals("-")) {
+		} else if (s.equals(ArithExpn.OP_MINUS)) {
 			this.writer.writeRawAssembly(Machine.SUB);
-		} else if (s.equals("*")) {
+		} else if (s.equals(ArithExpn.OP_TIMES)) {
 			this.writer.writeRawAssembly(Machine.MUL);
-		} else if (s.equals("/")) {
+		} else if (s.equals(ArithExpn.OP_DIVIDE)) {
 			this.writer.writeRawAssembly(Machine.DIV);
-		} else { 
+		} else {
 			System.out.println("WARNING: Encountered bad symbol.");
 		}
 	}
 
 	@Override
 	public void visit(BoolConstExpn visitable) {
-		super.visit(visitable);		
+		super.visit(visitable);
 		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue() ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE);
 	}
 
@@ -357,9 +373,9 @@ public class CodeGenVisitor extends NodeVisitor {
 			visitable.getSecondExpression().accept(this);
 
 			// Now, we are done evaluating the second expression.
-			this.writer.patchAddress(toEndPatch);	
+			this.writer.patchAddress(toEndPatch);
 
-		} else if (visitable.getOpSymbol().equals("&")) {
+		} else if (visitable.getOpSymbol().equals(BoolExpn.OP_AND)) {
 			// If we see "false", we don't want to evaluate the second expression.
 			AddressPatch toNextExpnPatch = this.writer.writePatchableBranchIfFalse();
 
@@ -396,11 +412,6 @@ public class CodeGenVisitor extends NodeVisitor {
 				CONTROL_BLOCK_DISPLAY);
 		this.writer.writeRawAssembly(Machine.LOAD);
 
-		// Push parameters onto the stack.
-		for (Expn expn : visitable.getArguments()) {
-			expn.accept(this);
-		}
-
 		// Branch to the caller.
 		Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
 		RoutineSemType routine = (RoutineSemType)symbol.getType();
@@ -411,13 +422,22 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 
 	@Override
+	public void visit(EqualsExpn visitable) {
+		super.visit(visitable);
+		this.writer.writeRawAssembly(Machine.EQ);
+		if (visitable.getOpSymbol().equals(EqualsExpn.OP_NOT_EQUAL)) {
+			this.writer.writeNot();
+		}
+	}
+
+	@Override
 	public void visit(IntConstExpn visitable) {
 		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue());
 	}
 
 	@Override
-	public void visit(IdentExpn visitable) {		
-		// Push the address of the variable on to the top of the stack. 
+	public void visit(IdentExpn visitable) {
+		// Push the address of the variable on to the top of the stack.
 		// Use an address visitor to do this.
 		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
 		visitable.accept(addressVisitor);
@@ -425,6 +445,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Load the value at that address on to the top of the stack.
 		this.writer.writeRawAssembly(Machine.LOAD);
 	}
+
 
 	@Override
 	public void visit(SkipConstExpn visitable) {
@@ -439,7 +460,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		visitable.accept(addressVisitor);
 
 		// Load the value at that address on to the top of the stack.
-		this.writer.writeRawAssembly(Machine.LOAD);		
+		this.writer.writeRawAssembly(Machine.LOAD);
 	}
 
 	@Override

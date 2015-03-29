@@ -32,7 +32,7 @@ public class SymScope {
 	}
 	
 	public boolean isMajor() {
-		return this.scopeType.isMinor();
+		return this.scopeType.isMajor();
 	}
 	
 	public boolean isMinor() {

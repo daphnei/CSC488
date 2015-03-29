@@ -27,6 +27,11 @@ public class RoutineSemType extends SemType {
 	 * CODE GEN: The address to branch to when calling the routine.
 	 */
 	private short routineStartAddress = -1;
+
+	/**
+	 * CODE GEN: The lexical level associated with the routine.
+	 */
+	private short lexicalLevel = -1;
 	
 	/**
 	 * Create a function with parameters and a return value.
@@ -74,5 +79,13 @@ public class RoutineSemType extends SemType {
 
 	public short getStartAddress() {
 		return this.routineStartAddress;
+	}
+	
+	public void setLexicalLevel(short level) {
+		this.lexicalLevel = level;
+	}
+
+	public short getLexicalLevel() {
+		return this.lexicalLevel;
 	}
 }

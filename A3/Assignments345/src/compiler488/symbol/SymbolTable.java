@@ -84,7 +84,7 @@ public class SymbolTable {
 	public void closeCurrentScope() throws SemanticErrorException {
 		this.checkIfThereIsAnyScope();
 		// If the current scope is major, destroy all the symbols that were declared in it.
-		if (this.scopes.peek().isMajor()) {			
+		if (this.scopes.peek().isMajor()) {
 			for (String identifier : this.table.keySet()) {
 				Stack<Symbol> symbols = this.table.get(identifier);
 	
