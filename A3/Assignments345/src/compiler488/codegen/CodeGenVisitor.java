@@ -21,6 +21,7 @@ import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.IfStmt;
 import compiler488.ast.stmt.Program;
 import compiler488.ast.stmt.PutStmt;
+import compiler488.ast.stmt.ReturnStmt;
 import compiler488.ast.stmt.Stmt;
 import compiler488.compiler.Main;
 import compiler488.exceptions.ExecutionException;
@@ -40,6 +41,10 @@ public class CodeGenVisitor extends NodeVisitor {
 
 	public static final boolean DEBUGGING = false;
 	private static final short DISPLAY_OFFSET_IN_CONTROL_BLOCK = 2;
+	private static final short CONTROL_BLOCK_RETURN_VALUE = 0;
+	private static final short CONTROL_BLOCK_RETURN_ADDRESS = 1;
+	private static final short CONTROL_BLOCK_DISPLAY = 2;
+	private static final short CONTROL_BLOCK_SIZE = 3;
 
 	private CodeWriter writer;
 
@@ -84,13 +89,18 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.symbolTable.openScope(ScopeType.PROGRAM);
 		SymScope scope = this.symbolTable.getCurrentScope();
 		
-		// Write value to the display.
 		// TODO: Replace this with the regular activation block.
 		AddressPatch stackStartPatch = this.writer.writePatchablePush();
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
+				
+		this.writer.writeRawAssembly(Machine.PUSH, 0); // Push return value
+		this.writer.writeRawAssembly(Machine.PUSH, 0); // Push return address
+		this.writer.writeRawAssembly(Machine.ADDR, (short)0, 0); // Push display value.
+		
+		scope.assignSpaceForNewVariable(3); // Don't start assigning on top of the control block.
 		
 		// TODO: Push some fake space for holding all the variables.
-		this.writer.writeRawAssembly(Machine.PUSH, 0); 
+		this.writer.writeRawAssembly(Machine.PUSH, 0);
 		this.writer.writeRawAssembly(Machine.PUSH, 3);
 		this.writer.writeRawAssembly(Machine.DUPN);
 		
@@ -156,20 +166,20 @@ public class CodeGenVisitor extends NodeVisitor {
 		// TODO: Refactor into helper.
 		
 		// Set the display register.
-		short partialActivationRecordSize = 3; // TODO
+		short controlBlockAndParameters = 4; // TODO
 		this.writer.writeRawAssembly(Machine.PUSHMT);
-		this.writer.writeRawAssembly(Machine.PUSH, partialActivationRecordSize);
+		this.writer.writeRawAssembly(Machine.PUSH, controlBlockAndParameters);
 		this.writer.writeRawAssembly(Machine.SUB);
 		this.writer.writeRawAssembly(Machine.SETD, this.symbolTable.getCurrentScope().getLexicalLevel());
 		
 		// Push space for local variables on stack.
-		short localVariableSize = 10; // TODO
+		short localVariableSize = 3; // TODO
 		this.writer.writeRawAssembly(Machine.PUSH, 0); // Dummy value.
 		this.writer.writeRawAssembly(Machine.PUSH, localVariableSize);
 		this.writer.writeRawAssembly(Machine.DUPN);
 		
 		// Set the offset properly in the function scope.
-		this.symbolTable.getCurrentScope().assignSpaceForNewVariable(localVariableSize + partialActivationRecordSize);
+		this.symbolTable.getCurrentScope().assignSpaceForNewVariable(CONTROL_BLOCK_SIZE);
 		
 		// --- Visit children.
 		super.visit(visitable);
@@ -178,7 +188,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		// TODO: Refactor into helper.
 		
 		// Delete the local variables.
-		short localParameterSize = 7; // TODO
+		short localParameterSize = 1; // TODO
 		this.writer.writeRawAssembly(Machine.PUSH, localVariableSize + localParameterSize);
 		this.writer.writeRawAssembly(Machine.POPN);
 		
@@ -286,8 +296,19 @@ public class CodeGenVisitor extends NodeVisitor {
 		}
 	}
 	
+	@Override
+	public void visit(ReturnStmt visitable) {		
+		if (visitable.getValue() != null) {
+			// Put the return value into the control block.
+			this.writer.writeRawAssembly(Machine.ADDR, this.symbolTable.getCurrentScope().getLexicalLevel(), CONTROL_BLOCK_RETURN_VALUE);
+			visitable.getValue().accept(this);
+			this.writer.writeRawAssembly(Machine.STORE);
+		}
+		
+		// TODO: Do jumping.
+	}
+	
 	// --- Expressions ---
-
 	
 	@Override
 	public void visit(AnonFuncExpn visitable) {
@@ -375,7 +396,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.writer.writeRawAssembly(
 				Machine.ADDR,
 				this.symbolTable.getCurrentScope().getLexicalLevel(),
-				DISPLAY_OFFSET_IN_CONTROL_BLOCK);
+				CONTROL_BLOCK_DISPLAY);
 		this.writer.writeRawAssembly(Machine.LOAD);
 		
 		// Push parameters onto the stack.

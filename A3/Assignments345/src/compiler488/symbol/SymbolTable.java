@@ -44,7 +44,7 @@ public class SymbolTable {
 		this.scopes = new LinkedList<SymScope>();
 
 		this.curScopeIndex = -1; // Set this to -1 so that the first scope
-									// created will have index 0.
+	                             // created will have index 0.
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class SymbolTable {
 	 */
 	public void openScope(ScopeType type) {
 		this.curScopeIndex++;
-		this.scopes.push(this.createNewScope(type));		
+		this.scopes.push(this.createNewScope(type));	
 	}
 
 	/**

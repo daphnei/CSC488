@@ -49,6 +49,6 @@ public class Symbol {
 	}
 
 	public short getLexicalLevel(SymbolTable table) {
-		return table.scopes.get(this.scopeIndex).getLexicalLevel();
+		return table.scopes.get(table.scopes.size() - 1 - this.scopeIndex).getLexicalLevel();
 	}
 }
