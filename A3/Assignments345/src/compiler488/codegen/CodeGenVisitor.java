@@ -15,9 +15,11 @@ import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.FunctionCallExpn;
 import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.IntConstExpn;
+import compiler488.ast.expn.NotExpn;
 import compiler488.ast.expn.SkipConstExpn;
 import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.expn.TextConstExpn;
+import compiler488.ast.expn.UnaryMinusExpn;
 import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.IfStmt;
 import compiler488.ast.stmt.Program;
@@ -331,7 +333,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Evaluate the first expression.
 		visitable.getFirstExpression().accept(this);
 
-		if (visitable.getOpSymbol().equals("|")) {
+		if (visitable.getOpSymbol().equals(BoolExpn.OP_OR)) {
 			// If we see "true", we don't want to evaluate the second expression.
 			AddressPatch toNextExpnPatch = this.writer.writePatchableBranchIfFalse();
 
@@ -411,6 +413,20 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 
 
+	@Override
+	public void visit(NotExpn visitable) {
+		super.visit(visitable);
+
+		this.writer.writeNot();
+	}
+	
+	@Override
+	public void visit(UnaryMinusExpn visitable) {
+		super.visit(visitable);
+
+		this.writer.writeRawAssembly(Machine.NEG);
+	}
+	
 	@Override
 	public void visit(SkipConstExpn visitable) {
 		// Handled by PutStmt
