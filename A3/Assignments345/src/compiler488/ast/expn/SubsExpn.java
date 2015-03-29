@@ -65,11 +65,6 @@ public class SubsExpn extends Expn implements Readable {
 
 	@Override
 	public void accept(IVisitor visitor) {
-		this.subscript1.accept(visitor);
-		if (this.subscript2 != null) {
-			this.subscript2.accept(visitor);
-		}
-		
 		visitor.visit(this);	
 	}
 }

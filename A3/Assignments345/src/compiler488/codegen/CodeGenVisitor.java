@@ -41,6 +41,7 @@ import compiler488.symbol.SymbolTable;
 public class CodeGenVisitor extends NodeVisitor {
 
 	public static final boolean DEBUGGING = false;
+	private static final short DISPLAY_OFFSET_IN_CONTROL_BLOCK = 2;
 	private static final short CONTROL_BLOCK_RETURN_VALUE = 0;
 	private static final short CONTROL_BLOCK_RETURN_ADDRESS = 1;
 	private static final short CONTROL_BLOCK_DISPLAY = 2;
@@ -228,7 +229,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	
 	// --- Statements ---
 
-	public void visit(AssignStmt visitable) {
+	public void visit(AssignStmt visitable) {		
 		// Get the address of the left expression and push it onto the stack.
 		// TODO: handle arrays.
 		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
@@ -239,7 +240,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		
 		// Store the value at the address.
 		this.writer.writeRawAssembly(Machine.STORE);
-	}
+		}
 	
 	@Override
 	public void visit(IfStmt visitable) {
@@ -431,9 +432,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 	
 	@Override
-	public void visit(IdentExpn visitable) {
-		String varName = visitable.getIdentifier();
-		
+	public void visit(IdentExpn visitable) {		
 		// Push the address of the variable on to the top of the stack. 
 		// Use an address visitor to do this.
 		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
@@ -450,25 +449,13 @@ public class CodeGenVisitor extends NodeVisitor {
 	
 	@Override
 	public void visit(SubsExpn visitable) {
-		// Evaluate the left and right subscripts, pushing the results on to the stack.
-		visitable.getSubscript1().accept(this);
-		if (visitable.getSubscript2() != null) {
-			visitable.getSubscript2().accept(this);
-		}
-				
-		// Push the first memory address of the array on to the stack.
-		this.writer.writeSymbolAddress(visitable.getVariable());
+		// First visit this expression withing the address visitor in order
+		// to get the address of the desired position in the array.
+		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
+		visitable.accept(addressVisitor);
 		
-		// If there is only one dimension, our lives our easy, and a simple add is enough 
-		// to get to the proper memory address.
-		if (visitable.getSubscript2() == null) {
-			
-		
-		}
-		
-		// Do magic math to get an offset from the beginning of the address of the variable.
-		
-		
+		// Load the value at that address on to the top of the stack.
+		this.writer.writeRawAssembly(Machine.LOAD);		
 	}
 	
 	@Override
