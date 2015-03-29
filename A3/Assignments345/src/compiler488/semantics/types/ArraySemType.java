@@ -55,19 +55,22 @@ public class ArraySemType extends SemType {
 	
 	private void setLengthForDim1(int lowerBound, int upperBound) {
 		this.lengthDim1 = upperBound - lowerBound;
-		this.offsetDim1 = -lowerBound;
+		this.offsetDim1 = 1-lowerBound;
 	}
 	
 	private void setLengthForDim2(int lowerBound, int upperBound) {
 		this.lengthDim2 = upperBound - lowerBound;
-		this.offsetDim2 = -lowerBound;
+		this.offsetDim2 = 1-lowerBound;
 	}
 	
 	/**
 	 * @return the number of memory addresses this array should take up
 	 */
 	public int getSize() {
-		return this.lengthDim1 * this.lengthDim2;
+		if (this.dimensions == 1)
+			return this.lengthDim1;
+		else
+			return this.lengthDim1 * this.lengthDim2;
 	}
 	
 	public int getNumDimensions() {
@@ -77,6 +80,23 @@ public class ArraySemType extends SemType {
 	public PrimitiveSemType getBaseType() {
 		return this.baseType;
 	}
+
+	public Integer getLengthDim1() {
+		return lengthDim2;
+	}
+	
+	public Integer getLengthDim2() {
+		return lengthDim2;
+	}
+
+	public Integer getOffsetDim1() {
+		return offsetDim1;
+	}
+
+	public Integer getOffsetDim2() {
+		return offsetDim2;
+	}
+	
 
 	@Override
 	public boolean equals(Object obj) {
