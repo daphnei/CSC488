@@ -289,30 +289,38 @@ public class CodeWriter {
 		this.writeRawAssembly(Machine.PUSH, offset);
 		this.writeRawAssembly(Machine.ADD);
 		
-		// Check if the resulting index is too small.
+		// Push a couple more copies of this index onto the stack, for use with error checking.
 		this.writeRawAssembly(Machine.DUP);
+		this.writeRawAssembly(Machine.DUP);
+		
+		// Check if the index is too small.
 		this.writeRawAssembly(Machine.PUSH, 1);
 		this.writeRawAssembly(Machine.LT);
 
 		// Check if the resulting index is too large.
-		this.writeRawAssembly(Machine.DUP);
+		this.writeRawAssembly(Machine.SWAP);
 		this.writeRawAssembly(Machine.PUSH, length);
+		this.writeRawAssembly(Machine.SWAP);
 		this.writeRawAssembly(Machine.LT);
 		
-		// Check if either of these cases occured.
+		// Check if either of these cases occurred.
 		this.writeRawAssembly(Machine.OR);
 		
 		AddressPatch patchIf = this.writePatchableBranchIfFalse();
 		
 		// If either case occurred, the print an error and exit.
-		this.writeString("Line ");
-		this.writeRawAssembly(Machine.PRINTI, lineNumber);
-		this.writeString(": ArrayOutOfBoundsException. Halting execution.");
-		this.writeRawAssembly(Machine.HALT);
+		this.writeErrorThenHalt(lineNumber, "ArrayOutOfBoundsException.");
 		
 		this.patchAddress(patchIf, this.programCounter);
 	}
 
+	public void writeErrorThenHalt(int lineNumber, String message) {
+		this.writeString("Line ");
+		this.writeRawAssembly(Machine.PRINTI, lineNumber);
+		this.writeString(": " + message + " Halting execution.");
+		this.writeRawAssembly(Machine.HALT);
+	}
+	
 	public void writeSymbolAddress(String symbolIdentifier) {
 		Symbol symbol = this.symbolTable.retrieveSymbol(symbolIdentifier);
 		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(this.symbolTable), symbol.getOffset());
