@@ -1,12 +1,15 @@
 package compiler488.symbol;
 
+import compiler488.exceptions.SemanticErrorException;
+import compiler488.semantics.types.SemType;
+
 public class CodeGenSymbolTable extends SymbolTable {
 	
 	public CodeGenSymbolTable() {
 		
 	}
 	
-	private int getOpenLexicalLevel() {
+	private short getOpenLexicalLevel() {
 		if (this.scopes.isEmpty()) {
 			return -1;
 		}
@@ -18,5 +21,12 @@ public class CodeGenSymbolTable extends SymbolTable {
 		short nextLevel = (short)(this.getOpenLexicalLevel() + (type.isMajor() ? 1 : 0));
 		SymScope scope = new SymScope(type, nextLevel);
 		return scope;
+	}
+	
+	@Override
+	public Symbol addSymbolToCurScope(String identifier, SemType type) throws SemanticErrorException {
+		Symbol symbol = super.addSymbolToCurScope(identifier, type);
+		symbol.setLexicalLevel(this.getOpenLexicalLevel());
+		return symbol;
 	}
 }
