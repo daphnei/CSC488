@@ -35,7 +35,7 @@ public class ExpnAddressVisitor extends NodeVisitor {
 		String varName = visitable.getIdentifier();
 				
 		// Push the address of this variable on to the top of the stack.
-		this.writer.writeSymbolAddress(varName);
+		this.writer.writeSymbolAddress(varName, symbolTable);
 	}
 	
 	@Override
@@ -51,7 +51,7 @@ public class ExpnAddressVisitor extends NodeVisitor {
 		
 		if (visitable.getSubscript2() == null) {
 			// Push the first memory address of the array on to the stack.
-			this.writer.writeSymbolAddress(visitable.getVariable());
+			this.writer.writeSymbolAddress(visitable.getVariable(), symbolTable);
 			
 			// If there is only one dimension, our lives our easy, and a simple add is enough 
 			// to get to the proper memory address.

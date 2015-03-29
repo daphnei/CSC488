@@ -1,11 +1,11 @@
 begin
   integer function compute(integer var) begin
-    put skip, var, skip
-    if var = 3 then
-      return (100)
-    else
-      return (compute(var + 1))
-    end
+   put skip, var, skip
+   if var = 3 then
+     return (100)
+   else
+     return (compute(var + 1))
+   end
   end
   integer x
   x <= compute(0)

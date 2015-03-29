@@ -2,6 +2,7 @@ package compiler488.symbol;
 
 import compiler488.codegen.CodeGenVisitor;
 import compiler488.runtime.Machine;
+import compiler488.semantics.types.RoutineSemType;
 
 public class SymScope {
 	private ScopeType scopeType;
@@ -17,6 +18,9 @@ public class SymScope {
 	 * that has not been allocated yet.
 	 */
 	private short freeOffset = CodeGenVisitor.CONTROL_BLOCK_SIZE;
+	
+	private RoutineSemType associatedRoutine = null;
+	
 	
 	public SymScope(ScopeType scopeType) {
 		this(scopeType, Machine.UNDEFINED);
@@ -55,6 +59,14 @@ public class SymScope {
 		int addressOfVar = this.freeOffset;
 		this.freeOffset += varSize;
 		return addressOfVar;
+	}
+	
+	public void setRoutine(RoutineSemType routine) {
+		this.associatedRoutine = routine;
+	}
+	
+	public RoutineSemType getRoutine() {
+		return this.associatedRoutine;
 	}
 	
 	public short getOffset() {
