@@ -10,6 +10,7 @@ import compiler488.ast.expn.AnonFuncExpn;
 import compiler488.ast.expn.ArithExpn;
 import compiler488.ast.expn.BoolConstExpn;
 import compiler488.ast.expn.BoolExpn;
+import compiler488.ast.expn.EqualsExpn;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.FunctionCallExpn;
 import compiler488.ast.expn.IdentExpn;
@@ -39,7 +40,7 @@ import compiler488.symbol.SymbolTable;
 
 public class CodeGenVisitor extends NodeVisitor {
 
-	public static final boolean DEBUGGING = true;
+	public static final boolean DEBUGGING = false;
 	private static final short CONTROL_BLOCK_RETURN_VALUE = 0;
 	private static final short CONTROL_BLOCK_RETURN_ADDRESS = 1;
 	private static final short CONTROL_BLOCK_DISPLAY = 2;
@@ -153,6 +154,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		
 		RoutineSemType routineType = new RoutineSemType(visitable.getType().getSemanticType());
 		routineType.setStartAddress(this.writer.getCurrentProgramCounter());
+		routineType.setLexicalLevel(this.symbolTable.getCurrentScope().getLexicalLevel());
 		this.symbolTable.addSymbolToCurScope(visitable.getName(), routineType);
 		
 		// The following values are pushed on from the caller.
@@ -320,13 +322,13 @@ public class CodeGenVisitor extends NodeVisitor {
 		super.visit(visitable);
 		
 		String s = visitable.getOpSymbol();
-		if (s.equals("+")) {
+		if (s.equals(ArithExpn.OP_PLUS)) {
 			this.writer.writeRawAssembly(Machine.ADD);
-		} else if (s.equals("-")) {
+		} else if (s.equals(ArithExpn.OP_MINUS)) {
 			this.writer.writeRawAssembly(Machine.SUB);
-		} else if (s.equals("*")) {
+		} else if (s.equals(ArithExpn.OP_TIMES)) {
 			this.writer.writeRawAssembly(Machine.MUL);
-		} else if (s.equals("/")) {
+		} else if (s.equals(ArithExpn.OP_DIVIDE)) {
 			this.writer.writeRawAssembly(Machine.DIV);
 		} else { 
 			System.out.println("WARNING: Encountered bad symbol.");
@@ -346,7 +348,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Evaluate the first expression.
 		visitable.getFirstExpression().accept(this);
 		
-		if (visitable.getOpSymbol().equals("|")) {
+		if (visitable.getOpSymbol().equals(BoolExpn.OP_OR)) {
 			// If we see "true", we don't want to evaluate the second expression.
 			AddressPatch toNextExpnPatch = this.writer.writePatchableBranchIfFalse();
 			
@@ -361,7 +363,7 @@ public class CodeGenVisitor extends NodeVisitor {
 			// Now, we are done evaluating the second expression.
 			this.writer.patchAddress(toEndPatch);	
 			
-		} else if (visitable.getOpSymbol().equals("&")) {
+		} else if (visitable.getOpSymbol().equals(BoolExpn.OP_AND)) {
 			// If we see "false", we don't want to evaluate the second expression.
 			AddressPatch toNextExpnPatch = this.writer.writePatchableBranchIfFalse();
 			
@@ -382,6 +384,16 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 	
 	@Override
+	public void visit(EqualsExpn visitable) {
+		super.visit(visitable);
+		if (visitable.getOpSymbol().equals(EqualsExpn.OP_EQUAL)) {
+			this.writer.writeRawAssembly(Machine.EQ);
+		} else {
+			// TODO: 
+		}
+	}
+	
+	@Override
 	public void visit(FunctionCallExpn visitable) {
 		// TODO: Refactor into helper.
 		
@@ -391,12 +403,15 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Push the return address.
 		AddressPatch afterFunctionCallPatch = this.writer.writePatchablePush();
 		
-		// Push the value of the current display onto the stack.
+		// Push the value of the current LL display for this routine onto the stack.
+		Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
+		RoutineSemType routine = (RoutineSemType)symbol.getType();
 		this.writer.writeRawAssembly(
 				Machine.ADDR,
-				this.symbolTable.getCurrentScope().getLexicalLevel(),
-				CONTROL_BLOCK_DISPLAY);
-		this.writer.writeRawAssembly(Machine.LOAD);
+				routine.getLexicalLevel(),
+				0);
+		// TODO: This was in the sudo-code, but I think it is wrong.
+		// this.writer.writeRawAssembly(Machine.LOAD);
 		
 		// Push parameters onto the stack.
 		for (Expn expn : visitable.getArguments()) {
@@ -404,8 +419,6 @@ public class CodeGenVisitor extends NodeVisitor {
 		}
 		
 		// Branch to the caller.
-		Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
-		RoutineSemType routine = (RoutineSemType)symbol.getType();
 		this.writer.writeBranchAlways(routine.getStartAddress());
 		
 		// Patch now that we know were to come back to after calling the function.

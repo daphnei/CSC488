@@ -1,8 +1,13 @@
 begin
   integer function compute(integer var) begin
-    return (var + 1)
+    put skip, var, skip
+    if var = 50 then
+      return (100)
+    else
+      return (compute(var + 1))
+    end
   end
-  integer value
-  value <= compute(1)
-  put value
+  integer x
+  x <= compute(1)
+  put x
 end
