@@ -22,11 +22,4 @@ public class CodeGenSymbolTable extends SymbolTable {
 		SymScope scope = new SymScope(type, nextLevel);
 		return scope;
 	}
-	
-	@Override
-	public Symbol addSymbolToCurScope(String identifier, SemType type) throws SemanticErrorException {
-		Symbol symbol = super.addSymbolToCurScope(identifier, type);
-		symbol.setLexicalLevel(this.getOpenLexicalLevel());
-		return symbol;
-	}
 }

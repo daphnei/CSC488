@@ -131,11 +131,23 @@ public class CodeWriter {
 		return this.programCounter;
 	}
 	
+	public AddressPatch writePatchablePush() {
+		short originalMemory = this.programCounter;		
+		this.writeRawAssembly(Machine.PUSH, this.programCounter);
+		
+		int debugRecordIndex = this.debugRecord.size() - 1; // HACK: Be careful about this!
+		this.record(debugRecordIndex, originalMemory, Machine.PUSH, "PATCHME", null);
+		
+		AddressPatch patch = new AddressPatch(originalMemory + 1, this.programCounter, debugRecordIndex);
+		this.requiredPatches.add(patch);
+		return patch;
+	}
+	
 	// --- Helpers ---
 	
 	public void writeSymbolAddress(String symbolIdentifier) {
 		Symbol symbol = this.symbolTable.retrieveSymbol(symbolIdentifier);
-		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(), symbol.getOffset());
+		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(this.symbolTable), symbol.getOffset());
 	}
 	
 	public void patchAddress(AddressPatch needingPatch) {
@@ -174,5 +186,11 @@ public class CodeWriter {
 	
 	private void record(String text) {
 		this.debugRecord.add(text);
+	}
+	
+	public static void printStackTrace() {
+		for(StackTraceElement s : Thread.currentThread().getStackTrace()) {
+			System.out.println(s.toString());
+		}
 	}
 }

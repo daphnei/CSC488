@@ -17,11 +17,6 @@ public class Symbol {
 	 * The type associated with this symbol.
 	 */
 	private SemType type;
-	
-	/**
-	 * The lexical level associated with the variable.
-	 */
-	private short lexicalLevel;
 
 	/**
 	 * The address offset from this symbol's lexical level.
@@ -52,12 +47,8 @@ public class Symbol {
 	public SemType getType() {
 		return this.type;
 	}
-	
-	public void setLexicalLevel(short level) {
-		this.lexicalLevel = level;
-	}
 
-	public short getLexicalLevel() {
-		return this.lexicalLevel;
+	public short getLexicalLevel(SymbolTable table) {
+		return table.scopes.get(this.scopeIndex).getLexicalLevel();
 	}
 }
