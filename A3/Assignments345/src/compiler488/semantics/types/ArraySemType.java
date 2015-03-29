@@ -54,12 +54,12 @@ public class ArraySemType extends SemType {
 	}
 	
 	private void setLengthForDim1(int lowerBound, int upperBound) {
-		this.lengthDim1 = upperBound - lowerBound;
+		this.lengthDim1 = upperBound - lowerBound + 1;
 		this.offsetDim1 = 1-lowerBound;
 	}
 	
 	private void setLengthForDim2(int lowerBound, int upperBound) {
-		this.lengthDim2 = upperBound - lowerBound;
+		this.lengthDim2 = upperBound - lowerBound + 1;
 		this.offsetDim2 = 1-lowerBound;
 	}
 	
@@ -82,7 +82,7 @@ public class ArraySemType extends SemType {
 	}
 
 	public Integer getLengthDim1() {
-		return lengthDim2;
+		return lengthDim1;
 	}
 	
 	public Integer getLengthDim2() {

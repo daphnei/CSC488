@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import compiler488.ast.expn.Expn;
 import compiler488.runtime.Machine;
 import compiler488.semantics.types.RoutineSemType;
 import compiler488.symbol.Symbol;
@@ -242,9 +241,76 @@ public class CodeWriter {
 			this.writeRawAssembly(Machine.POP);
 		}
 	}
-
+	
 	// --- Helpers ---
 
+	public void writeBeginDebug() {
+		this.writeRawAssembly(Machine.TRON);
+	}
+	
+	public void writeEndDebug() {
+		this.writeRawAssembly(Machine.TROFF);
+	}
+	
+	/**
+	 * Write the specified string out to standard output.
+	 * @param string
+	 */
+	public void writeString(String string) {
+		for(char c : string.toCharArray()) {
+			this.writeRawAssembly(Machine.PUSH, c);
+			this.writeRawAssembly(Machine.PRINTC);
+		}
+	}
+	
+	/**
+	 * Before this method is entered, it is assumed that an array subscript has 
+	 * been pushed on to the stack. 
+	 * 
+	 * This method generates code to add the specified offset to the subscripts, and
+	 * then check to make sure the result is within the bounds of the array.
+	 * 
+	 * @param offset the offset for the dimension of the array index.
+	 * @param length the number of array elements in the dimension being indexed.
+	 * @param lineNumber This will be used in case of error.
+	 */
+	public void writeSubscriptOffsetAndBoundsCheck(int offset, int length, int lineNumber) {
+		// First add the offset to the subscript value already at the top of the stack. 
+		this.writeRawAssembly(Machine.PUSH, offset);
+		this.writeRawAssembly(Machine.ADD);
+		
+		// Push a couple more copies of this index onto the stack, for use with error checking.
+		this.writeRawAssembly(Machine.DUP);
+		this.writeRawAssembly(Machine.DUP);
+		
+		// Check if the index is too small.
+		this.writeRawAssembly(Machine.PUSH, 1);
+		this.writeRawAssembly(Machine.LT);
+
+		// Check if the resulting index is too large.
+		this.writeRawAssembly(Machine.SWAP);
+		this.writeRawAssembly(Machine.PUSH, length);
+		this.writeRawAssembly(Machine.SWAP);
+		this.writeRawAssembly(Machine.LT);
+		
+		// Check if either of these cases occurred.
+		this.writeRawAssembly(Machine.OR);
+		
+		AddressPatch patchIf = this.writePatchableBranchIfFalse();
+		
+		// If either case occurred, the print an error and exit.
+		this.writeErrorThenHalt(lineNumber, "ArrayOutOfBoundsException.");
+		
+		this.patchAddress(patchIf, this.programCounter);
+	}
+
+	public void writeErrorThenHalt(int lineNumber, String message) {
+		this.writeString("Line ");
+		this.writeRawAssembly(Machine.PRINTI, lineNumber);
+		this.writeString(": " + message + " Halting execution.");
+		this.writeRawAssembly(Machine.HALT);
+	}
+	
 	public void writeSymbolAddress(String symbolIdentifier) {
 		Symbol symbol = this.symbolTable.retrieveSymbol(symbolIdentifier);
 		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(this.symbolTable), symbol.getOffset());

@@ -7,7 +7,7 @@ import compiler488.ast.BasePrettyPrinter;
 import compiler488.ast.stmt.Program;
 import compiler488.codegen.CodeGenExample;
 import compiler488.codegen.CodeGenVisitor;
-import compiler488.exceptions.ExecutionException;
+import compiler488.exceptions.runtime.ExecutionException;
 import compiler488.semantics.SemanticsVisitor;
 import compiler488.runtime.*;
 

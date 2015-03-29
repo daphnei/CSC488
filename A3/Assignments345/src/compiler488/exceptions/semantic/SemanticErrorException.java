@@ -1,4 +1,4 @@
-package compiler488.exceptions;
+package compiler488.exceptions.semantic;
 
 /**
  * This exception should be thrown when a semantic error occurs.

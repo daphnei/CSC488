@@ -1,4 +1,4 @@
-package compiler488.exceptions;
+package compiler488.exceptions.semantic;
 
 /**
  * An exception that is thrown when a routine is called with the inccorect

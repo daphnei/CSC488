@@ -48,7 +48,7 @@ import compiler488.ast.type.BooleanType;
 import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.compiler.Main;
-import compiler488.exceptions.SemanticErrorException;
+import compiler488.exceptions.semantic.SemanticErrorException;
 import compiler488.semantics.types.ErrorSemType;
 import compiler488.semantics.types.PrimitiveSemType;
 import compiler488.semantics.types.RoutineSemType;
