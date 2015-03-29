@@ -31,11 +31,8 @@ public class ExpnAddressVisitor extends NodeVisitor {
 	@Override
 	public void visit(IdentExpn visitable) {
 		String varName = visitable.getIdentifier();
-		
-		Symbol symbol = this.symbolTable.retrieveSymbol(varName);
-		SymScope scope = this.symbolTable.getCurrentScope();
-		
+				
 		// Push the address of this variable on to the top of the stack.
-		this.writer.writeRawAssemply(Machine.ADDR, symbol.getLexicalLevel(), symbol.getOffset());
+		this.writer.writeSymbolAddress(varName);
 	}
 }

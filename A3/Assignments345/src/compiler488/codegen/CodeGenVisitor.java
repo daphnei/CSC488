@@ -371,7 +371,19 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(SubsExpn visitable) {
 		// Evaluate the left and right subscripts, pushing the results on to the stack.
 		visitable.getSubscript1().accept(this);
-		visitable.getSubscript2().accept(this);
+		if (visitable.getSubscript2() != null) {
+			visitable.getSubscript2().accept(this);
+		}
+				
+		// Push the first memory address of the array on to the stack.
+		this.writer.writeSymbolAddress(visitable.getVariable());
+		
+		// If there is only one dimension, our lives our easy, and a simple add is enough 
+		// to get to the proper memory address.
+		if (visitable.getSubscript2() == null) {
+			
+		
+		}
 		
 		// Do magic math to get an offset from the beginning of the address of the variable.
 		
