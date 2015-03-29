@@ -20,10 +20,8 @@ public class CodeWriter {
 	private short programCounter = 0;
 	private List<String> debugRecord = new ArrayList<String>();
 	private List<AddressPatch> requiredPatches = new LinkedList<AddressPatch>();
-	private SymbolTable symbolTable;
 
-	public CodeWriter(SymbolTable symbolTable) {
-		this.symbolTable = symbolTable;
+	public CodeWriter() {
 	}
 
 	public short getCurrentProgramCounter() {
@@ -200,7 +198,7 @@ public class CodeWriter {
 	/**
 	 * This function sets up a routine after being declared.
 	 */
-	public void writeRoutineDeclareSetup() {		
+	public AddressPatch writeRoutineDeclareSetup(RoutineSemType routine) {		
 		// The following values are pushed on from the caller.
 		// - Return value space
 		// - The line of code to return to
@@ -208,30 +206,27 @@ public class CodeWriter {
 		// - The parameters
 		
 		// Set the display register.
-		short controlBlockAndParameters = 4; // TODO
+		short controlBlockAndParameters = (short)(CodeGenVisitor.CONTROL_BLOCK_SIZE + routine.getNumParameters());
 		this.writeRawAssembly(Machine.PUSHMT);
 		this.writeRawAssembly(Machine.PUSH, controlBlockAndParameters);
 		this.writeRawAssembly(Machine.SUB);
-		this.writeRawAssembly(Machine.SETD, this.symbolTable.getCurrentScope().getLexicalLevel());
+		this.writeRawAssembly(Machine.SETD, routine.getLexicalLevel());
 		
-		short localParameterSize = 1;
-		
-		// Push space for local variables on stack.
-		short localVariableSize = 3; // TODO
+		// Push space for local variables on stack.	
 		this.writeRawAssembly(Machine.PUSH, 0); // Dummy value.
-		this.writeRawAssembly(Machine.PUSH, localVariableSize);
+		AddressPatch localMinusParamsSizePatch = this.writePatchablePush();
 		this.writeRawAssembly(Machine.DUPN);
+		
+		return localMinusParamsSizePatch;
 	}
 	
-	public void writeRoutineDeclareTeardown(RoutineSemType routine) {
+	public void writeRoutineDeclareTeardown(RoutineSemType routine, int localVariableSpace, AddressPatch localMinusParamsSizePatch) {
 		// Delete the local variables.
-		short localParameterSize = 1; // TODO
-		short localVariableSize = 3; // TODO
-		this.writeRawAssembly(Machine.PUSH, localVariableSize + localParameterSize);
+		this.writeRawAssembly(Machine.PUSH, localVariableSpace); // Includes parameters.
 		this.writeRawAssembly(Machine.POPN);
 		
 		// Set the display register back; the value on the stack is the previous value for this register.
-		this.writeRawAssembly(Machine.SETD, this.symbolTable.getCurrentScope().getLexicalLevel());
+		this.writeRawAssembly(Machine.SETD, routine.getLexicalLevel());
 
 		// Jump to back to where this method was called.
 		this.writeRawAssembly(Machine.BR);
@@ -240,6 +235,8 @@ public class CodeWriter {
 		if (routine.getReturnType() == null) {
 			this.writeRawAssembly(Machine.POP);
 		}
+		
+		this.patchAddress(localMinusParamsSizePatch, (short)(localVariableSpace - routine.getNumParameters()));
 	}
 	
 	// --- Helpers ---
@@ -311,10 +308,12 @@ public class CodeWriter {
 		this.writeRawAssembly(Machine.HALT);
 	}
 	
-	public void writeSymbolAddress(String symbolIdentifier) {
-		Symbol symbol = this.symbolTable.retrieveSymbol(symbolIdentifier);
-		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(this.symbolTable), symbol.getOffset());
+	public void writeSymbolAddress(String symbolIdentifier, SymbolTable symbolTable) {
+		Symbol symbol = symbolTable.retrieveSymbol(symbolIdentifier);
+		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(symbolTable), symbol.getOffset());
 	}
+	
+	// --- Patching ---
 
 	public void patchAddress(AddressPatch needingPatch) {
 		this.patchAddress(needingPatch, this.programCounter);
@@ -329,6 +328,8 @@ public class CodeWriter {
 			System.out.println("ERROR: Trying to patch address that has already been patched!");
 		}
 	}
+	
+	// --- Debug Info ---
 
 	private void record(short memoryAddr, short machineOp, Object arg1, Object arg2) {
 		this.record(this.debugRecord.size(), memoryAddr, machineOp, arg1, arg2);

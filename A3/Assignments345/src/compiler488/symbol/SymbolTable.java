@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.Stack;
+import java.util.TreeSet;
 
 import compiler488.exceptions.semantic.InvalidScopeException;
 import compiler488.exceptions.semantic.SemanticErrorException;
@@ -202,6 +203,10 @@ public class SymbolTable {
 		return -1;
 	}
 	
+	public boolean searchScopesForType(ScopeType searchTarget, Set<ScopeType> forbiddenSet) {
+		return this.findScopesForType(searchTarget, forbiddenSet) != null;
+	}
+	
 	/**
 	 * Checks the linearly through all open scopes, looking for a scope of the specified type.
 	 * If it finds the type, it returns true. If it encounters a forbidden type while searching
@@ -210,19 +215,19 @@ public class SymbolTable {
 	 * @param searchTarget 
 	 * @return True if a scope of the input type is open, false otherwise
 	 */
-	public boolean searchScopesForType(ScopeType searchTarget, Set<ScopeType> forbiddenSet) {
+	public SymScope findScopesForType(ScopeType searchTarget, Set<ScopeType> forbiddenSet) {
 		// The lowest index scope is the last element in the scopeTypes list.
 		// this.curScopeIndex corresponds to the first element in the scopeTypes list.	
 		for (SymScope scope : this.scopes) {
 			if (forbiddenSet.contains(scope.getScopeType())) {
-				return false;
+				return null;
 			}
 			if (scope.getScopeType().equals(searchTarget)) {
-				return true;
+				return scope;
 			}
 		}
 		
-		return false;
+		return null;
 	}
 
 	/**
@@ -247,7 +252,24 @@ public class SymbolTable {
 	 */
 	public SymScope getCurrentMajorScope() {
 		int index = this.searchForLastMajorScope();
-		return this.scopes.get(index);
+		return this.scopes.get(this.scopes.size() - 1 - index);
+	}
+	
+	public SymScope getCurrentRoutineScope() {
+		Set<ScopeType> forbidden = new TreeSet<ScopeType>();
+		forbidden.add(ScopeType.YIELD);
+		forbidden.add(ScopeType.PROGRAM);
+		
+		return this.findScopesForType(ScopeType.ROUTINE, forbidden);
+	}
+	
+	public SymScope getCurrentLoopScope() {
+		Set<ScopeType> forbidden = new TreeSet<ScopeType>();
+		forbidden.add(ScopeType.YIELD);
+		forbidden.add(ScopeType.ROUTINE);
+		forbidden.add(ScopeType.PROGRAM);
+		
+		return this.findScopesForType(ScopeType.LOOP, forbidden);
 	}
 	
 	/**

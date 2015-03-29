@@ -72,7 +72,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
-		this.writer = new CodeWriter(this.symbolTable);
+		this.writer = new CodeWriter();
 		program.accept(this);
 		this.writer.printWrittenCode();
 		if (!this.writer.isCompletelyPatched()) {
@@ -155,10 +155,14 @@ public class CodeGenVisitor extends NodeVisitor {
 		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(visitable.getName(), visitable.getType().getSemanticType());
 		SymScope scope = this.symbolTable.getCurrentMajorScope();
 		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));
+		// These declarations are only in routines... So this should be safe.
+		scope.getRoutine().addParameter(visitable.getType().getSemanticType());
 	}
 
 	@Override
 	public void visit(RoutineDecl visitable) {
+		// DO NOT CALL SUPER
+		
 		// Allow us to jump over the routine when we are not running it.
 		AddressPatch endOfFunctionDefinitionPatch = this.writer.writePatchableBranchAlways();
 
@@ -169,10 +173,21 @@ public class CodeGenVisitor extends NodeVisitor {
 	
 		// Open a new scope for the routine.
 		this.symbolTable.openScope(ScopeType.ROUTINE);
+		this.symbolTable.getCurrentScope().setRoutine(routineType);
 
-		this.writer.writeRoutineDeclareSetup();
-		super.visit(visitable);
-		this.writer.writeRoutineDeclareTeardown(routineType);
+		// Get the parameters for this routine.
+		for (ScalarDecl param : visitable.getParameters()) {
+			param.accept(this);
+		}
+		
+		// Do the setup, execution, and tear-down.
+		AddressPatch localMinusParamsSizePatch = this.writer.writeRoutineDeclareSetup(
+				routineType);
+		visitable.getBody().accept(this);
+		this.writer.writeRoutineDeclareTeardown(
+				routineType,
+				this.symbolTable.getCurrentScope().getSpaceAllocatedForVariables(),
+				localMinusParamsSizePatch);
 
 		// Close the scope and patch the address.
 		this.symbolTable.closeCurrentScope();
