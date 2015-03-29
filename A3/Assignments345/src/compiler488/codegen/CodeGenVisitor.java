@@ -41,6 +41,7 @@ import compiler488.symbol.SymbolTable;
 public class CodeGenVisitor extends NodeVisitor {
 
 	public static final boolean DEBUGGING = false;
+	public static final short DUMMY = 0;
 	public static final short CONTROL_BLOCK_RETURN_VALUE = 0;
 	public static final short CONTROL_BLOCK_RETURN_ADDRESS = 1;
 	public static final short CONTROL_BLOCK_DISPLAY = 2;
@@ -80,7 +81,7 @@ public class CodeGenVisitor extends NodeVisitor {
 
 		Machine.setPC((short) 0); /* where code to be executed begins */
 		Machine.setMSP(this.writer.getCurrentProgramCounter()); /* where memory stack begins */
-		Machine.setMLP((short) (Machine.memorySize - 1)); /* */
+		Machine.setMLP((short) (Machine.memorySize - 1)); /* where the memory stack ends */
 	}
 
 	// --- Program ---
@@ -97,25 +98,24 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.symbolTable.openScope(ScopeType.PROGRAM);
 		SymScope scope = this.symbolTable.getCurrentScope();
 
-		// TODO: Replace this with the regular activation block.
+		// Set the initial display to the correct value.
 		AddressPatch stackStartPatch = this.writer.writePatchablePush();
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
+		
+		// Write a dummy control block.
+		AddressPatch returnAddressPatch = this.writer.writeControlBlock(DUMMY);
+		this.writer.patchAddress(returnAddressPatch, DUMMY);  
 
-		this.writer.writeRawAssembly(Machine.PUSH, 0); // Push return value
-		this.writer.writeRawAssembly(Machine.PUSH, 0); // Push return address
-		this.writer.writeRawAssembly(Machine.ADDR, (short) 0, 0); // Push display value.
-
-		scope.assignSpaceForNewVariable(3); // Don't start assigning on top of the control block.
-
-		// TODO: Push some fake space for holding all the variables.
-		this.writer.writeRawAssembly(Machine.PUSH, 0);
-		this.writer.writeRawAssembly(Machine.PUSH, 3);
+		// Push some fake space for holding all program scope variables.
+		this.writer.writeRawAssembly(Machine.PUSH, DUMMY);
+		AddressPatch amountOfVariableSpacePatch = this.writer.writePatchablePush();
 		this.writer.writeRawAssembly(Machine.DUPN);
 
 		// Generate code for the rest of the program.
 		super.visit(visitable);
 
 		// Finish up the program.
+		this.writer.patchAddress(amountOfVariableSpacePatch, this.symbolTable.getCurrentScope().getSpaceAllocatedForVariables());
 		this.symbolTable.closeCurrentScope();
 		if (DEBUGGING) {
 			writer.writeRawAssembly(Machine.TROFF);
@@ -134,7 +134,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		PrimitiveSemType varType = this.currentDeclarationType;
 
 		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, varType);
-		SymScope scope = this.symbolTable.getCurrentScope();
+		SymScope scope = this.symbolTable.getCurrentMajorScope();
 		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));
 	}
 
@@ -151,13 +151,13 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(ScalarDecl visitable) {
 		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(visitable.getName(), visitable.getType().getSemanticType());
-		SymScope scope = this.symbolTable.getCurrentScope();
+		SymScope scope = this.symbolTable.getCurrentMajorScope();
 		newSymbol.setOffset(scope.assignSpaceForNewVariable(1));
 	}
 
 	@Override
 	public void visit(RoutineDecl visitable) {
-		// Allow the
+		// Allow us to jump over the routine when we are not running it.
 		AddressPatch endOfFunctionDefinitionPatch = this.writer.writePatchableBranchAlways();
 
 		// Add the routine to the symbol table.
@@ -165,17 +165,17 @@ public class CodeGenVisitor extends NodeVisitor {
 		routineType.setStartAddress(this.writer.getCurrentProgramCounter());
 		routineType.setLexicalLevel((short) (this.symbolTable.getCurrentScope().getLexicalLevel() + 1));
 		this.symbolTable.addSymbolToCurScope(visitable.getName(), routineType);
-
+		
+		// Open a new scope for the routine.
 		this.symbolTable.openScope(ScopeType.ROUTINE);
 
 		this.writer.writeRoutineDeclareSetup();
-
 		super.visit(visitable);
-
 		this.writer.writeRoutineDeclareTeardown(routineType);
 
-		this.writer.patchAddress(endOfFunctionDefinitionPatch);
+		// Close the scope and patch the address.
 		this.symbolTable.closeCurrentScope();
+		this.writer.patchAddress(endOfFunctionDefinitionPatch);
 	}
 
 	@Override
@@ -186,7 +186,7 @@ public class CodeGenVisitor extends NodeVisitor {
 				visitable.getLowerBoundary2(), visitable.getUpperBoundary2());
 
 		Symbol newSymbol = this.symbolTable.addSymbolToCurScope(varName, varType);
-		SymScope scope = this.symbolTable.getCurrentScope();
+		SymScope scope = this.symbolTable.getCurrentMajorScope();
 		newSymbol.setOffset(scope.assignSpaceForNewVariable(varType.getSize()));
 	}
 
@@ -363,14 +363,19 @@ public class CodeGenVisitor extends NodeVisitor {
 		Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
 		RoutineSemType routine = (RoutineSemType) symbol.getType();
 
-		AddressPatch patch = this.writer.writeRoutineCallBefore(routine);
+		// Write the control block.
+		AddressPatch returnAddressPatch = this.writer.writeControlBlock(routine.getLexicalLevel());
 
 		// Push parameters onto the stack.
 		for (Expn expn : visitable.getArguments()) {
 			expn.accept(this);
 		}
+		
+		// Branch to the caller.
+		this.writer.writeBranchAlways(routine.getStartAddress());
 
-		this.writer.writeRoutineCallAfter(routine, patch);
+		// Patch now that we know were to come back to after calling the function.
+		this.writer.patchAddress(returnAddressPatch);
 	}
 
 	@Override

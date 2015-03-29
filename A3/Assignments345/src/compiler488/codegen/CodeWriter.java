@@ -170,24 +170,23 @@ public class CodeWriter {
 		return patch;
 	}
 
-	// --- Function Setup / Teardown
+	// --- Function Setup / Tear-down
 
 	/**
-	 * Use this method when a routine is being called. You MUST call both the Before and After
-	 * method, and in-between, you must push the parameters onto the stack. The patch returned by
-	 * this method must be given to the After call.
+	 * Use this method to write a control block. The AddressPatch must be patched with
+	 * the return value.
 	 */
-	public AddressPatch writeRoutineCallBefore(RoutineSemType routine) {
+	public AddressPatch writeControlBlock(short lexicalLevelForActivationRecord) {
 		// Push space for the return value.
 		this.writeRawAssembly(Machine.PUSH, 0);
 
 		// Push the return address.
-		AddressPatch afterFunctionCallPatch = this.writePatchablePush();
+		AddressPatch returnAddressPatch = this.writePatchablePush();
 
 		// Push the value of the current LL display for this routine onto the stack.
-		this.writeRawAssembly(Machine.ADDR, routine.getLexicalLevel(), 0);
+		this.writeRawAssembly(Machine.ADDR, lexicalLevelForActivationRecord, 0);
 
-		return afterFunctionCallPatch;
+		return returnAddressPatch;
 	}
 
 	/**
@@ -195,26 +194,19 @@ public class CodeWriter {
 	 * @param routine An object representing the routine we are running.
 	 * @param afterFunctionCallPatch A patch from the Before method we need here.
 	 */
-	public void writeRoutineCallAfter(RoutineSemType routine, AddressPatch afterFunctionCallPatch) {
-		// Branch to the caller.
-		this.writeBranchAlways(routine.getStartAddress());
+	public void writeRoutineCallAfter(RoutineSemType routine, AddressPatch returnAddressPatch) {
 
-		// Patch now that we know were to come back to after calling the function.
-		this.patchAddress(afterFunctionCallPatch);
 	}
 	
 	/**
 	 * This function sets up a routine after being declared.
 	 */
-	public void writeRoutineDeclareSetup() {
+	public void writeRoutineDeclareSetup() {		
 		// The following values are pushed on from the caller.
 		// - Return value space
 		// - The line of code to return to
 		// - The value in the display
 		// - The parameters
-		
-		// --- Prologue.
-		// TODO: Refactor into helper.
 		
 		// Set the display register.
 		short controlBlockAndParameters = 4; // TODO
@@ -223,15 +215,13 @@ public class CodeWriter {
 		this.writeRawAssembly(Machine.SUB);
 		this.writeRawAssembly(Machine.SETD, this.symbolTable.getCurrentScope().getLexicalLevel());
 		
+		short localParameterSize = 1;
+		
 		// Push space for local variables on stack.
 		short localVariableSize = 3; // TODO
 		this.writeRawAssembly(Machine.PUSH, 0); // Dummy value.
 		this.writeRawAssembly(Machine.PUSH, localVariableSize);
 		this.writeRawAssembly(Machine.DUPN);
-		
-		// Set the offset properly in the function scope.
-		this.symbolTable.getCurrentScope().assignSpaceForNewVariable(CodeGenVisitor.CONTROL_BLOCK_SIZE);
-		
 	}
 	
 	public void writeRoutineDeclareTeardown(RoutineSemType routine) {

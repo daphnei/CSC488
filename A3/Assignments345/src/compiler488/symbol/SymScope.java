@@ -1,5 +1,6 @@
 package compiler488.symbol;
 
+import compiler488.codegen.CodeGenVisitor;
 import compiler488.runtime.Machine;
 
 public class SymScope {
@@ -15,7 +16,7 @@ public class SymScope {
 	 * The offset to the first address in this lexical level
 	 * that has not been allocated yet.
 	 */
-	private short freeOffset;
+	private short freeOffset = CodeGenVisitor.CONTROL_BLOCK_SIZE;
 	
 	public SymScope(ScopeType scopeType) {
 		this(scopeType, Machine.UNDEFINED);
@@ -24,7 +25,7 @@ public class SymScope {
 	public SymScope(ScopeType scopeType, short lexicalLevel) {
 		this.scopeType = scopeType;
 		this.lexicalLevel = lexicalLevel;
-		this.freeOffset = 0;
+		this.freeOffset = CodeGenVisitor.CONTROL_BLOCK_SIZE;
 	}
 	
 	public ScopeType getScopeType() {
@@ -48,9 +49,20 @@ public class SymScope {
 	 * @return The offset to the first memory address of the variable.
 	 */
 	public int assignSpaceForNewVariable(int varSize) {
+		if (this.scopeType.isMinor()) {
+			throw new RuntimeException("ERROR: You should not be assigning space to a minor scope!");
+		}
 		int addressOfVar = this.freeOffset;
 		this.freeOffset += varSize;
 		return addressOfVar;
+	}
+	
+	public short getOffset() {
+		return this.freeOffset;
+	}
+	
+	public short getSpaceAllocatedForVariables() {
+		return (short)(this.freeOffset - CodeGenVisitor.CONTROL_BLOCK_SIZE);
 	}
 	
 	public short getLexicalLevel() {
