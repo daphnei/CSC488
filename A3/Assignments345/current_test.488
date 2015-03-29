@@ -1,7 +1,7 @@
 begin
   integer function compute(integer var) begin
     put skip, var, skip
-    if var = 50 then
+    if var = 3 then
       return (100)
     else
       return (compute(var + 1))
