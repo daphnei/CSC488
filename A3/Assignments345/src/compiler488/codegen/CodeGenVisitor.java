@@ -12,6 +12,7 @@ import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.IdentExpn;
 import compiler488.ast.expn.IntConstExpn;
 import compiler488.ast.expn.SkipConstExpn;
+import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.expn.TextConstExpn;
 import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.IfStmt;
@@ -283,7 +284,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		
 		// Push the address of the variable on to the top of the stack. 
 		// Use an address visitor to do this.
-		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer);
+		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
 		visitable.accept(addressVisitor);
 		
 		// Load the value at that address on to the top of the stack.
@@ -293,6 +294,17 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(SkipConstExpn visitable) {
 		// Handled by PutStmt
+	}
+	
+	@Override
+	public void visit(SubsExpn visitable) {
+		// Evaluate the left and right subscripts, pushing the results on to the stack.
+		visitable.getSubscript1().accept(this);
+		visitable.getSubscript2().accept(this);
+		
+		// Do magic math to get an offset from the beginning of the address of the variable.
+		
+		
 	}
 	
 	@Override

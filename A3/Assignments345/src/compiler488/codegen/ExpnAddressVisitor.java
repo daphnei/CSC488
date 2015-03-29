@@ -20,10 +20,12 @@ import compiler488.symbol.SymbolTable;
 public class ExpnAddressVisitor extends NodeVisitor {
 	private SymbolTable symbolTable;
 	private CodeWriter writer;
+	private CodeGenVisitor codeGenVisitor;
 	
-	public ExpnAddressVisitor(SymbolTable symbolTable, CodeWriter writer) {
+	public ExpnAddressVisitor(SymbolTable symbolTable, CodeWriter writer, CodeGenVisitor codeGenVisitor) {
 		this.symbolTable = symbolTable;
 		this.writer = writer;
+		this.codeGenVisitor = codeGenVisitor;
 	}
 	
 	@Override
