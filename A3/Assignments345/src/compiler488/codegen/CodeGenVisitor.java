@@ -193,17 +193,22 @@ public class CodeGenVisitor extends NodeVisitor {
 		AddressPatch localMinusParamsSizePatch = this.writer.writeRoutineDeclareSetup(
 				routineType);
 		visitable.getBody().accept(this);
+		
+		short pcBeforeTeardown = this.writer.getProgramCounter();
+		
 		this.writer.writeRoutineDeclareTeardown(
 				routineType,
 				this.symbolTable.getCurrentScope().getSpaceAllocatedForVariables(),
 				localMinusParamsSizePatch);
-
-		// Close the scope and patch the address.
-		this.symbolTable.closeCurrentScope();
+	
+		// Patch the address for the end of the function definition
 		this.writer.patchAddress(endOfFunctionDefinitionPatch);
 		
 		// Also patch any returns found in this scope.
-		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentMajorScope());
+		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentMajorScope(), pcBeforeTeardown);
+		
+		// Close the scope.
+		this.symbolTable.closeCurrentScope();
 	}
 
 	@Override
@@ -293,7 +298,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.writer.patchAddress(conditionPatch, this.writer.getProgramCounter());	
 		
 		// Patch any exits that may have occured in the body of the loop.
-		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentLoopScope());
+		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentLoopScope(), this.writer.getProgramCounter());
 	}
 	
 	@Override
@@ -313,7 +318,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.writer.writeRawAssembly(Machine.BR);
 		
 		// Patch any exits.
-		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentLoopScope());
+		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentLoopScope(), this.writer.getProgramCounter());
 		
 		this.symbolTable.closeCurrentScope();
 	}

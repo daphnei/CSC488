@@ -330,10 +330,10 @@ public class CodeWriter {
 		}
 	}
 	
-	public void patchReturnsOrExits(SymScope scope) {
+	public void patchReturnsOrExits(SymScope scope, short patchAddress) {
 		ArrayList<AddressPatch> exitsToBePatched = scope.getAllExitsToBePatched();
 		for (AddressPatch patch : exitsToBePatched) {
-			this.patchAddress(patch, this.programCounter);
+			this.patchAddress(patch, patchAddress);
 		}
 	}
 	
