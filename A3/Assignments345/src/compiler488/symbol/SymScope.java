@@ -1,5 +1,8 @@
 package compiler488.symbol;
 
+import java.util.ArrayList;
+
+import compiler488.codegen.AddressPatch;
 import compiler488.codegen.CodeGenVisitor;
 import compiler488.runtime.Machine;
 import compiler488.semantics.types.RoutineSemType;
@@ -21,6 +24,7 @@ public class SymScope {
 	
 	private RoutineSemType associatedRoutine = null;
 	
+	private ArrayList<AddressPatch> returnsAndExitsToBePatched;
 	
 	public SymScope(ScopeType scopeType) {
 		this(scopeType, Machine.UNDEFINED);
@@ -30,6 +34,7 @@ public class SymScope {
 		this.scopeType = scopeType;
 		this.lexicalLevel = lexicalLevel;
 		this.freeOffset = CodeGenVisitor.CONTROL_BLOCK_SIZE;
+		this.returnsAndExitsToBePatched = new ArrayList<AddressPatch>();
 	}
 	
 	public ScopeType getScopeType() {
@@ -79,5 +84,23 @@ public class SymScope {
 	
 	public short getLexicalLevel() {
 		return this.lexicalLevel;
+	}
+	
+	/**
+	 * Note down that there is an exit or return from this scope that
+	 * needs to be patched.
+	 * @param patch
+	 */
+	public void keepTrackOfAnExit(AddressPatch patch) {
+		this.returnsAndExitsToBePatched.add(patch);
+	}
+	
+	/**
+	 * Returns a list of all of the branching statements that need to be
+	 * patched with the first address outside of this scope.
+	 * @return
+	 */
+	public ArrayList<AddressPatch> getAllExitsToBePatched() {
+		return this.returnsAndExitsToBePatched;
 	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import compiler488.runtime.Machine;
 import compiler488.semantics.types.RoutineSemType;
+import compiler488.symbol.SymScope;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
 
@@ -24,7 +25,7 @@ public class CodeWriter {
 	public CodeWriter() {
 	}
 
-	public short getCurrentProgramCounter() {
+	public short getProgramCounter() {
 		return this.programCounter;
 	}
 
@@ -326,6 +327,13 @@ public class CodeWriter {
 			this.record("PATCH >> " + needingPatch.addressToBePatched + " is set to " + newAddress);
 		} else {
 			System.out.println("ERROR: Trying to patch address that has already been patched!");
+		}
+	}
+	
+	public void patchReturnsOrExits(SymScope scope) {
+		ArrayList<AddressPatch> exitsToBePatched = scope.getAllExitsToBePatched();
+		for (AddressPatch patch : exitsToBePatched) {
+			this.patchAddress(patch, this.programCounter);
 		}
 	}
 	

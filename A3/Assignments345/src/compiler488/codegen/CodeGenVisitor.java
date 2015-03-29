@@ -1,5 +1,7 @@
 package compiler488.codegen;
 
+import java.util.ArrayList;
+
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.MultiDeclarations;
@@ -22,6 +24,7 @@ import compiler488.ast.expn.SubsExpn;
 import compiler488.ast.expn.TextConstExpn;
 import compiler488.ast.expn.UnaryMinusExpn;
 import compiler488.ast.stmt.AssignStmt;
+import compiler488.ast.stmt.ExitStmt;
 import compiler488.ast.stmt.IfStmt;
 import compiler488.ast.stmt.LoopStmt;
 import compiler488.ast.stmt.Program;
@@ -87,7 +90,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		}
 
 		Machine.setPC((short) 0); /* where code to be executed begins */
-		Machine.setMSP(this.writer.getCurrentProgramCounter()); /* where memory stack begins */
+		Machine.setMSP(this.writer.getProgramCounter()); /* where memory stack begins */
 		Machine.setMLP((short) (Machine.memorySize - 1)); /* where the memory stack ends */
 	}
 
@@ -173,7 +176,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		AddressPatch endOfFunctionDefinitionPatch = this.writer.writePatchableBranchAlways();
 
 		RoutineSemType routineType = new RoutineSemType(visitable.getType().getSemanticType());
-		routineType.setStartAddress(this.writer.getCurrentProgramCounter());
+		routineType.setStartAddress(this.writer.getProgramCounter());
 		routineType.setLexicalLevel((short) (this.symbolTable.getCurrentScope().getLexicalLevel() + 1));
 		this.symbolTable.addSymbolToCurScope(visitable.getName(), routineType);
 
@@ -198,6 +201,9 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Close the scope and patch the address.
 		this.symbolTable.closeCurrentScope();
 		this.writer.patchAddress(endOfFunctionDefinitionPatch);
+		
+		// Also patch any returns found in this scope.
+		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentMajorScope());
 	}
 
 	@Override
@@ -250,23 +256,21 @@ public class CodeGenVisitor extends NodeVisitor {
 		// If there is no else, then "whenFalse" will be null.
 		if (visitable.getWhenFalse() == null) {
 			// Patch up the IF-block to jump here when false.
-			this.writer.patchAddress(patchIf, this.writer.getCurrentProgramCounter());
+			this.writer.patchAddress(patchIf, this.writer.getProgramCounter());
 		} else {
 			AddressPatch pathToEnd = this.writer.writePatchableBranchAlways();
-			this.writer.patchAddress(patchIf, this.writer.getCurrentProgramCounter());
+			this.writer.patchAddress(patchIf, this.writer.getProgramCounter());
 
 			for (Stmt falseStmt : visitable.getWhenFalse()) {
 				falseStmt.accept(this);
 			}
-			this.writer.patchAddress(pathToEnd, this.writer.getCurrentProgramCounter());
+			this.writer.patchAddress(pathToEnd, this.writer.getProgramCounter());
 		}
 	}
 
-	public void visit(WhileDoStmt visitable) {
-		this.writer.writeBeginDebug();
-		
+	public void visit(WhileDoStmt visitable) {		
 		// Write the program counter value to the stack.
-		int topOfTheLoop = this.writer.getCurrentProgramCounter();
+		int topOfTheLoop = this.writer.getProgramCounter();
 
 		// Check the condition
 		Expn condition = visitable.getExpn();
@@ -285,17 +289,20 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.writer.writeRawAssembly(Machine.PUSH, topOfTheLoop);
 		this.writer.writeRawAssembly(Machine.BR);
 
-		//Make sure that a false condition will push execution to outside the program outside of the loop.
-		this.writer.patchAddress(conditionPatch, this.writer.getCurrentProgramCounter());
+		// Make sure that a false condition will push execution to outside the program outside of the loop.
+		this.writer.patchAddress(conditionPatch, this.writer.getProgramCounter());	
 		
-		this.writer.writeEndDebug();
+		// Patch any exits that may have occured in the body of the loop.
+		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentLoopScope());
 	}
+	
 	@Override
 	public void visit(LoopStmt visitable) {
-
 		// Write the program counter value to the stack.
-		int topOfTheLoop = this.writer.getCurrentProgramCounter();
+		int topOfTheLoop = this.writer.getProgramCounter();
 
+		this.symbolTable.openScope(ScopeType.LOOP);
+		
 		// Generate code for all my children.
 		for (Stmt bodyStmt : visitable.getBody()) {
 			bodyStmt.accept(this);
@@ -304,8 +311,18 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Branch back to the top of the loop.
 		this.writer.writeRawAssembly(Machine.PUSH, topOfTheLoop);
 		this.writer.writeRawAssembly(Machine.BR);
+		
+		// Patch any exits.
+		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentLoopScope());
+		
+		this.symbolTable.closeCurrentScope();
 	}
 
+	public void visit(ExitStmt visitable) {
+		AddressPatch patch = this.writer.writePatchableBranchAlways();
+		this.symbolTable.getCurrentLoopScope().keepTrackOfAnExit(patch);
+	}
+	
 	@Override
 	public void visit(PutStmt visitable) {
 		// DO NOT CALL SUPER
@@ -339,9 +356,10 @@ public class CodeGenVisitor extends NodeVisitor {
 			this.writer.writeRawAssembly(Machine.STORE);
 		}
 
-		// TODO: Do jumping.
+		AddressPatch patch = this.writer.writePatchableBranchAlways();
+		this.symbolTable.getCurrentMajorScope().keepTrackOfAnExit(patch);
 	}
-
+	
 	// --- Expressions ---
 
 	@Override
