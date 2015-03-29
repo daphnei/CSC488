@@ -10,6 +10,7 @@ import compiler488.ast.expn.AnonFuncExpn;
 import compiler488.ast.expn.ArithExpn;
 import compiler488.ast.expn.BoolConstExpn;
 import compiler488.ast.expn.BoolExpn;
+import compiler488.ast.expn.CompareExpn;
 import compiler488.ast.expn.EqualsExpn;
 import compiler488.ast.expn.Expn;
 import compiler488.ast.expn.FunctionCallExpn;
@@ -22,10 +23,12 @@ import compiler488.ast.expn.TextConstExpn;
 import compiler488.ast.expn.UnaryMinusExpn;
 import compiler488.ast.stmt.AssignStmt;
 import compiler488.ast.stmt.IfStmt;
+import compiler488.ast.stmt.LoopStmt;
 import compiler488.ast.stmt.Program;
 import compiler488.ast.stmt.PutStmt;
 import compiler488.ast.stmt.ReturnStmt;
 import compiler488.ast.stmt.Stmt;
+import compiler488.ast.stmt.WhileDoStmt;
 import compiler488.compiler.Main;
 import compiler488.exceptions.runtime.ExecutionException;
 import compiler488.exceptions.runtime.MemoryAddressException;
@@ -43,6 +46,7 @@ import compiler488.symbol.SymbolTable;
 public class CodeGenVisitor extends NodeVisitor {
 
 	public static final boolean DEBUGGING = false;
+	
 	public static final short DUMMY = 0;
 	public static final short CONTROL_BLOCK_RETURN_VALUE = 0;
 	public static final short CONTROL_BLOCK_RETURN_ADDRESS = 1;
@@ -104,7 +108,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Set the initial display to the correct value.
 		AddressPatch stackStartPatch = this.writer.writePatchablePush();
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
-		
+
 		// Write a dummy control block.
 		AddressPatch returnAddressPatch = this.writer.writeControlBlock(DUMMY);
 		this.writer.patchAddress(returnAddressPatch, DUMMY);  
@@ -168,7 +172,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		routineType.setStartAddress(this.writer.getCurrentProgramCounter());
 		routineType.setLexicalLevel((short) (this.symbolTable.getCurrentScope().getLexicalLevel() + 1));
 		this.symbolTable.addSymbolToCurScope(visitable.getName(), routineType);
-	
+
 		// Open a new scope for the routine.
 		this.symbolTable.openScope(ScopeType.ROUTINE);
 
@@ -243,6 +247,50 @@ public class CodeGenVisitor extends NodeVisitor {
 		}
 	}
 
+	public void visit(WhileDoStmt visitable) {
+		this.writer.writeBeginDebug();
+		
+		// Write the program counter value to the stack.
+		int topOfTheLoop = this.writer.getCurrentProgramCounter();
+
+		// Check the condition
+		Expn condition = visitable.getExpn();
+		AddressPatch conditionPatch = null;
+		condition.accept(this);
+
+		//If the condition has not been met, branch to end.
+		conditionPatch = this.writer.writePatchableBranchIfFalse();
+
+		// Generate code for all my children.
+		for (Stmt bodyStmt : visitable.getBody()) {
+			bodyStmt.accept(this);
+		}
+
+		// Branch back to the top of the loop.
+		this.writer.writeRawAssembly(Machine.PUSH, topOfTheLoop);
+		this.writer.writeRawAssembly(Machine.BR);
+
+		//Make sure that a false condition will push execution to outside the program outside of the loop.
+		this.writer.patchAddress(conditionPatch, this.writer.getCurrentProgramCounter());
+		
+		this.writer.writeEndDebug();
+	}
+	@Override
+	public void visit(LoopStmt visitable) {
+
+		// Write the program counter value to the stack.
+		int topOfTheLoop = this.writer.getCurrentProgramCounter();
+
+		// Generate code for all my children.
+		for (Stmt bodyStmt : visitable.getBody()) {
+			bodyStmt.accept(this);
+		}
+
+		// Branch back to the top of the loop.
+		this.writer.writeRawAssembly(Machine.PUSH, topOfTheLoop);
+		this.writer.writeRawAssembly(Machine.BR);
+	}
+
 	@Override
 	public void visit(PutStmt visitable) {
 		// DO NOT CALL SUPER
@@ -305,6 +353,29 @@ public class CodeGenVisitor extends NodeVisitor {
 		}
 	}
 
+	public void visit(CompareExpn visitable) {
+		super.visit(visitable);
+		
+		//TODO: refractor these into helper methods.
+		String s = visitable.getOpSymbol();
+		if (s.equals(CompareExpn.OP_GREATER)) {
+			this.writer.writeRawAssembly(Machine.SWAP);
+			this.writer.writeRawAssembly(Machine.LT);
+		} 
+		else if (s.equals(CompareExpn.OP_LESS)) {
+			this.writer.writeRawAssembly(Machine.LT);
+		}
+		else if (s.equals(CompareExpn.OP_GREATER_EQUAL)) {
+			this.writer.writeRawAssembly(Machine.LT);
+			this.writer.writeNot();
+		}
+		else if (s.equals(CompareExpn.OP_LESS_EQUAL)) {
+			this.writer.writeRawAssembly(Machine.SWAP);
+			this.writer.writeRawAssembly(Machine.LT);
+			this.writer.writeNot();
+		}
+	}//abab
+	
 	@Override
 	public void visit(BoolConstExpn visitable) {
 		super.visit(visitable);
@@ -374,7 +445,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		for (Expn expn : visitable.getArguments()) {
 			expn.accept(this);
 		}
-		
+
 		// Branch to the caller.
 		this.writer.writeBranchAlways(routine.getStartAddress());
 
@@ -404,14 +475,14 @@ public class CodeGenVisitor extends NodeVisitor {
 
 		this.writer.writeNot();
 	}
-	
+
 	@Override
 	public void visit(UnaryMinusExpn visitable) {
 		super.visit(visitable);
 
 		this.writer.writeRawAssembly(Machine.NEG);
 	}
-	
+
 	@Override
 	public void visit(SkipConstExpn visitable) {
 		// Handled by PutStmt
