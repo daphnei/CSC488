@@ -1,5 +1,6 @@
 package compiler488.codegen;
 
+import compiler488.ast.PrettyPrinter;
 import java.util.ArrayList;
 
 import compiler488.ast.Printable;
@@ -30,8 +31,10 @@ import compiler488.ast.stmt.LoopStmt;
 import compiler488.ast.stmt.Program;
 import compiler488.ast.stmt.PutStmt;
 import compiler488.ast.stmt.ReturnStmt;
+import compiler488.ast.stmt.Scope;
 import compiler488.ast.stmt.Stmt;
 import compiler488.ast.stmt.WhileDoStmt;
+import compiler488.ast.type.IntegerType;
 import compiler488.compiler.Main;
 import compiler488.exceptions.runtime.ExecutionException;
 import compiler488.exceptions.runtime.MemoryAddressException;
@@ -55,6 +58,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	public static final short CONTROL_BLOCK_RETURN_ADDRESS = 1;
 	public static final short CONTROL_BLOCK_DISPLAY = 2;
 	public static final short CONTROL_BLOCK_SIZE = 3;
+        public static int Anoncount = 0;
 
 
 	/**
@@ -369,8 +373,12 @@ public class CodeGenVisitor extends NodeVisitor {
 
 	@Override
 	public void visit(AnonFuncExpn visitable) {
-		// TODO
-		super.visit(visitable);
+                // DO NOT CALL SUPER
+                Scope fake = new Scope(visitable.getBody(), 0, 0);
+                String name = "anonfunc"+Anoncount;
+                Anoncount+=1;
+                RoutineDecl temp = new RoutineDecl(name, visitable.getExpn().getResultType().returnAST(), fake, 0, 0);
+                temp.accept(this);
 	}
 
 	@Override
