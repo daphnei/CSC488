@@ -5,4 +5,5 @@ begin
 	procedure p (integer a) begin
 	put a, skip
 	end
+	p
 end
