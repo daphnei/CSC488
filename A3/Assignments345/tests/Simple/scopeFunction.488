@@ -1,0 +1,7 @@
+begin
+	begin
+	end
+	integer function compute(integer var) begin
+		return (1)
+	end
+end
