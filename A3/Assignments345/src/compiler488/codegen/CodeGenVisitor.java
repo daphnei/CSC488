@@ -3,6 +3,7 @@ package compiler488.codegen;
 import compiler488.ast.PrettyPrinter;
 import java.util.ArrayList;
 
+import compiler488.ast.ASTList;
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
 import compiler488.ast.decl.MultiDeclarations;
@@ -30,14 +31,18 @@ import compiler488.ast.stmt.IfStmt;
 import compiler488.ast.stmt.LoopStmt;
 import compiler488.ast.stmt.Program;
 import compiler488.ast.stmt.PutStmt;
+import compiler488.ast.stmt.GetStmt;
 import compiler488.ast.stmt.ReturnStmt;
 import compiler488.ast.stmt.Scope;
 import compiler488.ast.stmt.Stmt;
 import compiler488.ast.stmt.WhileDoStmt;
+import compiler488.ast.stmt.ProcedureCallStmt;
 import compiler488.ast.type.IntegerType;
+import compiler488.ast.type.Type;
 import compiler488.compiler.Main;
 import compiler488.exceptions.runtime.ExecutionException;
 import compiler488.exceptions.runtime.MemoryAddressException;
+import compiler488.interfaces.IRoutineCall;
 import compiler488.runtime.Machine;
 import compiler488.semantics.NodeVisitor;
 import compiler488.semantics.types.ArraySemType;
@@ -87,6 +92,8 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
 		this.writer = new CodeWriter();
 		program.accept(this);
+		
+		
 		this.writer.printWrittenCode();
 		if (!this.writer.isCompletelyPatched()) {
 			Main.errorOccurred = true;
@@ -179,7 +186,12 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Allow us to jump over the routine when we are not running it.
 		AddressPatch endOfFunctionDefinitionPatch = this.writer.writePatchableBranchAlways();
 
-		RoutineSemType routineType = new RoutineSemType(visitable.getType().getSemanticType());
+	    PrimitiveSemType semType = null;
+		Type type = visitable.getType();
+		if (type != null)
+		    semType = type.getSemanticType();
+		
+		RoutineSemType routineType = new RoutineSemType(semType);
 		routineType.setStartAddress(this.writer.getProgramCounter());
 		routineType.setLexicalLevel((short) (this.symbolTable.getCurrentScope().getLexicalLevel() + 1));
 		this.symbolTable.addSymbolToCurScope(visitable.getName(), routineType);
@@ -351,10 +363,28 @@ public class CodeGenVisitor extends NodeVisitor {
 				expn.accept(this);
 				this.writer.writeRawAssembly(Machine.PRINTI);
 			} else {
-				System.out.println("WARNING: Cannot handle printing non-experssion!");
+				System.out.println("WARNING: Cannot handle printing non-expression!");
 			}
 		}
 	}
+	
+	@Override
+	public void visit(GetStmt visitable) {
+	    
+	    for (Expn expn : visitable.getInputs()) {
+	        
+	        ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
+	        expn.accept(addressVisitor);
+	        
+	        //expn.accept(this);  //not sure if this will cause problems b/c of LOAD
+	        //this.writer.writeRawAssembly(Machine.POP); // temp HACK
+	        this.writer.writeRawAssembly(Machine.READI);
+	        this.writer.writeRawAssembly(Machine.STORE);
+	        
+	    }
+	    
+	}
+	
 
 	@Override
 	public void visit(ReturnStmt visitable) {
@@ -367,6 +397,17 @@ public class CodeGenVisitor extends NodeVisitor {
 
 		AddressPatch patch = this.writer.writePatchableBranchAlways();
 		this.symbolTable.getCurrentMajorScope().keepTrackOfAnExit(patch);
+	}
+	
+	
+	@Override
+	public void visit(ProcedureCallStmt visitable)
+	{
+	    Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
+	    ASTList<Expn> args = visitable.getArguments();
+	        
+	    visitHelperFuncProc(symbol, args);
+	    
 	}
 	
 	// --- Expressions ---
@@ -481,6 +522,12 @@ public class CodeGenVisitor extends NodeVisitor {
 
 	@Override
 	public void visit(FunctionCallExpn visitable) {
+	    
+	    Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
+	    ASTList<Expn> args = visitable.getArguments();
+	    
+	    visitHelperFuncProc(symbol, args);
+	    /*
 		Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
 		RoutineSemType routine = (RoutineSemType) symbol.getType();
 
@@ -497,7 +544,30 @@ public class CodeGenVisitor extends NodeVisitor {
 
 		// Patch now that we know were to come back to after calling the function.
 		this.writer.patchAddress(returnAddressPatch);
+		
+		*/
 	}
+	
+	
+	public void visitHelperFuncProc(Symbol symbol, ASTList<Expn> args) {
+
+        RoutineSemType routine = (RoutineSemType) symbol.getType();
+
+        // Write the control block.
+        AddressPatch returnAddressPatch = this.writer.writeControlBlock(routine.getLexicalLevel());
+
+        // Push parameters onto the stack.
+        for (Expn expn : args) {
+            expn.accept(this);
+        }
+
+        // Branch to the caller.
+        this.writer.writeBranchAlways(routine.getStartAddress());
+
+        // Patch now that we know were to come back to after calling the function.
+        this.writer.patchAddress(returnAddressPatch); 
+	}
+	
 
 	public void visit(IntConstExpn visitable) {
 		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue());
