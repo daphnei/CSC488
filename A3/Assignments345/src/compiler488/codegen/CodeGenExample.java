@@ -100,7 +100,7 @@ public class CodeGenExample
 		//  REPLACE THIS CODE WITH YOUR OWN CODE
 		//  THIS CODE generates a single HALT instruction
 		//  as an example.
-		Machine.setPC( (short) 0 ) ;		/* where code to be executed begins */
+		Machine.setPC((short) 0 ) ;		/* where code to be executed begins */
 		Machine.setMSP((short)  1 );   	/* where memory stack begins */
 		Machine.setMLP((short) ( Machine.memorySize -1 ) );
 		/* limit of stack */
