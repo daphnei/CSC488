@@ -1,0 +1,24 @@
+% Accessing identifiers declared in main scope from inside routines
+begin
+
+	integer outx, outy
+	boolean k
+
+	procedure p (integer x, integer y)
+	begin
+		outx <= 5
+		outy <= 15
+		put outx, skip, outy
+	end
+
+	boolean function f
+	begin
+		outx <= outx + 1
+		outy <= outx + outy
+		return (outy <= 10)
+	end
+	
+	k <= f
+	p(outx,outy)
+
+end

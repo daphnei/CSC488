@@ -4,4 +4,8 @@ integer function my_func begin
 	put "Hello Canada"
 end
 
+integer i
+
+i = my_func
+
 end

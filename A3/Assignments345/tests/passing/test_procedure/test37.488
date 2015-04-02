@@ -1,7 +1,9 @@
 begin
 
-   procedure my_first_procedure_ begin
-	put "Playstation! Playstation! Playstation!"
+   procedure my_first_procedure(integer p1) begin
+		put "Playstation! Playstation! Playstation!"
    end
+   
+   my_first_procedure(2)
 
 end
