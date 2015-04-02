@@ -16,5 +16,7 @@ begin
 	end
 
 	begin
+		a <= f
+		p
 	end
 end

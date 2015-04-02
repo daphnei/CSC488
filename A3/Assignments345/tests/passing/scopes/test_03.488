@@ -19,5 +19,8 @@ begin
 		outy <= outx + outy
 		return (outy <= 10)
 	end
+	
+	outx <= f
+	p(outx,outy)
 
 end

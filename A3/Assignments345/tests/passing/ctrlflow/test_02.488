@@ -6,4 +6,5 @@ begin
 		put a, skip
 		return
 	end
+	p
 end
