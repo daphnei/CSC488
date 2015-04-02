@@ -1,9 +1,10 @@
 begin
 
-if ! false then 
-if false then 
-      put "hi"
-   end
-   end
+if ! ! ( ! false) then 
+	if (- -(-15))>0 then 
+    	put "hi"
+   	end
+
+end
 
 end

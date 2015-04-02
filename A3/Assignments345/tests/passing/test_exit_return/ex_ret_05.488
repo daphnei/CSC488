@@ -1,12 +1,19 @@
 begin
 
-boolean b
-b <= true
-loop 
-	if b
-	then 
-		exit
-	end
+integer i
+i <= 100
+
+loop
+	put "Looping..", skip
+	i <= i - 1
+	if i = -100
+	then
+		loop 
+		i <= i + 1
+		exit when i = 100
+		end
+	end	
+	exit when i > 100
 end
 
 end

@@ -1,6 +1,14 @@
 begin
 
-if false then 
+integer function func(boolean b)
+if b
+then
+	return 20
+else
+	return 100
+end
+
+if func(true) * 2 <= 100 then 
       put "hi" 
 end
 

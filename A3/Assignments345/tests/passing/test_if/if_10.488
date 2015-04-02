@@ -1,8 +1,19 @@
 begin
-if (false) then 
-if (-15)<0 then 
-      put "hi"
-   end
-   end
+
+boolean a, b
+a <= false
+b <= true
+
+if (b) then 
+	if (!a)
+		if -15 < 0 then 
+			if (a | b)
+				if (b & (a | !a))
+					put "Success through nests!", skip
+				end
+			end
+		end	
+   	end
+end
 
 end

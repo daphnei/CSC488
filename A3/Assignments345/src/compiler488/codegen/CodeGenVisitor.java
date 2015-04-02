@@ -102,8 +102,10 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Start the traversal of the tree.
 		program.accept(this);
 		
-		// Print out a copy of all of that that was genrated.
-		this.writer.printWrittenCode();
+		// Trace code generation output (all them instructions)
+		if (Main.traceCodeGen) {
+		    this.writer.printWrittenCode();
+		}
 		if (!this.writer.isCompletelyPatched()) {
 			Main.errorOccurred = true;
 			System.out.print("ERROR: We have unpatched branch statements! Please fix them!");
@@ -397,8 +399,6 @@ public class CodeGenVisitor extends NodeVisitor {
 	        ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
 	        expn.accept(addressVisitor);
 	        
-	        //expn.accept(this);  //not sure if this will cause problems b/c of LOAD
-	        //this.writer.writeRawAssembly(Machine.POP); // temp HACK
 	        this.writer.writeRawAssembly(Machine.READI);
 	        this.writer.writeRawAssembly(Machine.STORE);
 	        
@@ -451,6 +451,7 @@ public class CodeGenVisitor extends NodeVisitor {
                 //create a fake call of the  function
                 FunctionCallExpn fakecall = new FunctionCallExpn(name, new ASTList<Expn>(), 0, 0);
                 this.visit(fakecall);
+
 	}
 
 	@Override

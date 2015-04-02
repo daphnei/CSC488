@@ -47,7 +47,7 @@ test_04
 ex_ret_01 
 > Basic exit in loop.
 ex_ret_02 
-> Exit contained in nested loop exits outer loop as well.
+> Exit contained in nested loop does not exit outer loop.
 ex_ret_03 
 > Exit in if stmt exits containing loop.
 ex_ret_04 
@@ -132,14 +132,15 @@ if_05.488
 if_06.488
 > If statement with convoluted comparison expression.
 if_07.488
-> 
+> Nested if statements.
 if_08.488
+> Function call in if condition expression.
 if_09.488
+> If statement conditions with multiple boolean not's applied sequentially.
 if_10.488
+> Heavily nested if statements (depth = 5)
 if_11.488
-if_12.488
-if_13.488
-
+>
 
 >>> test_loop <<< 
 

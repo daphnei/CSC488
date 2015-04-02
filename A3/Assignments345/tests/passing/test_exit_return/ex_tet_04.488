@@ -7,7 +7,7 @@ boolean a3[5]
 
 loop
 	put "Looping...", skip
-	a3[a1] <= a2
+	a3[a1] <= !a2
 	a1 <= a1 + 1
 	a2 <= !a2
 	exit when (a3[5])
