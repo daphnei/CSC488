@@ -3,7 +3,7 @@ begin
 integer variable1
 
 variable1 <= 5
-integer function my_func(integer var) begin
+boolean function my_func(integer var) begin
    if var = 5 then
 	return (true)
    end

@@ -1,3 +1,4 @@
+% Nested function defs
 begin
   integer function x begin
     integer function y begin
@@ -6,12 +7,4 @@ begin
     return (y + 1)
    end
   put x, skip
-
-  procedure f begin
-    procedure g begin
-      put "hello", skip
-    end
-    g
-  end
-  f
 end

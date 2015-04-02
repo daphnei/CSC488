@@ -1,0 +1,12 @@
+% Nested procedure defs
+begin
+
+  procedure f begin
+    procedure g begin
+      put "hello", skip
+    end
+    g
+  end
+  f
+
+end

@@ -2,8 +2,7 @@ begin
 
 integer function my_func (integer param1, boolean param2) begin
 	put "Hello Canada"
+	return (2)
 end
-
-
 
 end

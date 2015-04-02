@@ -2,6 +2,7 @@ begin
 
 integer function my_func begin
 	put "Hello Canada"
+	return (1)
 end
 
 integer i

@@ -10,5 +10,7 @@ begin
 	end
 end
 
+integer i
+i <= func_2a(true)
 
 end

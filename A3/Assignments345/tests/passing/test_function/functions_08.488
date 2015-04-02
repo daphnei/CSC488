@@ -10,4 +10,7 @@ begin
 	end
 end
 
+boolean b
+b <= func_2b(-5)
+
 end

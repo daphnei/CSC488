@@ -1,7 +1,12 @@
 begin
 
-boolean in1, in2
+integer in1, in2
 
-get in1, in2
+loop 
+get in1
+get in2
+exit end
+
+put "Got some things: ", skip, in1, skip, in2, skip
 
 end

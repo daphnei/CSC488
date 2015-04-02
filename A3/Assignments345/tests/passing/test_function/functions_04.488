@@ -1,11 +1,21 @@
 begin
 integer a1
 boolean a2
+a1 <= 5
 
-integer function first_function
+boolean function first_function
    begin
       integer a3
+      a3 <= 3
+      put "Value of something weird:", (a1 + a3), skip 
+      a2 <= (a1 + a3) >= 5
+      return (a2)
    end
 
+a2 <= first_function
+if (a2)
+	then
+	put "Funky function"
+end
 
 end

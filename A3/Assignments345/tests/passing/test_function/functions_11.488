@@ -1,6 +1,6 @@
 begin
 
-% Function with no parameters
+% Function with one parameters
 boolean function func_1b(boolean a)
 begin
 	return (a)

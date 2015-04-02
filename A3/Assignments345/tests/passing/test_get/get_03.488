@@ -1,7 +1,15 @@
 begin
 
-boolean in1
+integer in1
 
-get in1
+integer function functimes
+begin
+	integer p1
+	get p1
+	return (p1)
+end
+
+in1 <= functimes
+put "Got a value: ", in1, skip
 
 end

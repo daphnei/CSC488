@@ -1,8 +1,16 @@
 begin
 
-boolean in1, in2
-integer in3
+integer in1, in2, in3
 
-get in1, in2, in3
+integer function funcy
+begin
+	get in1, in2
+	return (in1 + in2)
+end
+
+in3 <= funcy
+
+put "Values gotten inside function:", 
+	skip, in1, skip, in2, skip, in3
 
 end

@@ -1,6 +1,6 @@
 begin
 
-% Function with no parameters
+% Function with one parameters
 integer function func_1b(integer a)
 begin
 	return (a * 2)

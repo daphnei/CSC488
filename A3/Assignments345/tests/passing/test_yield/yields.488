@@ -1,9 +1,0 @@
-begin
-	integer function compute(integer var) begin
-		return (1)
-	end
-	begin
-		integer x
-		x <= { begin integer x end yields 1+compute(x)}
-	end
-end

@@ -1,6 +1,4 @@
 % Declarations & creating entries in the symbol table as well as check the declarations via access
-% S10-19, S46-48 , S51-53
-% S25, S27-28, S34-39, S40-45
 
 begin
 	integer p4[20, 20]

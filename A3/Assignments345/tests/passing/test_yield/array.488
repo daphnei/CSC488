@@ -1,6 +1,0 @@
-begin
-	integer x[2]
-	begin
-		x[1] <= { begin end yields 1 }
-	end
-end

@@ -1,227 +1,291 @@
 Test Index
 
-Here you will find an index of all tests in all folders, each accompanied by a brief description of what the test targets as well as the specific semantic rule(s) being examined. 
+Here you will find an index of all tests in all folders, each accompanied by a brief description of what the test targets. Tests that were newly written/rewritten expressly for this assignment are denoted "NEW."
 
-Passing :
+Passing:
+
+>>> test_array_variables <<<
+arrays_01 
+> simple boolean array with defined lower and upper bounds
+arrays_02 
+> simple integer array with negative lower bound
+arrays_03 
+> simple integer array
+arrays_04 
+> 2d integer array
+arrays_05 
+> 2d integer array with defined lower and upper bounds
+arrays_06 
+> 2d integer array
+arrays_07 
+> 2d boolean array
+arrays_08 
+> 2 simple arrays
+arrays_09 
+> 2 simple arrays being used
+arrays_10 
+> accessing array subscript with variable
+arrays_11 
+> using a simple boolean array
+arrays_12 
+> using a 2d boolean array
+arrays_13 
+> using a simple boolean array
+arrays_14 
+> using a 2d boolean array
+arrays_15 
+> using a 2d boolean array with negative bounds
+arrays_comprehensive 
+> All kinds of declaration of arrays
+
+>>> test_exit_return <<<
+test_03 
+>  Loop exit inside minor scope (still counts as "directly inside") 
+test_04 
+>  Loop using "exit when expression"
+ex_ret_01 
+>  Using exit when
+ex_ret_02 
+>  Using exit out of loop
+ex_ret_03 
+>  Using exit and return out of loop and routine
+ex_ret_04 
+>  Using exit and return out of loop and routine
+ex_ret_05 
+>  Using exit and return out of loop and routine
+return_01 
+>  Multiple return tests, with and without return value
+exitScope 
+>  Using exit to quit a loop
+
+>>> test_expressions <<<
+exp_01 
+> Check a mixture of all four binary operations.
+exp_02 
+> Check for order of operations correctness.
+exp_03 
+> Check a bunch of '-' symbols used both in binary and unary format.
+exp_04 
+>  testing logic and arithmetic order
+exp_05 
+> Try a bunch of different boolean logic types mixed together
+test_basic 
+>  Expressions (all kinds) and type checking
+arithmetic_comprehensive 
+>  All arithmetic expressions and combinations testing
+
+test_function <<<
+
+func_01
+> Multi-parameter functions and layered function calls (ie. call a function on the return value of another function).
+
+func_02
+> Nested function definitions & calls.
+
+functions_01
+> Basic function & call.
+
+functions_02
+> Basic function (multi params) & call.
+
+functions_03
+> Return statement inside if-statement (no else-statement).
+
+functions_04 (NEW)
+> Parameterless function using/modifying global variables declared outside the function scope.
+
+functions_05
+> Parameterless function
+
+functions_06
+> Parameterless function
+
+functions_07
+> Takes integer returns boolean; return statements appear in both if- and else- blocks.
+
+functions_08
+> Takes boolean returns integer; return statements appear in both if- and else- blocks.
+
+functions_09
+> Multi-parametered function w/ arithmetic expr. in return statement.
+
+functions_10
+** DUPLICATE FLAG FOR REWRITE
+
+functions_11
+
+functions_12
+
+>>> test_get <<<
+
+get_01.488
+> Basic call to "get" w/ two variables.
+get_02.488
+> Basic call to "get" w/ only one variable.
+get_03.488 (NEW)
+> Call "get" inside a function and return value gotten.
+get_04.488 (NEW)
+> Call "get" inside loop stmt.
+get_05.488 (NEW)
+> Call "get" inside function scope on variables declared outside the function.
 
 
-test_array_variables:
-arrays_01 >>>
-%simple boolean array with defined lower and upper bounds
-arrays_02 >>>
-%simple integer array with negative lower bound
-arrays_03 >>>
-%simple integer array
-arrays_04 >>>
-%2d integer array
-arrays_05 >>>
-%2d integer array with defined lower and upper bounds
-arrays_06 >>>
-%2d integer array
-arrays_07 >>>
-%2d boolean array
-arrays_08 >>>
-%2 simple arrays
-arrays_09 >>>
-%2 simple arrays being used
-arrays_10 >>>
-%accessing array subscript with variable
-arrays_11 >>>
-%using a simple boolean array
-arrays_12 >>>
-%using a 2d boolean array
-arrays_13 >>>
-%using a simple boolean array
-arrays_14 >>>
-%using a 2d boolean array
-arrays_15 >>>
-%using a 2d boolean array with negative bounds
-arrays_comprehensive >>>
-%All kinds of declaration of arrays
+>>> test_if <<<
 
-test_exit_return:
-test_03 >>>
-% Loop exit inside minor scope (still counts as "directly inside") 
-test_04 >>>
-% Loop using "exit when expression"
-ex_ret_01 >>>
-% Using exit when
-ex_ret_02 >>>
-% Using exit out of loop
-ex_ret_03 >>>
-% Using exit and return out of loop and routine
-ex_ret_04 >>>
-% Using exit and return out of loop and routine
-ex_ret_05 >>>
-% Using exit and return out of loop and routine
-return_01 >>>
-% Multiple return tests, with and without return value
-exitScope >>>
-% Using exit to quit a loop
+>>> test_loop <<< 
 
-test_expressions:
-exp_01 >>>
-%Check a mixture of all four binary operations.
-exp_02 >>>
-%Check for order of operations correctness.
-exp_03 >>>
-%Check a bunch of '-' symbols used both in binary and unary format.
-exp_04 >>>
-% testing logic and arithmetic order
-exp_05 >>>
-%Try a bunch of different boolean logic types mixed together
-test_basic >>>
-% Expressions (all kinds) and type checking
-arithmetic_comprehensive >>>
-% All arithmetic expressions and combinations testing
+loop_comprehensive
+> From A1, long test with lots of loop usage.
 
-test_function:
+loop_infinite1 (NEW)
+>  Infinite while loop (previously belonging to a longer test, but broken off for ease of testing)
+
+loop_infinite2 (NEW)
+>  Infinite loop using "loop" statement
+
+test_misc<<<
+test_basic
+Declaring and accessing identifiers for a varied
 
 
-test_get:
 
-test_if:
+test_nonarray_variables <<<
 
-test_loop: 
+test_procedure <<<
 
-test_misc:
+test_put <<<
 
-test_nonarray_variables:
+test_recursion <<<
 
-test_procedure:
+test_scope <<<
 
-test_put:
+test_yield<<<
 
-test_recursion:
-
-test_scope:
-
-test_yield:
 
 
 
 Failing:
 
 
-Folder A2:
-Inside test_semantically_incorrect folder:
-test_17 >>>
-%using boolean operator or with integers
-test_19 >>>
-%using negative operator with a boolean
-test_20 >>>
-%comparing integer using or
-test_24 >>>
-%Linking boolean operators
-semanticIncorrect >>>
-%using variable undeclared
-semanticIncorrect2 >>>
-%missing function reserved word 
+Folder A2 <<<
+Inside test_semantically_incorrect folder <<<
+test_17 
+> using boolean operator or with integers
+test_19 
+> using negative operator with a boolean
+test_20 
+> comparing integer using or
+test_24 
+> Linking boolean operators
+semanticIncorrect 
+> using variable undeclared
+semanticIncorrect2 
+> missing function reserved word 
 
-test_01 >>>
-%Missing begin 
-test_02 >>>
-%Waiting statement inside scope, instead of expression
-test_03 >>>
-%Waiting statement inside scope, instead of expression
-test_04 >>>
-%Type should be followed by a identifier
-test_05 >>>
-%Exit is a statement and should be followed by another statement, but instead we got "true", which is a expression
-test_06 >>>
-%Waiting statement inside scope, instead of expression
-test_07 >>>
-%Waiting expression inside "while", got statement
-test_08 >>>
-%Statement inside expression is invalid
-test_09 >>>
-%Missing "<" in assingment
-test_10 >>>
-%Missing type before variable
-test_11 >>>
-%The "when" keyword needs to follow "exit"
-test_12 >>>
-%Missing ")" in return.
-test_13 >>>
-%Missing "()" in return.
-test_14 >>>
-%New scope with no end
-test_15 >>>
-%Missing type of function
-test_16 >>>
-%Missing type of parameter
-test_17 >>>
-%Missing name of parameter
-test_18 >>>
-%Identifiers cant begin with digit
-test_19 >>>
-%Missing right ")"
-test_20 >>>
-%Cant have a "put" inside a "while"
-test_21 >>>
-%Statemet where a expression is expected is invalid
-test_22 >>>
-%Operator precedence is undefined
-test_23 >>>
-%Missing statements in if and else blocks
-test_24 >>>
-%Linking boolean operators
-test_25 >>>
-%Defining a single negative bound
-
-
-Folder A3:
-
-Inside ctrlflow folder:
-test_01 >>>
-% Illegal use of exit in main scope
-test_02 >>>
-% Illegal use of return inside main scope. 
-test_03 >>>
-% Illegal placement of exit (not "directly inside" loop)
-test_04 >>>
-% Illegal use of return (and return value) in non-function/procedure scope 
-
-Inside misc folder:
-test_01 >>>
-% Illegal use of exit statement in anonymous function
-test_02 >>>
-% Function must contain return
-test_03 >>>
-% Function/procedure parameter count mismatch
-test_04 >>>
-% Array declared with improper bounds
-test_05 >>>
-% NO return should be allowed inside yield 
-
-Inside scopes folder:
-test_01 >>>
-% Unidentified function/procedure calls
-test_02 >>>
-% Redeclaring identifier in minor scope.
-test_03 >>>
-% Illegal use of undeclared identifier.
-test_04 >>>
-% Redeclaring identifier (declared inside minor scope).
-
-Inside types folder:
-test_01 >>>
-% Various expression result type errors due to incorrect usage
-test_02 >>>
-% Nested expression result type errors.
-test_03 >>>
-% Function return type must match declaration
-test_04 >>>
-% Function/procedure parameter types must match declaration
-test_05 >>>
-% Illegal usage of function (function call must be RHS of statement)
-test_06 >>>
-% Type errors in arrays
+test_01 
+> Missing begin 
+test_02 
+> Waiting statement inside scope, instead of expression
+test_03 
+> Waiting statement inside scope, instead of expression
+test_04 
+> Type should be followed by a identifier
+test_05 
+> Exit is a statement and should be followed by another statement, but instead we got "true", which is a expression
+test_06 
+> Waiting statement inside scope, instead of expression
+test_07 
+> Waiting expression inside "while", got statement
+test_08 
+> Statement inside expression is invalid
+test_09 
+> Missing "<" in assingment
+test_10 
+> Missing type before variable
+test_11 
+> The "when" keyword needs to follow "exit"
+test_12 
+> Missing ")" in return.
+test_13 
+> Missing "()" in return.
+test_14 
+> New scope with no end
+test_15 
+> Missing type of function
+test_16 
+> Missing type of parameter
+test_17 
+> Missing name of parameter
+test_18 
+> Identifiers cant begin with digit
+test_19 
+> Missing right ")"
+test_20 
+> Cant have a "put" inside a "while"
+test_21 
+> Statemet where a expression is expected is invalid
+test_22 
+> Operator precedence is undefined
+test_23 
+> Missing statements in if and else blocks
+test_24 
+> Linking boolean operators
+test_25 
+> Defining a single negative bound
 
 
-Folder A4:
+Folder A3 <<<
 
-array >>>
-%Accessing out of the bounds of the array
-variable >>>
-%Using a variable not initialized
+Inside ctrlflow folder <<<
+test_01 
+>  Illegal use of exit in main scope
+test_02 
+>  Illegal use of return inside main scope. 
+test_03 
+>  Illegal placement of exit (not "directly inside" loop)
+test_04 
+>  Illegal use of return (and return value) in non-function/procedure scope 
+
+Inside misc folder <<<
+test_01 
+>  Illegal use of exit statement in anonymous function
+test_02 
+>  Function must contain return
+test_03 
+>  Function/procedure parameter count mismatch
+test_04 
+>  Array declared with improper bounds
+test_05 
+>  NO return should be allowed inside yield 
+
+Inside scopes folder <<<
+test_01 
+>  Unidentified function/procedure calls
+test_02 
+>  Redeclaring identifier in minor scope.
+test_03 
+>  Illegal use of undeclared identifier.
+test_04 
+>  Redeclaring identifier (declared inside minor scope).
+
+Inside types folder <<<
+test_01 
+>  Various expression result type errors due to incorrect usage
+test_02 
+>  Nested expression result type errors.
+test_03 
+>  Function return type must match declaration
+test_04 
+>  Function/procedure parameter types must match declaration
+test_05 
+>  Illegal usage of function (function call must be RHS of statement)
+test_06 
+>  Type errors in arrays
+
+
+Folder A4 <<<
+
+array 
+> Accessing out of the bounds of the array
+variable 
+> Using a variable not initialized
