@@ -3,9 +3,11 @@ begin
     integer result
     
     integer dog
+	dog <= 1
     result <= { integer cat cat <= dog yields cat }
-    result <= { integer cat if dog = 2 then cat <= 1 else cat <= 5 end yields cat }
-    
+	put result, skip
+    result <= { integer rat if dog = 2 then rat <= 1 else rat <= 5 end yields rat }
+    put result, skip
     if {
         integer cheese
         cheese <= 6

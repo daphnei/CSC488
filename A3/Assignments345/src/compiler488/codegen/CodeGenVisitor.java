@@ -132,7 +132,7 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Set the initial display to the correct value.
 		AddressPatch stackStartPatch = this.writer.writePatchablePush();
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
-                
+
 		// Write a dummy control block.
 		AddressPatch returnAddressPatch = this.writer.writeControlBlock(scope.getLexicalLevel());
 		this.writer.patchAddress(returnAddressPatch, Machine.UNDEFINED);  
@@ -429,16 +429,21 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(AnonFuncExpn visitable) {
                 // DO NOT CALL SUPER
-                this.symbolTable.openScope(ScopeType.YIELD);
-                ListIterator<Stmt> it = visitable.getBody().listIterator();
-                while (it.hasNext()){
-                    it.next().accept(this);
-                }
+                // use a fakename template for anonfuncs
+                String name = "anonfunc"+anonCount;
+                anonCount+=1;
                 
-                visitable.getExpn().accept(this);
+                //create a fake routine declaration
+                ASTList<Stmt> stmt = visitable.getBody();
+                stmt.add(new ReturnStmt(visitable.getExpn(), 0, 0));
+                Scope scope = new Scope(stmt,0,0);
+                Type type = visitable.getExpn().getResultType().returnAST();
+                RoutineDecl fakefunction = new RoutineDecl(name,type,scope,0,0);
+                this.visit(fakefunction);
                 
-                
-                this.symbolTable.closeCurrentScope();
+                //create a fake call of the function
+                FunctionCallExpn fakecall = new FunctionCallExpn(name, new ASTList<Expn>(), 0, 0);
+                this.visit(fakecall);
 	}
 
 	@Override
