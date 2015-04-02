@@ -1,0 +1,13 @@
+% YIELDS
+begin
+    boolean expb, bool
+    bool <= false
+
+    expb <= { put "Anonymous Function Being Called"
+    			yields (bool & true) }
+
+    integer expn, n1, n2
+    n1 <= 10
+    n2 <= 1
+    expn <=	{ get n1, n2 yields (n1 + n2) * 100 }		
+end

@@ -46,13 +46,4 @@ begin
 		end
 	end
 
-	while true
-	do
-		put "This is the loop that never ends.", skip
-	end
-
-	loop
-		put "This is the other loop that never ends.", skip
-	end
-
 end

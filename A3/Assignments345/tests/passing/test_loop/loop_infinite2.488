@@ -1,0 +1,7 @@
+%An infinite loop-loop.
+
+begin
+	loop
+		put "This is the other loop that never ends.", skip
+	end
+end	

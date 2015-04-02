@@ -1,4 +1,4 @@
-:wqwqbegin
+begin
   integer function x begin
     integer function y begin
       return (123)

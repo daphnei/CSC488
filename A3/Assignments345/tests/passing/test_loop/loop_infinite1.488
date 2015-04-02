@@ -1,0 +1,8 @@
+% An infinite while loop
+
+begin
+	while true
+	do
+		put "This is the loop that never ends.", skip
+	end
+end	
