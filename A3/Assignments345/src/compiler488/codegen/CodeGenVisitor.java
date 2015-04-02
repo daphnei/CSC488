@@ -48,6 +48,7 @@ import compiler488.symbol.ScopeType;
 import compiler488.symbol.SymScope;
 import compiler488.symbol.Symbol;
 import compiler488.symbol.SymbolTable;
+import java.util.ListIterator;
 
 public class CodeGenVisitor extends NodeVisitor {
 
@@ -131,9 +132,9 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Set the initial display to the correct value.
 		AddressPatch stackStartPatch = this.writer.writePatchablePush();
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
-
+                
 		// Write a dummy control block.
-		AddressPatch returnAddressPatch = this.writer.writeControlBlock(Machine.UNDEFINED);
+		AddressPatch returnAddressPatch = this.writer.writeControlBlock(scope.getLexicalLevel());
 		this.writer.patchAddress(returnAddressPatch, Machine.UNDEFINED);  
 
 		// Push some fake space for holding all program scope variables.
@@ -428,15 +429,16 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(AnonFuncExpn visitable) {
                 // DO NOT CALL SUPER
-                ASTList<Stmt> exp = visitable.getBody();
-                exp.add(new ReturnStmt(visitable.getExpn(), 0, 0));
-                Scope fake = new Scope(exp, 0, 0);
-                String name = "anonfunc"+anonCount;
-                anonCount+=1;
-                RoutineDecl temp = new RoutineDecl(name, visitable.getExpn().getResultType().returnAST(), fake, 0, 0);
-                super.visit(temp);
-                FunctionCallExpn in = new FunctionCallExpn(name, new ASTList<Expn>(), 0, 0);
-                super.visit(in);
+                this.symbolTable.openScope(ScopeType.YIELD);
+                ListIterator<Stmt> it = visitable.getBody().listIterator();
+                while (it.hasNext()){
+                    it.next().accept(this);
+                }
+                
+                visitable.getExpn().accept(this);
+                
+                
+                this.symbolTable.closeCurrentScope();
 	}
 
 	@Override
