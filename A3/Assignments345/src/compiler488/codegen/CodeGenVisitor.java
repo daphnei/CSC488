@@ -434,7 +434,9 @@ public class CodeGenVisitor extends NodeVisitor {
                 String name = "anonfunc"+anonCount;
                 anonCount+=1;
                 RoutineDecl temp = new RoutineDecl(name, visitable.getExpn().getResultType().returnAST(), fake, 0, 0);
-                temp.accept(this);
+                super.visit(temp);
+                FunctionCallExpn in = new FunctionCallExpn(name, new ASTList<Expn>(), 0, 0);
+                super.visit(in);
 	}
 
 	@Override
