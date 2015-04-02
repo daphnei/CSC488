@@ -354,7 +354,14 @@ public class CodeGenVisitor extends NodeVisitor {
 	}
 
 	public void visit(ExitStmt visitable) {
-		AddressPatch patch = this.writer.writePatchableBranchAlways();
+                AddressPatch patch;
+                if (visitable.getExpn()==null){
+                    patch = this.writer.writePatchableBranchAlways();
+                } else{
+                    visitable.getExpn().accept(this);
+                    this.writer.writeNot();
+                    patch = this.writer.writePatchableBranchIfFalse();
+                }
 		this.symbolTable.getCurrentLoopScope().keepTrackOfAnExit(patch);
 	}
 	
