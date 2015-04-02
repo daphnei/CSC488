@@ -1,13 +1,17 @@
 begin
-  integer function compute(integer var) begin
-   put skip, var, skip
-   if var = 3 then
-     return (100)
-   else
-     return (compute(var + 1))
+  integer function x begin
+    integer function y begin
+      return (123)
+    end
+    return (y + 1)
    end
+  put x, skip
+
+  procedure f begin
+    procedure g begin
+      put "hello", skip
+    end
+    g
   end
-  integer x
-  x <= compute(0)
-  put x
+  f
 end
