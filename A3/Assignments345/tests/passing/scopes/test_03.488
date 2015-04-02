@@ -5,12 +5,13 @@
 begin
 
 	integer outx, outy
+	boolean k
 
 	procedure p (integer x, integer y)
 	begin
 		outx <= 5
 		outy <= 15
-		put outx, outy
+		put outx, skip, outy
 	end
 
 	boolean function f
@@ -20,7 +21,7 @@ begin
 		return (outy <= 10)
 	end
 	
-	outx <= f
+	k <= f
 	p(outx,outy)
 
 end

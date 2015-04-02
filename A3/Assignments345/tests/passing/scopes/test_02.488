@@ -4,6 +4,7 @@
 
 begin
 	integer x
+	boolean y
 	x < = 3
 	
 	procedure p
@@ -19,6 +20,6 @@ begin
 		return ( x )
 	end
 	p
-	x <= f
+	y <= f
 	put "x is ", x, skip
 end
