@@ -68,6 +68,8 @@ public class ExpnAddressVisitor extends NodeVisitor {
 			// Add the dimension offset to this subscript.
 			this.writer.writeSubscriptOffsetAndBoundsCheck(semType.getOffsetDim2(), semType.getLengthDim2(), visitable.getLineNumber());
                         
+                        this.writer.writeRawAssembly(Machine.ADD);
+                        
                         // Push the first memory address of the array on to the stack.
 			this.writer.writeSymbolAddress(visitable.getVariable(), symbolTable);
 			

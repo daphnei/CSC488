@@ -441,7 +441,7 @@ public class CodeGenVisitor extends NodeVisitor {
                 RoutineDecl fakefunction = new RoutineDecl(name,type,scope,0,0);
                 this.visit(fakefunction);
                 
-                //create a fake call of the function
+                //create a fake call of the  function
                 FunctionCallExpn fakecall = new FunctionCallExpn(name, new ASTList<Expn>(), 0, 0);
                 this.visit(fakecall);
 	}
