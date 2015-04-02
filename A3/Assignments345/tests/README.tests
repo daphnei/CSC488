@@ -3,67 +3,121 @@ Test Index
 Here you will find an index of all tests in all folders, each accompanied by a brief description of what the test targets as well as the specific semantic rule(s) being examined. 
 
 Passing :
-(all rules used in the test are mentioned)
 
-Inside ctrlflow folder:
-test_01 >>>
-% Procedure without explicit return ("running off the end")
-% S00, S01, S03, S41, S08, S14, S21, S16, S15, S18, S31
-test_02 >>>
-% Regular procedure with return stmt.
-% S00, S01, S03, S41, S08, S14, S21, S16, S15, S18, S31, S52
+
+test_array_variables:
+arrays_01 >>>
+%simple boolean array with defined lower and upper bounds
+arrays_02 >>>
+%simple integer array with negative lower bound
+arrays_03 >>>
+%simple integer array
+arrays_04 >>>
+%2d integer array
+arrays_05 >>>
+%2d integer array with defined lower and upper bounds
+arrays_06 >>>
+%2d integer array
+arrays_07 >>>
+%2d boolean array
+arrays_08 >>>
+%2 simple arrays
+arrays_09 >>>
+%2 simple arrays being used
+arrays_10 >>>
+%accessing array subscript with variable
+arrays_11 >>>
+%using a simple boolean array
+arrays_12 >>>
+%using a 2d boolean array
+arrays_13 >>>
+%using a simple boolean array
+arrays_14 >>>
+%using a 2d boolean array
+arrays_15 >>>
+%using a 2d boolean array with negative bounds
+arrays_comprehensive >>>
+%All kinds of declaration of arrays
+
+test_exit_return:
 test_03 >>>
 % Loop exit inside minor scope (still counts as "directly inside") 
-% S00, S01, S03, S06, S07, S50
 test_04 >>>
 % Loop using "exit when expression"
-% S00, S01, S03, S21, S37, S47, S10, S34, S06, S07, S26, S31, S20, S30, S50
+ex_ret_01 >>>
+% Using exit when
+ex_ret_02 >>>
+% Using exit out of loop
+ex_ret_03 >>>
+% Using exit and return out of loop and routine
+ex_ret_04 >>>
+% Using exit and return out of loop and routine
+ex_ret_05 >>>
+% Using exit and return out of loop and routine
+return_01 >>>
+% Multiple return tests, with and without return value
+exitScope >>>
+% Using exit to quit a loop
 
-Inside misc folder:
-test_basic >>>
-% Declarations & creating entries in the symbol table as well as check the declarations via access
-% S10-19, S46-48 , S51-53
-% S25, S27-28, S34-39, S40-45
-
-Inside scopes folder:
-test_01 >>>
-% Identifier declared in if-block (still counts as part of main scope)
-% S00, S01, S03, S30, S20, S47, S10, S21, S37, S34, S26, S31
-test_02 >>>
-% Redeclaring (and reassigning) identifier inside new major scope
-% S00, S01, S03, S21, S47, S10, S37, S34, S26, S41, S17, S08, S09, S13
-% S20, S51, S35, S31
-test_03 >>>
-% Accessing identifiers declared in main scope from inside routines
-% S00, S01, S03, S21, S47, S10, S37, S41, S08, S14, S16, S15, S18, S09, S13
-% S34, S26, S31, S20, S51, S35
-test_basic >>>
-% Bread and butter scope and program semantic operators
-% S00, S01, S03, S21, S47, S10, S37, S40, S11, S04, S05, S53, S13, S51, S35
-% S41, S17, S08, S09, S52
-test_simple >>>
-% The simplest scope test
-% S00, S01 
-
-Inside types folder:
-test_01 >>>
-% Multiple declarations in one statement
-% S00, S01, S03, S21, S37, S10, S47, S48, S19, S20
-test_02 >>>
-% Assignments and comparisons look alike
-% S00, S01, S03, S21, S37, S47, S10, S20, S34, S26, S31
+test_expressions:
+exp_01 >>>
+%Check a mixture of all four binary operations.
+exp_02 >>>
+%Check for order of operations correctness.
+exp_03 >>>
+%Check a bunch of '-' symbols used both in binary and unary format.
+exp_04 >>>
+% testing logic and arithmetic order
+exp_05 >>>
+%Try a bunch of different boolean logic types mixed together
 test_basic >>>
 % Expressions (all kinds) and type checking
-% S20-24, S26, S30-32
-test_yields >>>
-% YIELDS
-% S24
+arithmetic_comprehensive >>>
+% All arithmetic expressions and combinations testing
+
+test_function:
+
+
+test_get:
+
+test_if:
+
+test_loop: 
+
+test_misc:
+
+test_nonarray_variables:
+
+test_procedure:
+
+test_put:
+
+test_recursion:
+
+test_scope:
+
+test_yield:
+
 
 
 Failing:
 
 
 Folder A2:
+Inside test_semantically_incorrect folder:
+test_17 >>>
+%using boolean operator or with integers
+test_19 >>>
+%using negative operator with a boolean
+test_20 >>>
+%comparing integer using or
+test_24 >>>
+%Linking boolean operators
+semanticIncorrect >>>
+%using variable undeclared
+semanticIncorrect2 >>>
+%missing function reserved word 
+
 test_01 >>>
 %Missing begin 
 test_02 >>>
