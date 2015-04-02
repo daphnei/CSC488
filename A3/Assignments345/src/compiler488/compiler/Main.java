@@ -399,25 +399,8 @@ public class Main {
 		}
 
 		try {
-			/* CodeGenExample generator = new CodeGenExample();
-			generator.Initialize();
-			generator.Finalize(); */
 			CodeGenVisitor generator = new CodeGenVisitor();
 			generator.generateCode(programAST);
-			
-			// INSERT CODE HERE TO DO CODE GENERATION
-			// e.g.
-			//
-			// ASTVisitor visitor = new CodeGenerator();
-			// programAST.accept(visitor);
-			//
-			// or
-			//
-			// programAST.doCodeGen() ;
-			//
-			// or
-			//
-			// codeGen.doIt( programAST );
 		} catch (Exception e) {
 			System.err.println("Exception during Code Generation");
 			System.err.println(e.getClass().getName() + ": " + e.getMessage());

@@ -280,10 +280,10 @@ public class CodeWriter {
 	}
 	
 	/**
-	 * 
-	 * @param routine
-	 * @param localVariableSpace
-	 * @param localMinusParamsSizePatch
+	 * This function tears down a routine once it has been executed/
+	 * @param routine The object storing info about the routine.
+	 * @param localVariableSpace How much space was being used by variables declared in this routine's scope.
+	 * @param localMinusParamsSizePatch The patch corresponding to the first address of the routine following the activation record.
 	 */
 	public void writeRoutineDeclareTeardown(RoutineSemType routine, int localVariableSpace, AddressPatch localMinusParamsSizePatch) {
 		// Delete the local variables.
@@ -301,10 +301,16 @@ public class CodeWriter {
 	
 	// --- Helpers ---
 
+	/**
+	 * Write the instruction to start the machine doing debug.
+	 */
 	public void writeBeginDebug() {
 		this.writeRawAssembly(Machine.TRON);
 	}
 	
+	/**
+	 * Write the instruction to stop the machine doing debug.
+	 */
 	public void writeEndDebug() {
 		this.writeRawAssembly(Machine.TROFF);
 	}
@@ -361,6 +367,11 @@ public class CodeWriter {
 		this.patchAddress(patchIf, this.programCounter);
 	}
 
+	/**
+	 * Write a runtime error. A good use case for this is bad array bounds.
+	 * @param lineNumber The line number on which the error occured.
+ 	 * @param message The type of problem that occured.
+	 */
 	public void writeErrorThenHalt(int lineNumber, String message) {
 		this.writeString("Line ");
 		this.writeRawAssembly(Machine.PRINTI, lineNumber);
@@ -368,6 +379,11 @@ public class CodeWriter {
 		this.writeRawAssembly(Machine.HALT);
 	}
 	
+	/**
+	 * Write the address of the specified symbol in the symbol table.
+	 * @param symbolIdentifier The name of the symbol.
+	 * @param symbolTable A reference to the symbol table.
+	 */
 	public void writeSymbolAddress(String symbolIdentifier, SymbolTable symbolTable) {
 		Symbol symbol = symbolTable.retrieveSymbol(symbolIdentifier);
 		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(symbolTable), symbol.getOffset());
@@ -375,10 +391,19 @@ public class CodeWriter {
 	
 	// --- Patching ---
 
+	/**
+	 * Patch the provided address with the current value of the program counter.
+	 * @param needingPatch
+	 */
 	public void patchAddress(AddressPatch needingPatch) {
 		this.patchAddress(needingPatch, this.programCounter);
 	}
 
+	/**
+	 * Patch the provided address with the specified position.
+	 * @param needingPatch The patch that needs revising.
+	 * @param newAddress The address to make the patch point to.
+	 */
 	public void patchAddress(AddressPatch needingPatch, short newAddress) {
 		if (this.requiredPatches.contains(needingPatch)) {
 			Machine.writeMemory(needingPatch.addressToBePatched, newAddress);
@@ -389,6 +414,13 @@ public class CodeWriter {
 		}
 	}
 	
+	/**
+	 * Cause all of the patches in the specified scope to be patched with the specified address.
+	 * This is a utility used to patch all of the returns inside a function or all of the exits
+	 * inside a loop.
+	 * @param scope A scope object.
+	 * @param patchAddress The address to patch to.
+	 */
 	public void patchReturnsOrExits(SymScope scope, short patchAddress) {
 		ArrayList<AddressPatch> exitsToBePatched = scope.getAllExitsToBePatched();
 		for (AddressPatch patch : exitsToBePatched) {
@@ -398,10 +430,16 @@ public class CodeWriter {
 	
 	// --- Debug Info ---
 
+	/**
+	 * Mark down that some instruction has been generated. This was used for debugging.
+	 */
 	private void record(short memoryAddr, short machineOp, Object arg1, Object arg2) {
 		this.record(this.debugRecord.size(), memoryAddr, machineOp, arg1, arg2);
 	}
 
+	/**
+	 * Mark down that some instruction has been generated. This was used for debugging.
+	 */
 	private void record(int debugIndex, short memoryAddr, short machineOp, Object arg1, Object arg2) {
 		String debug = String.format("%d : (%s, %s, %s)", memoryAddr, Machine.instructionNames[machineOp], arg1 != null ? arg1.toString()
 				: "", arg2 != null ? arg2.toString() : "");
@@ -413,10 +451,16 @@ public class CodeWriter {
 		}
 	}
 
+	/**
+	 * Mark down some text. This was used for debugging.
+	 */
 	private void record(String text) {
 		this.debugRecord.add(text);
 	}
 
+	/**
+	 * Print a record of the stack.
+	 */
 	public static void printStackTrace() {
 		for (StackTraceElement s : Thread.currentThread().getStackTrace()) {
 			System.out.println(s.toString());
