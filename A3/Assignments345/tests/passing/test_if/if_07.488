@@ -1,11 +1,8 @@
 begin
-
-if 15 then 
-      exit 
-   end
-
 if true then 
-      exit 
-   end
+	if false then 
+		put "hi" 
+	end
+end
 
 end

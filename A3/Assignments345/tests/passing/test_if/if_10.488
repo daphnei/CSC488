@@ -1,11 +1,8 @@
 begin
-
-if (-15) then 
-      return 
-   end
-
 if (false) then 
-      return 
+if (-15)<0 then 
+      put "hi"
+   end
    end
 
 end
