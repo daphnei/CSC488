@@ -32,7 +32,7 @@ begin
     put "6 = ", (a * b * c), skip
     put "4 = ", (a * b * c - 2), skip
     put "8 = ", (a * b + c * 2), skip
-    put "12 = ", (a * (b + c) * 2), skip
+    put "10 = ", (a * (b + c) * 2), skip
 
     % OPERATIONS ON BOOLEANS
 
@@ -71,8 +71,8 @@ begin
     bool <= bool = false          % = false
     check_bool(false, bool)
 
-    % bool <= bool != true          % = true
-    check_bool(true, bool)
+    % bool <= bool != true          % = false
+    check_bool(false, bool)
 
     % EQUALITY OPERATIONS
 

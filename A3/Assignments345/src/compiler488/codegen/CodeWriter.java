@@ -237,7 +237,6 @@ public class CodeWriter {
 
 		// Push the return address.
 		AddressPatch returnAddressPatch = this.writePatchablePush();
-                System.out.println("in writecontrol "+lexicalLevelForActivationRecord);
 		// Push the value of the current LL display for this routine onto the stack.
 		this.writeRawAssembly(Machine.ADDR, lexicalLevelForActivationRecord, 0);
 
@@ -386,7 +385,6 @@ public class CodeWriter {
 	 */
 	public void writeSymbolAddress(String symbolIdentifier, SymbolTable symbolTable) {
 		Symbol symbol = symbolTable.retrieveSymbol(symbolIdentifier);
-                System.out.println("in writesym "+symbol.getLexicalLevel(symbolTable));
 		this.writeRawAssembly(Machine.ADDR, symbol.getLexicalLevel(symbolTable), symbol.getOffset());
 	}
 	

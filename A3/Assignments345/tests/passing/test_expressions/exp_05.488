@@ -2,5 +2,6 @@ begin
 	%Try a bunch of different boolean logic types mixed together
 
 	boolean b
+	b <= true
 	b <= (b | 2 > 4 & (9 + 2 = 11) | (true & 1 = 1))
 end
