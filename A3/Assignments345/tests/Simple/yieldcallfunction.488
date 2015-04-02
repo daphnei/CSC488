@@ -1,8 +1,0 @@
-begin
-	integer a
-	integer function f 
-	begin
-		return (0)
-	end
-	a <= { begin integer y y <= f end yields f }
-end
