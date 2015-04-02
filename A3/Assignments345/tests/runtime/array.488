@@ -1,0 +1,6 @@
+begin
+	integer x[3]
+	integer y,w
+	y <= 4
+	w <= x[(1+y)]
+end

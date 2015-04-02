@@ -214,7 +214,7 @@ public class CodeWriter {
 		this.writeRawAssembly(Machine.SETD, routine.getLexicalLevel());
 		
 		// Push space for local variables on stack.	
-		this.writeRawAssembly(Machine.PUSH, 0); // Dummy value.
+		this.writeRawAssembly(Machine.PUSH, Machine.UNDEFINED); // Dummy value.
 		AddressPatch localMinusParamsSizePatch = this.writePatchablePush();
 		this.writeRawAssembly(Machine.DUPN);
 		
