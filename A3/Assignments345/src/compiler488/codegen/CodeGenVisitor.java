@@ -293,6 +293,8 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Write the program counter value to the stack.
 		int topOfTheLoop = this.writer.getProgramCounter();
 
+                this.symbolTable.openScope(ScopeType.LOOP);
+                
 		// Check the condition
 		Expn condition = visitable.getExpn();
 		AddressPatch conditionPatch = null;
@@ -309,12 +311,14 @@ public class CodeGenVisitor extends NodeVisitor {
 		// Branch back to the top of the loop.
 		this.writer.writeRawAssembly(Machine.PUSH, topOfTheLoop);
 		this.writer.writeRawAssembly(Machine.BR);
-
+                
 		// Make sure that a false condition will push execution to outside the program outside of the loop.
 		this.writer.patchAddress(conditionPatch, this.writer.getProgramCounter());	
 		
 		// Patch any exits that may have occured in the body of the loop.
 		this.writer.patchReturnsOrExits(this.symbolTable.getCurrentLoopScope(), this.writer.getProgramCounter());
+                
+                this.symbolTable.closeCurrentScope();
 	}
 	
 	@Override
