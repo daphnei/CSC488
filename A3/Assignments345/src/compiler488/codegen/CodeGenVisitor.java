@@ -419,7 +419,9 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(AnonFuncExpn visitable) {
                 // DO NOT CALL SUPER
-                Scope fake = new Scope(visitable.getBody(), 0, 0);
+                ASTList<Stmt> exp = visitable.getBody();
+                exp.add(new ReturnStmt(visitable.getExpn(), 0, 0));
+                Scope fake = new Scope(exp, 0, 0);
                 String name = "anonfunc"+Anoncount;
                 Anoncount+=1;
                 RoutineDecl temp = new RoutineDecl(name, visitable.getExpn().getResultType().returnAST(), fake, 0, 0);

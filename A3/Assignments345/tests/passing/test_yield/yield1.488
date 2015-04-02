@@ -1,22 +1,6 @@
 begin
-    % These might not be semantically correct!
-    boolean result
+    integer result
+    integer dog
+    result <= 1
     
-    boolean dog
-    dog <= 4
-    result <= { int cat cat <= dog yields cat }
-    result <= { int cat if dog = 2 then cat <= 1 else cat <= 5 end yields cat }
-    
-    if {
-        boolean cheese
-        cheese <= 6
-        while cheese > 0
-        do
-            cheese <= cheese - 1
-        end
-        yields
-        cheese + 1
-    } then
-        dog <= 2
-    end
 end
