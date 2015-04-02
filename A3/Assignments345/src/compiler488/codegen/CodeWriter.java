@@ -14,25 +14,51 @@ import compiler488.symbol.SymbolTable;
  * All writes to the machine should go through this class. It allows us to build debug information
  * about the program as code is generated, and provides an interface for common write operations.
  * 
- * @author g2robint
+ * @author Adam, Daphne
  */
 public class CodeWriter {
 
+	/**
+	 * The current value of the program counter.
+	 */
 	private short programCounter = 0;
+	
+	/**
+	 * A utility to keep track of all the code that has been written to the machine so far.
+	 * We used this for debugging.
+	 */
 	private List<String> debugRecord = new ArrayList<String>();
+	
+	/**
+	 * A list of the addresses that are part of branch statements, but we don't know exactly 
+	 * where to branch yet. By the time the compiler is finished, all of these addresses 
+	 * should be patched, and this list should be empty.
+	 */
 	private List<AddressPatch> requiredPatches = new LinkedList<AddressPatch>();
 
+	/**
+	 * Nothing much to see here.
+	 */
 	public CodeWriter() {
 	}
 
+	/**
+	 * @return the current value of the program counter.
+	 */
 	public short getProgramCounter() {
 		return this.programCounter;
 	}
 
+	/**
+	 * @return true if all branch addresses have been patched, false otherwise.
+	 */
 	public boolean isCompletelyPatched() {
 		return this.requiredPatches.isEmpty();
 	}
-
+	
+	/**
+	 * Print out a record of all of the code that has been written to the machine so far.
+	 */
 	public void printWrittenCode() {
 		for (String str : this.debugRecord) {
 			System.out.println(str);
@@ -94,30 +120,46 @@ public class CodeWriter {
 	// --- Branch ---
 
 	/**
+	 * Write a conditional branch instruction
 	 * Returns an AddressPatch object which you MUST eventually use to patch this branch statement.
 	 * Failing to do so will generate an error.
+	 * @return the address that needs to be patched.
 	 */
 	public AddressPatch writePatchableBranchIfFalse() {
 		return this.writePatchableBranch(Machine.BF);
 	}
 
+	/**
+	 * Write a conditional branch instruction where we know exactly what address to branch to  
+	 * (no patching is needed.)
+	 * @param addressToBranch The address to branch to.
+	 * @return the program counter following this instruction's addition
+	 */
 	public short writeBranchIfFalse(short addressToBranch) {
 		return this.writeBranch(Machine.BF, addressToBranch);
 	}
 
 	/**
-	 * Returns an AddressPatch object which you MUST eventually use to patch this branch statement.
+	 * Write an unconditional branch instruction.
+	 * @return an AddressPatch object which you MUST eventually use to patch this branch statement.
 	 * Failing to do so will generate an error.
 	 */
 	public AddressPatch writePatchableBranchAlways() {
 		return this.writePatchableBranch(Machine.BR);
 	}
 
+	/**
+	 * Write an unconditional branch instruction.
+	 * @param addressToBranch The address to branch to.
+	 * @return
+	 */
 	public short writeBranchAlways(short addressToBranch) {
 		return this.writeBranch(Machine.BR, addressToBranch);
 	}
 
 	/**
+	 * Write a branch instruction that needs to be patched.
+	 * 
 	 * Returns an AddressPatch object which you MUST eventually use to patch this branch statement.
 	 * Failing to do so will generate an error.
 	 * 
@@ -138,6 +180,12 @@ public class CodeWriter {
 		return patch;
 	}
 
+	/**
+	 * Write a branch instruction, and record that we are doing so.
+	 * @param branchOperation Whether to use BR or BF
+	 * @param addressToBranch The address to branch to.
+	 * @return
+	 */
 	private short writeBranch(short branchOperation, short addressToBranch) {
 		this.record("<BRANCH>");
 		this.writeRawAssembly(Machine.PUSH, addressToBranch);
@@ -148,6 +196,10 @@ public class CodeWriter {
 
 	// --- Unsupported Operations ---
 
+	/**
+	 * Write the instruction to perform the NOT expression/
+	 * @return the position of the program counter after this instruction has been written.
+	 */
 	public short writeNot() {
 		this.record("<NOT>");
 		this.writeRawAssembly(Machine.PUSH, Machine.MACHINE_FALSE);
@@ -156,6 +208,10 @@ public class CodeWriter {
 		return this.programCounter;
 	}
 
+	/**
+	 * Write a push instruction where the argument to push needs to be patched.
+	 * @return The patch created.
+	 */
 	public AddressPatch writePatchablePush() {
 		short originalMemory = this.programCounter;
 		this.writeRawAssembly(Machine.PUSH, this.programCounter);
@@ -173,6 +229,7 @@ public class CodeWriter {
 	/**
 	 * Use this method to write a control block. The AddressPatch must be patched with
 	 * the return value.
+	 * @return The patch created.
 	 */
 	public AddressPatch writeControlBlock(short lexicalLevelForActivationRecord) {
 		// Push space for the return value.
@@ -188,7 +245,7 @@ public class CodeWriter {
 	}
 
 	/**
-	 * Call after setting up the parameters when calling a routine.
+	 * Call after setting up the parameters when calling a routine. For not, we've decided not to use this.
 	 * @param routine An object representing the routine we are running.
 	 * @param afterFunctionCallPatch A patch from the Before method we need here.
 	 */
@@ -198,6 +255,7 @@ public class CodeWriter {
 	
 	/**
 	 * This function sets up a routine after being declared.
+	 * @param RoutineSemType object storing information about the parameters to the routine.
 	 */
 	public AddressPatch writeRoutineDeclareSetup(RoutineSemType routine) {		
 		// The following values are pushed on from the caller.
@@ -221,6 +279,12 @@ public class CodeWriter {
 		return localMinusParamsSizePatch;
 	}
 	
+	/**
+	 * 
+	 * @param routine
+	 * @param localVariableSpace
+	 * @param localMinusParamsSizePatch
+	 */
 	public void writeRoutineDeclareTeardown(RoutineSemType routine, int localVariableSpace, AddressPatch localMinusParamsSizePatch) {
 		// Delete the local variables.
 		this.writeRawAssembly(Machine.PUSH, localVariableSpace); // Includes parameters.
