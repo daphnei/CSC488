@@ -1,8 +1,5 @@
 package compiler488.codegen;
 
-import compiler488.ast.PrettyPrinter;
-import java.util.ArrayList;
-
 import compiler488.ast.ASTList;
 import compiler488.ast.Printable;
 import compiler488.ast.decl.ArrayDeclPart;
@@ -37,12 +34,10 @@ import compiler488.ast.stmt.Scope;
 import compiler488.ast.stmt.Stmt;
 import compiler488.ast.stmt.WhileDoStmt;
 import compiler488.ast.stmt.ProcedureCallStmt;
-import compiler488.ast.type.IntegerType;
 import compiler488.ast.type.Type;
 import compiler488.compiler.Main;
 import compiler488.exceptions.runtime.ExecutionException;
 import compiler488.exceptions.runtime.MemoryAddressException;
-import compiler488.interfaces.IRoutineCall;
 import compiler488.runtime.Machine;
 import compiler488.semantics.NodeVisitor;
 import compiler488.semantics.types.ArraySemType;
@@ -56,15 +51,24 @@ import compiler488.symbol.SymbolTable;
 
 public class CodeGenVisitor extends NodeVisitor {
 
+	/**
+	 * Whether or not to enable debugging for the entire program execution.
+	 */
 	public static final boolean DEBUGGING = false;
 	
-	public static final short DUMMY = 0;
+	/**
+	 * Offsets from the LL for the pieces of info in the activation record.
+	 */
 	public static final short CONTROL_BLOCK_RETURN_VALUE = 0;
 	public static final short CONTROL_BLOCK_RETURN_ADDRESS = 1;
 	public static final short CONTROL_BLOCK_DISPLAY = 2;
 	public static final short CONTROL_BLOCK_SIZE = 3;
-        public static int Anoncount = 0;
-
+	
+	/**
+	 * The number of anonymous functions that have been created so far. This
+	 * var is used so that we can give a unique identifier to each of them.
+	 */
+	public static int anonCount = 0;
 
 	/**
 	 * A writer that keeps track of the program counter and provides a consistent interface for
@@ -85,21 +89,26 @@ public class CodeGenVisitor extends NodeVisitor {
 	private PrimitiveSemType currentDeclarationType;
 
 	public CodeGenVisitor() {
+		// Set up the symbol table.
 		this.symbolTable = new CodeGenSymbolTable();
 		this.symbolTable.Initialize();
 	}
 
+	// Start off the code generation.
 	public void generateCode(Program program) throws MemoryAddressException, ExecutionException {
 		this.writer = new CodeWriter();
+		
+		// Start the traversal of the tree.
 		program.accept(this);
 		
-		
+		// Print out a copy of all of that that was genrated.
 		this.writer.printWrittenCode();
 		if (!this.writer.isCompletelyPatched()) {
 			Main.errorOccurred = true;
 			System.out.print("ERROR: We have unpatched branch statements! Please fix them!");
 		}
 
+		// Set up the stack pointer and the program counter so that execution can begin.
 		Machine.setPC((short) 0); /* where code to be executed begins */
 		Machine.setMSP(this.writer.getProgramCounter()); /* where memory stack begins */
 		Machine.setMLP((short) (Machine.memorySize - 1)); /* where the memory stack ends */
@@ -124,11 +133,11 @@ public class CodeGenVisitor extends NodeVisitor {
 		this.writer.writeRawAssembly(Machine.SETD, scope.getLexicalLevel());
 
 		// Write a dummy control block.
-		AddressPatch returnAddressPatch = this.writer.writeControlBlock(DUMMY);
-		this.writer.patchAddress(returnAddressPatch, DUMMY);  
+		AddressPatch returnAddressPatch = this.writer.writeControlBlock(Machine.UNDEFINED);
+		this.writer.patchAddress(returnAddressPatch, Machine.UNDEFINED);  
 
 		// Push some fake space for holding all program scope variables.
-		this.writer.writeRawAssembly(Machine.PUSH, DUMMY);
+		this.writer.writeRawAssembly(Machine.PUSH, Machine.UNDEFINED);
 		AddressPatch amountOfVariableSpacePatch = this.writer.writePatchablePush();
 		this.writer.writeRawAssembly(Machine.DUPN);
 
@@ -416,8 +425,8 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(AnonFuncExpn visitable) {
                 // DO NOT CALL SUPER
                 Scope fake = new Scope(visitable.getBody(), 0, 0);
-                String name = "anonfunc"+Anoncount;
-                Anoncount+=1;
+                String name = "anonfunc"+anonCount;
+                anonCount+=1;
                 RoutineDecl temp = new RoutineDecl(name, visitable.getExpn().getResultType().returnAST(), fake, 0, 0);
                 temp.accept(this);
 	}
@@ -426,6 +435,7 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(ArithExpn visitable) {
 		super.visit(visitable);
 
+		// These arithmatic expressions are all pretty straightforward. 
 		String s = visitable.getOpSymbol();
 		if (s.equals(ArithExpn.OP_PLUS)) {
 			this.writer.writeRawAssembly(Machine.ADD);
@@ -443,20 +453,23 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(CompareExpn visitable) {
 		super.visit(visitable);
 		
-		//TODO: refractor these into helper methods.
 		String s = visitable.getOpSymbol();
 		if (s.equals(CompareExpn.OP_GREATER)) {
+			// a > b is the same as b < a
 			this.writer.writeRawAssembly(Machine.SWAP);
 			this.writer.writeRawAssembly(Machine.LT);
 		} 
 		else if (s.equals(CompareExpn.OP_LESS)) {
+			// this is the case we have a direction machine isntruction for.
 			this.writer.writeRawAssembly(Machine.LT);
 		}
 		else if (s.equals(CompareExpn.OP_GREATER_EQUAL)) {
+			// a >= b is the same as !(b < a) 
 			this.writer.writeRawAssembly(Machine.LT);
 			this.writer.writeNot();
 		}
 		else if (s.equals(CompareExpn.OP_LESS_EQUAL)) {
+			// a <= b is the same as !(b < a)
 			this.writer.writeRawAssembly(Machine.SWAP);
 			this.writer.writeRawAssembly(Machine.LT);
 			this.writer.writeNot();
@@ -466,6 +479,8 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(BoolConstExpn visitable) {
 		super.visit(visitable);
+		
+		// Push either machine true or false depending on the value of the constant.
 		this.writer.writeRawAssembly(Machine.PUSH, visitable.getValue() ? Machine.MACHINE_TRUE : Machine.MACHINE_FALSE);
 	}
 
@@ -514,7 +529,11 @@ public class CodeGenVisitor extends NodeVisitor {
 	@Override
 	public void visit(EqualsExpn visitable) {
 		super.visit(visitable);
+		
+		// Check for equality.
 		this.writer.writeRawAssembly(Machine.EQ);
+		
+		// Add in a "not" if necessary.
 		if (visitable.getOpSymbol().equals(EqualsExpn.OP_NOT_EQUAL)) {
 			this.writer.writeNot();
 		}
@@ -522,30 +541,11 @@ public class CodeGenVisitor extends NodeVisitor {
 
 	@Override
 	public void visit(FunctionCallExpn visitable) {
-	    
+		// Get the symbol corresponding to the function call.
 	    Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
 	    ASTList<Expn> args = visitable.getArguments();
 	    
 	    visitHelperFuncProc(symbol, args);
-	    /*
-		Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
-		RoutineSemType routine = (RoutineSemType) symbol.getType();
-
-		// Write the control block.
-		AddressPatch returnAddressPatch = this.writer.writeControlBlock(routine.getLexicalLevel());
-
-		// Push parameters onto the stack.
-		for (Expn expn : visitable.getArguments()) {
-			expn.accept(this);
-		}
-
-		// Branch to the caller.
-		this.writer.writeBranchAlways(routine.getStartAddress());
-
-		// Patch now that we know were to come back to after calling the function.
-		this.writer.patchAddress(returnAddressPatch);
-		
-		*/
 	}
 	
 	
