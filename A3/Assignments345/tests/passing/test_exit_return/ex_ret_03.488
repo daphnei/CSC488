@@ -1,8 +1,12 @@
 begin
-integer a1
-boolean a2
 
-exit
-return
+boolean b
+b <= true
+loop 
+	if b
+	then 
+		exit
+	end
+end
 
 end

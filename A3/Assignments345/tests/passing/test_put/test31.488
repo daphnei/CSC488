@@ -1,7 +1,13 @@
 begin
 
-put true
-put "Hello world"
+integer i1, i2, i3
+
+i1 <= 2
+i2 <= 4
+i3 <= 6
+
+put "Computering some math (using variables): "
+put (i2 * i2 * (i1 + i3))/i1/i1/i1/i1
 put skip
 
 

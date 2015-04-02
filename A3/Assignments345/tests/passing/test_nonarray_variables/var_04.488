@@ -1,5 +1,6 @@
 begin
-	integer n, p
-    n <= -1 
-    p <= 1
+	integer a, b, c
+    a <= -1 
+    b <= 1
+    c <= 0
 end

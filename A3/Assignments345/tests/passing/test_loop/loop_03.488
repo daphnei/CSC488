@@ -1,13 +1,18 @@
 begin
 
+integer m
 
 loop 
-   if 30 + 30 then
-	exit when true
-   end
+	put "Guess the magic number:", skip
+	get m
+	
+	if m !=2 then
+   		put "Sorry, no cigar.", skip
+   	
+   	else
+   		put "Correct!", skip
+   		exit
+   	end
 end
-
-
-
 
 end

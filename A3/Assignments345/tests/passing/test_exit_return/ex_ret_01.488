@@ -1,5 +1,7 @@
 begin
 
-exit when true
+loop
+	exit
+end
 
 end

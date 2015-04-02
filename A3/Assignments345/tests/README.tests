@@ -40,19 +40,19 @@ arrays_comprehensive
 
 >>> test_exit_return <<<
 test_03 
->  Loop exit inside minor scope (still counts as "directly inside") 
+> Loop exit inside minor scope (still counts as "directly inside") 
 test_04 
->  Loop using "exit when expression"
+> Loop using "exit when expression"
 ex_ret_01 
->  Using exit when
+> Basic exit in loop.
 ex_ret_02 
->  Using exit out of loop
+> Exit contained in nested loop exits outer loop as well.
 ex_ret_03 
->  Using exit and return out of loop and routine
+> Exit in if stmt exits containing loop.
 ex_ret_04 
->  Using exit and return out of loop and routine
+> Exit when with condition that will eventually be true.  
 ex_ret_05 
->  Using exit and return out of loop and routine
+> Exit when with never-true condition.
 return_01 
 >  Multiple return tests, with and without return value
 exitScope 
@@ -66,7 +66,7 @@ exp_02
 exp_03 
 > Check a bunch of '-' symbols used both in binary and unary format.
 exp_04 
->  testing logic and arithmetic order
+> Testing logic and arithmetic order
 exp_05 
 > Try a bunch of different boolean logic types mixed together
 test_basic 
@@ -74,38 +74,28 @@ test_basic
 arithmetic_comprehensive 
 >  All arithmetic expressions and combinations testing
 
-test_function <<<
+>>> test_function <<<
 
 func_01
 > Multi-parameter functions and layered function calls (ie. call a function on the return value of another function).
-
 func_02
 > Nested function definitions & calls.
-
 functions_01
 > Basic function & call.
-
 functions_02
 > Basic function (multi params) & call.
-
 functions_03
 > Return statement inside if-statement (no else-statement).
-
 functions_04 (NEW)
 > Parameterless function using/modifying global variables declared outside the function scope.
-
 functions_05
 > Parameterless function
-
 functions_06
 > Parameterless function
-
 functions_07
 > Takes integer returns boolean; return statements appear in both if- and else- blocks.
-
 functions_08
 > Takes boolean returns integer; return statements appear in both if- and else- blocks.
-
 functions_09
 > Multi-parametered function w/ arithmetic expr. in return statement.
 
@@ -115,6 +105,7 @@ functions_10
 functions_11
 
 functions_12
+
 
 >>> test_get <<<
 
@@ -132,43 +123,123 @@ get_05.488 (NEW)
 
 >>> test_if <<<
 
+if_01.488
+> Basic if-statement wrapping empty scope declaration (ie. scope containing nothing.)
+if_02.488
+> Basic if/else-statement wrapping empty scope declaration (ie. scope containing nothing.)
+if_03.488
+if_04.488
+if_05.488
+if_06.488
+if_07.488
+if_08.488
+if_09.488
+if_10.488
+if_11.488
+if_12.488
+if_13.488
+
 >>> test_loop <<< 
 
+loop_01.488
+> Basic loop with exit inside if-condition.
+loop_02.488
+> Infinite loop induced with logic (ie. exit stmt inside never-true if-check)
+loop_03.488 (NEW)
+> Loop exit based on value "gotten" from user input.
+loop_04.488
+> Basic loop with exit when.
+loop_05.488
+> While loop nested in plain loop.
+loop_06.488
+> Plain loop nested in while loop.
+loop_07.488
+> Basic while loop.
 loop_comprehensive
 > From A1, long test with lots of loop usage.
-
 loop_infinite1 (NEW)
 >  Infinite while loop (previously belonging to a longer test, but broken off for ease of testing)
-
 loop_infinite2 (NEW)
 >  Infinite loop using "loop" statement
 
-test_misc<<<
+>>> test_misc <<<
 test_basic
-Declaring and accessing identifiers for a varied
+> Declaring and accessing identifiers for variables, functions and procedures.
+
+>>> test_nonarray_variables <<<
+var_01.488
+> Single integer variable declaration.
+var_02.488
+> Single integer variable declaration and assignment.
+var_03.488
+> Multi integer variable declarations.
+var_04.488
+> Multi integer variable declarations and assignments.
+var_05.488
+> Multi boolean variable declarations.
+var_06.488
+> Single boolean variable declaration.
+var_07.488
+> Single boolean variable declaration and assignment.
+var_08.488
+> Multi boolean variable declarations and assignments.
+test_01.488
+> Mixing array and non-array declarations in a single statement.
+test_02.488
+> Assignments and comparisons look alike
 
 
-
-test_nonarray_variables <<<
-
-test_procedure <<<
-
-test_put <<<
-
-test_recursion <<<
-
-test_scope <<<
-
-test_yield<<<
+>>> test_procedure <<<
+test_01.488
+test_02.488
+test37.488
+test38.488
+proc_nested.488
+procedure_comprehensive.488
 
 
+>>> test_put <<<
+test29.488
+> Single put statement inside main (program) scope.
+test30.488 (NEW)
+> Put with arithmetic expressions
+test31.488 (NEW)
+> Put with arithmetic expressions using variables 
+
+
+>>> test_recursion <<<
+recursion_comprehensive
+> Long test from A1 to test recursive functions.
+
+>>> test_scope <<<
+scopeFunction.488
+test2.488
+test_01.488
+test_02.488
+test_03.488
+test_basic.488
+test_simple.488
+
+
+>>> test_yield <<<
+
+yields_array.488
+> Populate array using result of yields.
+yields_funccall.488
+> Call function both in assignment statement in first part of yields then as expression portion of yields.
+yields_get.488
+> Call "get" in statement part of yields
+yields_misc1.488
+> Declaring variables in statement part of yields and 
+yields_misc2.488
+> MOVE TO FAILING
 
 
 Failing:
 
+>>> Folder A2 <<<
 
-Folder A2 <<<
-Inside test_semantically_incorrect folder <<<
+>> test_semantically_incorrect <<
 test_17 
 > using boolean operator or with integers
 test_19 
@@ -234,9 +305,9 @@ test_25
 > Defining a single negative bound
 
 
-Folder A3 <<<
+>>> Folder A3 <<<
 
-Inside ctrlflow folder <<<
+>> ctrlflow folder <<
 test_01 
 >  Illegal use of exit in main scope
 test_02 
@@ -246,7 +317,7 @@ test_03
 test_04 
 >  Illegal use of return (and return value) in non-function/procedure scope 
 
-Inside misc folder <<<
+>> misc folder <<
 test_01 
 >  Illegal use of exit statement in anonymous function
 test_02 
@@ -258,7 +329,7 @@ test_04
 test_05 
 >  NO return should be allowed inside yield 
 
-Inside scopes folder <<<
+>> scopes folder <<
 test_01 
 >  Unidentified function/procedure calls
 test_02 
@@ -268,7 +339,7 @@ test_03
 test_04 
 >  Redeclaring identifier (declared inside minor scope).
 
-Inside types folder <<<
+>> types folder <<
 test_01 
 >  Various expression result type errors due to incorrect usage
 test_02 
@@ -283,7 +354,7 @@ test_06
 >  Type errors in arrays
 
 
-Folder A4 <<<
+>>> Folder A4 <<<
 
 array 
 > Accessing out of the bounds of the array

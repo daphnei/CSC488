@@ -1,5 +1,6 @@
 begin
 
-put true
+put "Computering some math: ", skip
+put (5 * (8 - 2) /(7 + 3)), skip
 
 end

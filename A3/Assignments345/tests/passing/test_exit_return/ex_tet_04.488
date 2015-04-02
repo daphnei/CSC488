@@ -1,11 +1,16 @@
 begin
 integer a1
+a1 <= 1
 boolean a2
-integer a3[5]
+a2 <= true
+boolean a3[5]
 
-
-
-exit
-return
+loop
+	put "Looping...", skip
+	a3[a1] <= a2
+	a1 <= a1 + 1
+	a2 <= !a2
+	exit when (a3[5])
+end
 
 end

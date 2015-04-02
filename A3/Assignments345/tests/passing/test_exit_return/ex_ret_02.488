@@ -1,8 +1,17 @@
 begin
 integer a1
-boolean a2
+a1 <= 1
 
-exit
+loop 
+	put "Looping...", skip
+	begin
+		loop
+			exit
+		end
+	end
+	a1 <= a1 + 1
+	exit when a1 = 10
 
+end
 
 end

@@ -1,11 +1,11 @@
 begin
 
 if 15 then 
-      return 
+      exit 
    end
 
 if true then 
-      return 
+      exit 
    end
 
 end
