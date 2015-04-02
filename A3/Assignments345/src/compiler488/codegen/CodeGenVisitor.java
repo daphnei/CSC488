@@ -566,6 +566,11 @@ public class CodeGenVisitor extends NodeVisitor {
 
         // Patch now that we know were to come back to after calling the function.
         this.writer.patchAddress(returnAddressPatch); 
+        
+		// The return value is left on the stack for use; unless this is a procedure.
+		if (routine.getReturnType() == null) {
+			this.writer.writeRawAssembly(Machine.POP);
+		}
 	}
 	
 
@@ -577,11 +582,16 @@ public class CodeGenVisitor extends NodeVisitor {
 	public void visit(IdentExpn visitable) {
 		// Push the address of the variable on to the top of the stack.
 		// Use an address visitor to do this.
-		ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
-		visitable.accept(addressVisitor);
+		Symbol symbol = this.symbolTable.retrieveSymbol(visitable.getIdentifier());
+		if (symbol.getType() instanceof RoutineSemType) {
+			this.visitHelperFuncProc(symbol, new ASTList<Expn>());
+		} else {
+			ExpnAddressVisitor addressVisitor = new ExpnAddressVisitor(this.symbolTable, this.writer, this);
+			visitable.accept(addressVisitor);
 
-		// Load the value at that address on to the top of the stack.
-		this.writer.writeRawAssembly(Machine.LOAD);
+			// Load the value at that address on to the top of the stack.
+			this.writer.writeRawAssembly(Machine.LOAD);
+		}
 	}
 
 
