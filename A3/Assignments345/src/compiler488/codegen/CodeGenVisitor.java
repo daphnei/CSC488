@@ -566,6 +566,11 @@ public class CodeGenVisitor extends NodeVisitor {
 
         // Patch now that we know were to come back to after calling the function.
         this.writer.patchAddress(returnAddressPatch); 
+        
+		// The return value is left on the stack for use; unless this is a procedure.
+		if (routine.getReturnType() == null) {
+			this.writer.writeRawAssembly(Machine.POP);
+		}
 	}
 	
 

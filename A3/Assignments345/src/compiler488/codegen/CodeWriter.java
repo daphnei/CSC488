@@ -232,11 +232,6 @@ public class CodeWriter {
 		// Jump to back to where this method was called.
 		this.writeRawAssembly(Machine.BR);
 		
-		// The return value is left on the stack for use.
-		if (routine.getReturnType() == null) {
-			this.writeRawAssembly(Machine.POP);
-		}
-		
 		this.patchAddress(localMinusParamsSizePatch, (short)(localVariableSpace - routine.getNumParameters()));
 	}
 	
