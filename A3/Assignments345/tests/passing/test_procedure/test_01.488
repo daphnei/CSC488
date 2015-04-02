@@ -2,8 +2,10 @@
 % from forum post https://csc.cdf.toronto.edu/mybb/showthread.php?tid=10845
 % S00, S01, S03, S41, S08, S14, S21, S16, S15, S18, S31
 begin
+	integer d
+	d <= 1
 	procedure p (integer a) begin
 	put a, skip
 	end
-	p
+	p(d)
 end
