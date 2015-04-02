@@ -1,3 +1,5 @@
+% Uninitialized value x being passed to function compute. 
+
 begin
 	integer function compute(integer var) begin
 		return (1)

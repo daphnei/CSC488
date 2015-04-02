@@ -1,6 +1,14 @@
 begin
 
-if 15 then return end
+integer a, b, c
 
+a <= 2
+b <= 3
+c <= 7
+
+if ( c * (c - 1) / (a + b) <= 100) 
+then 
+	put "Success!", skip
+end
 
 end

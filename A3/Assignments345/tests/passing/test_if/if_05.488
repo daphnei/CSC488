@@ -1,5 +1,10 @@
 begin
-	if ( 2 = 2 )
+boolean a, b, c
+a <= true
+b <= false
+c <= a | b
+
+	if ( (b | a | b) & (!c | b | !a) & (b | c | !c) )
 	then
 		put "false"
 	else

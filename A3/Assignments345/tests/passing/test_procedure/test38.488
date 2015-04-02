@@ -1,7 +1,11 @@
 begin
 
-   procedure my_first_procedure_(integer param1, boolean param2, boolean param3) begin
-	put "Playstation! Playstation! Playstation!"
+   procedure my_first_procedure(integer param1, integer param2, boolean param3) 
+   begin
+	put "Playstation", param1, "! Playstation", param2, "! Playstation Infinity!", skip
    end
+
+
+   my_first_procedure(1, 2, true)
 
 end

@@ -38,6 +38,7 @@ arrays_15
 arrays_comprehensive 
 > All kinds of declaration of arrays
 
+
 >>> test_exit_return <<<
 test_03 
 > Loop exit inside minor scope (still counts as "directly inside") 
@@ -58,6 +59,7 @@ return_01
 exitScope 
 >  Using exit to quit a loop
 
+
 >>> test_expressions <<<
 exp_01 
 > Check a mixture of all four binary operations.
@@ -70,9 +72,10 @@ exp_04
 exp_05 
 > Try a bunch of different boolean logic types mixed together
 test_basic 
->  Expressions (all kinds) and type checking
+> Expressions (all kinds) and type checking
 arithmetic_comprehensive 
->  All arithmetic expressions and combinations testing
+> All arithmetic expressions and combinations testing
+
 
 >>> test_function <<<
 
@@ -99,13 +102,6 @@ functions_08
 functions_09
 > Multi-parametered function w/ arithmetic expr. in return statement.
 
-functions_10
-** DUPLICATE FLAG FOR REWRITE
-
-functions_11
-
-functions_12
-
 
 >>> test_get <<<
 
@@ -128,16 +124,22 @@ if_01.488
 if_02.488
 > Basic if/else-statement wrapping empty scope declaration (ie. scope containing nothing.)
 if_03.488
+> If statement with boolean literal condition.
 if_04.488
+> If statement with simple boolean expression.
 if_05.488
+> If statement with convoluted boolean expression (think 3-SAT).
 if_06.488
+> If statement with convoluted comparison expression.
 if_07.488
+> 
 if_08.488
 if_09.488
 if_10.488
 if_11.488
 if_12.488
 if_13.488
+
 
 >>> test_loop <<< 
 
@@ -158,9 +160,10 @@ loop_07.488
 loop_comprehensive
 > From A1, long test with lots of loop usage.
 loop_infinite1 (NEW)
->  Infinite while loop (previously belonging to a longer test, but broken off for ease of testing)
+>  Infinite while loop (previously belonged to a longer test, but broken off for ease of testing)
 loop_infinite2 (NEW)
 >  Infinite loop using "loop" statement
+
 
 >>> test_misc <<<
 test_basic
@@ -191,12 +194,17 @@ test_02.488
 
 >>> test_procedure <<<
 test_01.488
+> Procedure with no explicit return statement.
 test_02.488
+> Plain procedure with return statement.
 test37.488
+> Parameterless procedure, outputs text. 
 test38.488
-proc_nested.488
+> Multi-parameter procedure, outputs text.
+proc_nested.488 (NEW)
+> Nested procedure declaration & call.
 procedure_comprehensive.488
-
+> Long test from A1 with various procedure declaration & usages.
 
 >>> test_put <<<
 test29.488
@@ -211,28 +219,32 @@ test31.488 (NEW)
 recursion_comprehensive
 > Long test from A1 to test recursive functions.
 
+
 >>> test_scope <<<
 scopeFunction.488
-test2.488
+> One minor scope and one major scope.
 test_01.488
+> Identifier declared in if-block (still counts as part of main scope)
 test_02.488
+> Redeclaring (and reassigning) identifier inside new major scope
 test_03.488
+> Accessing identifiers declared in main scope from inside routines
 test_basic.488
+> Basic declarations of various major/minor scopes.
 test_simple.488
+> Nothing but an empty main scope.
 
 
 >>> test_yield <<<
 
-yields_array.488
+yields_array.488 (NEW)
 > Populate array using result of yields.
-yields_funccall.488
+yields_funccall.488 (NEW)
 > Call function both in assignment statement in first part of yields then as expression portion of yields.
-yields_get.488
+yields_get.488 (NEW)
 > Call "get" in statement part of yields
 yields_misc1.488
 > Declaring variables in statement part of yields and 
-yields_misc2.488
-> MOVE TO FAILING
 
 
 Failing:
@@ -358,5 +370,7 @@ test_06
 
 array 
 > Accessing out of the bounds of the array
+uninit_var
+> Uninitialized variable being passed as parameter to function should throw runtime error. 
 variable 
 > Using a variable not initialized
