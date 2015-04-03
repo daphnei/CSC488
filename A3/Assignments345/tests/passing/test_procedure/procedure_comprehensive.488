@@ -89,22 +89,22 @@ begin
 end
 
 % Call all the procedures/functions (done in new scope for testing purposes)
-begin 
+begin
+	integer r_2a
+	boolean r_2b
+	integer r_3
 	proc_1a
-	proc_1b (7)
-	proc_1c (11, true, 17)
+	proc_1b(1)
+	proc_1c(11, true, 17)
 	proc_2a
-	proc_2b (0)
-	proc_2c (func_1a, func_1b)
-	proc_2c (-(func_1a), !(func_1b))
+	proc_2b(0)
+	proc_2c(func_1a, func_1b)
+	proc_2c(-(func_1a), !(func_1b))
 
 	r_2a < = func_2a (false)
 	r_2b < = func_2b (1)
 	r_3 < = func_3 (false, 3, 7)
 
-	% These should throw errors, but not b/c of syntax..
-
-	proc_1b (true) 				% Type error
 end
 
 end
