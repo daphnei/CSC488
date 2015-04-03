@@ -3,6 +3,8 @@ begin
 
 	integer outx, outy
 	boolean k
+	outx <= 1
+	outy <= 2
 
 	procedure p (integer x, integer y)
 	begin
