@@ -7,6 +7,6 @@ end
 
 integer i
 
-i = my_func
+i <= my_func
 
 end
