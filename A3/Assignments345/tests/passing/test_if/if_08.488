@@ -1,11 +1,13 @@
 begin
 
 integer function func(boolean b)
-if b
-then
-	return 20
-else
-	return 100
+begin
+	if b
+	then
+		return (20)
+	else
+		return (100)
+	end
 end
 
 if func(true) * 2 <= 100 then 

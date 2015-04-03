@@ -2,6 +2,8 @@ Test Index
 
 Here you will find an index of all tests in all folders, each accompanied by a brief description of what the test targets. Tests that were newly written/rewritten expressly for this assignment are denoted "NEW."
 
+(NOTE: names enclosed in ">>> <<<" denote folders, subdirectories indicated by fewer >'s)
+
 Passing:
 
 >>> test_array_variables <<<
@@ -50,10 +52,10 @@ ex_ret_02
 > Exit contained in nested loop does not exit outer loop.
 ex_ret_03 
 > Exit in if stmt exits containing loop.
-ex_ret_04 
+ex_ret_04 (NEW)
 > Exit when with condition that will eventually be true.  
-ex_ret_05 
-> Exit when with never-true condition.
+ex_ret_05 (NEW)
+> Nested loops with exit whens, one terminates the other has never-true condition.
 return_01 
 >  Multiple return tests, with and without return value
 exitScope 
@@ -78,7 +80,6 @@ arithmetic_comprehensive
 
 
 >>> test_function <<<
-
 func_01
 > Multi-parameter functions and layered function calls (ie. call a function on the return value of another function).
 func_02
@@ -104,7 +105,6 @@ functions_09
 
 
 >>> test_get <<<
-
 get_01.488
 > Basic call to "get" w/ two variables.
 get_02.488
@@ -118,7 +118,6 @@ get_05.488 (NEW)
 
 
 >>> test_if <<<
-
 if_01.488
 > Basic if-statement wrapping empty scope declaration (ie. scope containing nothing.)
 if_02.488
@@ -137,13 +136,10 @@ if_08.488
 > Function call in if condition expression.
 if_09.488
 > If statement conditions with multiple boolean not's applied sequentially.
-if_10.488
+if_10.488 (NEW)
 > Heavily nested if statements (depth = 5)
-if_11.488
->
 
 >>> test_loop <<< 
-
 loop_01.488
 > Basic loop with exit inside if-condition.
 loop_02.488
@@ -207,6 +203,7 @@ proc_nested.488 (NEW)
 procedure_comprehensive.488
 > Long test from A1 with various procedure declaration & usages.
 
+
 >>> test_put <<<
 test29.488
 > Single put statement inside main (program) scope.
@@ -237,7 +234,6 @@ test_simple.488
 
 
 >>> test_yield <<<
-
 yields_array.488 (NEW)
 > Populate array using result of yields.
 yields_funccall.488 (NEW)
@@ -252,7 +248,12 @@ Failing:
 
 >>> Folder A2 <<<
 
->> test_semantically_incorrect <<
+>> prevpassing <<
+
+arrays_11
+> Array access out of bounds.
+
+> test_semantically_incorrect <
 test_17 
 > using boolean operator or with integers
 test_19 
@@ -316,7 +317,6 @@ test_24
 > Linking boolean operators
 test_25 
 > Defining a single negative bound
-
 
 >>> Folder A3 <<<
 

@@ -1,7 +1,0 @@
-begin
-
-if (!(false) & true) then 
-      put "hi"
-   end
-
-end
